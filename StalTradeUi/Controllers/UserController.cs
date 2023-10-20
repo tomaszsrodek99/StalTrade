@@ -93,18 +93,8 @@ namespace StalTradeUi.Controllers
             return View("Index");
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult Privacy()
+        public IActionResult Logout()
         {
-            return View("Privacy");
-        }
-
-        [Authorize]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
             Response.Cookies.Delete("JWTToken");
             Response.Cookies.Delete("UserId");
             return RedirectToAction("LoginView");

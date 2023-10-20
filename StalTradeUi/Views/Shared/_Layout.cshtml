@@ -11,21 +11,30 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/loading-spinner.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/form.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <h1 class="navbar-brand"><img src=""/>StalTrade</h1>
+        <div class="blur-overlay" id="blurOverlay"></div>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
+            <div class="d-flex justify-content-between w-100">
+                <h1 class="navbar-brand">StalTrade</h1>
+                <div class="d-flex">
+                    <h1 class="navbar-brand clock"><span id="clock"></span></h1>               
+                </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
+    <footer class="border-top footer text-muted quest-footer">
+        <div class="container">
+            &copy; 2023 - StalTrade
+        </div>
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/loading.js" asp-append-version="true"></script>

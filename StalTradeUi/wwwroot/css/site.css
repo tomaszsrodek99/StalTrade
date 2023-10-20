@@ -14,26 +14,6 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
-.navbar {
-    border-bottom: 2px solid black;
-    width: 100%;
-    font-size: 24px;
-}
-.navbar-brand {
-    padding-left: 1.25em;
-}
-.logout {
-    position: absolute;
-    right: 0;
-}
-
-a.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
-}
-
-/* Provide sufficient contrast against white background */
 a {
     color: #0366d6;
 }
@@ -44,21 +24,10 @@ a {
     border-color: #1861ac;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-    font-size: 18px;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-    font-size: 14px;
-}
-
 .container {
-    max-width: 100%;
+    width: 85%;
+    min-height: 100%;
+    margin-left: 15%;
 }
 
 .border-top {
@@ -81,13 +50,17 @@ button.accept-policy {
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-    position: relative;
     min-height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     /* Margin bottom by footer height */
-    margin-bottom: 60px;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(220,220,220);
 }
 
 .footer {
@@ -95,24 +68,17 @@ body {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
+    padding: 12px;
+}
+.quest-footer {
+    background-color:#333;
 }
 
 .search-bar {
     border-radius: 7px;
 }
 
-.no-link-style {
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-    outline: none;
-}
 
-    .no-link-style:hover {
-        color: lightgreen;
-        cursor: pointer;
-    }
 
 
 .details-label {
@@ -122,4 +88,17 @@ body {
 
 .btn-back {
     margin-right: 15px;
+}
+
+.big-logo {
+    margin-left: auto;
+    height: 67%;
+    margin-right: auto;
+}
+
+.login-motto {
+    text-align: left;
+    padding-left: 10%;
+    margin-top: 50px;
+
 }

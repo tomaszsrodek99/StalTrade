@@ -1,0 +1,44 @@
+﻿.sidebar {
+    width: 15%; /* Stała szerokość panelu bocznego */
+    background-color: #333; /* Kolor tła */
+    height: 100%;
+    font-size: 18px;
+    position: fixed;
+    margin-top: -15px;
+    margin-bottom: -5px;
+    border-right: 2px solid black;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    border-bottom: 2px solid #444; /* Linie oddzielające elementy */
+}
+.sidebar-nav i {
+    padding: 7px;
+    margin-right: 7px;
+}
+
+.sidebar-nav a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #fff; /* Kolor tekstu */
+}
+
+    .sidebar-nav a:hover {
+        background-color: #5BC0DE; /* Kolor podczas najechania myszką */
+    }
+
+    /* Zmień kolor tekstu podczas najechania */
+    .sidebar-nav a:hover {
+        background-color: #1a6985;
+        color: lightgreen;
+        cursor: pointer;
+    }
+
+

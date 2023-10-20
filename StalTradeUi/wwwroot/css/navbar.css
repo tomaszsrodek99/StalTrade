@@ -1,0 +1,46 @@
+﻿.navbar {
+    border-bottom: 1px solid black;
+    width: 100%;
+    padding: 0px;
+    background-color: #1a6985;
+}
+
+.navbar-brand {
+    padding-left: 1.25em;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+.nav-link {
+    display: inline;
+}
+
+.logo {
+    max-width: 100%;
+    height: 25px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+    font-size: 22px;
+}
+
+.no-link-style {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+    .no-link-style:hover {
+        color: lightgreen;
+        cursor: pointer;
+    }
