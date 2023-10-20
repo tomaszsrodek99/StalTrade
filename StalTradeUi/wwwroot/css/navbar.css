@@ -1,7 +1,7 @@
 ﻿.navbar {
     border-bottom: 1px solid black;
     width: 100%;
-    padding: 0px;
+    padding: 5px;
     background-color: #1a6985;
 }
 
@@ -44,3 +44,10 @@ a.navbar-brand {
         color: lightgreen;
         cursor: pointer;
     }
+
+.min-logo {
+    height: 60px;
+    width: 70px;
+    margin-top: -15px;
+    margin-left: -10px;
+}

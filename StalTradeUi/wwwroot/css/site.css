@@ -58,9 +58,6 @@ html {
 body {
     /* Margin bottom by footer height */
     min-height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: rgb(220,220,220);
 }
 
 .footer {
@@ -70,16 +67,10 @@ body {
     white-space: nowrap;
     padding: 12px;
 }
-.quest-footer {
-    background-color:#333;
-}
 
 .search-bar {
     border-radius: 7px;
 }
-
-
-
 
 .details-label {
     font-weight: bold;
@@ -90,15 +81,12 @@ body {
     margin-right: 15px;
 }
 
-.big-logo {
-    margin-left: auto;
-    height: 67%;
-    margin-right: auto;
+.position-fixed {
+    position: fixed;
+    height: 100%;
+    width: 100%;
 }
 
-.login-motto {
-    text-align: left;
-    padding-left: 10%;
-    margin-top: 50px;
-
+pb-3 {
+    position: relative;
 }

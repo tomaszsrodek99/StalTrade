@@ -59,7 +59,15 @@ namespace StalTradeUi.Controllers
                         Secure = true,
                         SameSite = SameSiteMode.Strict
                     };
-                    Response.Cookies.Append("UserId", user.Id.ToString(), userIdCookie);                   
+                    Response.Cookies.Append("UserId", user.Id.ToString(), userIdCookie);
+
+                    var userName = new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.Strict
+                    };
+                    Response.Cookies.Append("UserName", user.FirstName, userName);
 
                     return RedirectToAction("Index");
                 }

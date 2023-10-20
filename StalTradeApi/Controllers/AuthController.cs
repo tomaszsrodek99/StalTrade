@@ -71,11 +71,8 @@ namespace StalTradeApi.Controllers
 
                 string token = CreateToken(user);
 
-                //var refreshToken = GenerateRefreshToken();
-
-                //await SetRefreshToken(refreshToken, user);
-
                 var responseDto = new UserLoginResponseDto() { Token = token, User = user };
+
                 return Ok(responseDto);
             }
             catch (Exception ex)
@@ -89,8 +86,8 @@ namespace StalTradeApi.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
-                new Claim("UserId", user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email)
+                //new Claim("UserId", user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.FirstName)
             };
 
             var token = new JwtSecurityToken(
@@ -103,61 +100,7 @@ namespace StalTradeApi.Controllers
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
-        }
-        /*private RefreshToken GenerateRefreshToken()
-        {
-            var refreshToken = new RefreshToken
-            {
-                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Expires = DateTime.Now.AddMinutes(10),
-                Created = DateTime.Now
-            };
-
-            return refreshToken;
-        }
-
-        [HttpPost("RefreshToken")]
-        public async Task<ActionResult<string>> RefreshToken(User user)
-        {
-            try
-            {
-                var refreshToken = Request.Cookies["refreshToken"];
-
-                if (user.TokenExpires < DateTime.Now)
-                {
-                    return Unauthorized("Logowanie wygasło.");
-                }
-
-                string token = CreateToken(user);
-                var newRefreshToken = GenerateRefreshToken();
-                await SetRefreshToken(newRefreshToken, user);
-
-                return Ok(token);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        private async Task SetRefreshToken(RefreshToken newRefreshToken, User user)
-        {
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = newRefreshToken.Expires,
-                Secure = true,
-                SameSite = SameSiteMode.None
-            };
-            Response.Cookies.Append("JWTToken", newRefreshToken.Token, cookieOptions);
-
-            user.TokenCreated = newRefreshToken.Created;
-            user.TokenExpires = newRefreshToken.Expires;
-
-            await _repository.UpdateAsync(user);
-        }*/
-
-
+        }    
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
