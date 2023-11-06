@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using StalTradeUi.Helpers;
+using StalTradeUI.Helpers;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

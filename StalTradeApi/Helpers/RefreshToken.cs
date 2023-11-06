@@ -1,4 +1,4 @@
-﻿namespace StalTradeApi.Helpers
+﻿namespace StalTradeAPI.Helpers
 {
     public class RefreshToken
     {

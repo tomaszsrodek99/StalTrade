@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StalTradeApi.Models;
+using StalTradeAPI.Models;
+using StalTradeAPI.Models;
 
-namespace StalTradeApi.Context
+namespace StalTradeAPI.Context
 {
     public class StalTradeDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Company> Companies { get; set; }
         public StalTradeDbContext(DbContextOptions options) : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

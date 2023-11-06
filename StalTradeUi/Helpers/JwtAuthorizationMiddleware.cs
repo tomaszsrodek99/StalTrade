@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.IdentityModel.Tokens;
-using StalTradeApi.Dtos;
-using StalTradeApi.Helpers;
-using StalTradeApi.Models;
+using StalTradeAPI.Dtos;
+using StalTradeAPI.Helpers;
+using StalTradeAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 
-namespace StalTradeUi.Helpers
+namespace StalTradeUI.Helpers
 {
     public class JwtAuthorizationMiddleware
     {

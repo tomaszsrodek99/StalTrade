@@ -2,18 +2,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using StalTradeApi.Dtos;
-using StalTradeApi.Helpers;
-using StalTradeApi.Interfaces;
-using StalTradeApi.Models;
-using StalTradeApi.Repositories;
+using StalTradeAPI.Dtos;
+using StalTradeAPI.Helpers;
+using StalTradeAPI.Interfaces;
+using StalTradeAPI.Models;
+using StalTradeAPI.Repositories;
 using StalTradeAPI.Dtos;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace StalTradeApi.Controllers
+namespace StalTradeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StalTradeApi.Dtos;
-using StalTradeApi.Models;
+using StalTradeAPI.Dtos;
+using StalTradeAPI.Models;
 
-namespace StalTradeApi.Interfaces
+namespace StalTradeAPI.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {

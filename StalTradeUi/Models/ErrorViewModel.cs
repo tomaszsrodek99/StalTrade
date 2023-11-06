@@ -1,4 +1,4 @@
-namespace StalTradeUi.Models
+namespace StalTradeUI.Models
 {
     public class ErrorViewModel
     {

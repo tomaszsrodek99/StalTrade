@@ -12,9 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="icon" type="image/png" href="/img/logo.png">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="~/css/loading-spinner.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/form.css" asp-append-version="true" />  
+    <link rel="stylesheet" href="~/css/form.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true" />
@@ -22,9 +22,9 @@
 <body style="background-color: rgb(220,220,220);">
     <header>
         <div class="blur-overlay" id="blurOverlay"></div>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow">
             <div class="d-flex justify-content-between w-100">
-                <h1 class="navbar-brand">Witaj, @userName !</h1>       
+                <h1 class="navbar-brand">Witaj, @userName !</h1>
                 <div class="d-flex">
                     <h1 class="navbar-brand clock"><span id="clock"></span></h1>
                     <h1 class="navbar-brand">
@@ -37,8 +37,8 @@
         </nav>
     </header>
 
-    <div class="sidebar">
-        <nav class="sidebar-nav">
+    <div class="container">
+        <aside class="sidebar">
             <ul>
                 <li><a href="/Home"><i class="fa-regular fa-cash-register"></i>Kasa</a></li>
                 <li><a href="/Products"><i class="fa-solid fa-person"></i>Dostawcy i klienci</a></li>
@@ -47,21 +47,19 @@
                 <li><a href="/Contact"><i class="fa-solid fa-dollar-sign"></i>Sprzedaż</a></li>
                 <li><a href="/Contact"><i class="fa-solid fa-cart-shopping"></i>Zakupy</a></li>
             </ul>
-        </nav>
-    </div>
-
-    <div class="container">
-        <main role="main" class="pb-3">
-            <img src="/img/logoznazwa.png" class="min-logo" />
+        </aside>
+        <main role="main" class="content text-center">
             @RenderBody()
-        </main>
+        </main>      
     </div>
 
     <div id="tokenExpirationMessage">
         <p>Wylogowano z powodu braku aktywności</p>
         <button id="acceptButton">Akceptuj</button>
     </div>
-
+    <footer class="border-top footer text-muted quest-footer">
+            &copy; 2023 - StalTrade
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/loading.js" asp-append-version="true"></script>

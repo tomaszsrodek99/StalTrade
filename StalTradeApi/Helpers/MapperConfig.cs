@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
-using StalTradeApi.Dtos;
+using StalTradeAPI.Dtos;
+using StalTradeAPI.Models;
 
-namespace StalTradeApi.Helpers
+namespace StalTradeAPI.Helpers
 {
     public class MapperConfig : Profile
     {
         public MapperConfig()
         {
-            CreateMap<Models.User, UserDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Contact, ContactDto>().ReverseMap();
+            CreateMap<Company, CompanyDto>().ReverseMap();
         }
     }
 }

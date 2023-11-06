@@ -1,14 +1,14 @@
-﻿using StalTradeApi.Models;
-using StalTradeApi.Interfaces;
+﻿using StalTradeAPI.Models;
+using StalTradeAPI.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using StalTradeApi.Dtos;
-using StalTradeApi.Context;
+using StalTradeAPI.Dtos;
+using StalTradeAPI.Context;
 using System.ComponentModel;
 
-namespace StalTradeApi.Repositories
+namespace StalTradeAPI.Repositories
 {
 
     public class UserRepository : GenericRepository<User>, IUserRepository

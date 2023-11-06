@@ -1,6 +1,6 @@
-﻿using StalTradeApi.Models;
+﻿using StalTradeAPI.Models;
 
-namespace StalTradeApi.Dtos
+namespace StalTradeAPI.Dtos
 {
     public class UserLoginResponseDto
     {

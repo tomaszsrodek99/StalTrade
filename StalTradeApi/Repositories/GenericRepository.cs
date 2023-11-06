@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StalTradeApi.Context;
-using StalTradeApi.Interfaces;
+using StalTradeAPI.Context;
+using StalTradeAPI.Interfaces;
 
-namespace StalTradeApi.Repositories
+namespace StalTradeAPI.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {

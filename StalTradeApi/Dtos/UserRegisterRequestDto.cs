@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace StalTradeApi.Dtos
+namespace StalTradeAPI.Dtos
 {
     public class UserRegisterRequestDto
     {

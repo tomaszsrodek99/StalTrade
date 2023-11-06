@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StalTradeApi.Context;
+using StalTradeAPI.Context;
 
 #nullable disable
 
-namespace StalTradeApi.Migrations
+namespace StalTradeAPI.Migrations
 {
     [DbContext(typeof(StalTradeDbContext))]
     partial class StalTradeDbContextModelSnapshot : ModelSnapshot

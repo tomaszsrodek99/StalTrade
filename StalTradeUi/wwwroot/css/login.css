@@ -28,3 +28,13 @@
 .blinking {
     animation: blink 3500ms infinite; 
 }
+
+.login-form-background {
+    background: url(/img/background.png);
+    padding-top: 20px;
+    background-size: cover;
+}
+
+.login-form {
+    margin-top: 20%;
+}

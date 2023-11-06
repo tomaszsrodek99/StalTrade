@@ -1,4 +1,4 @@
-﻿namespace StalTradeApi.Dtos
+﻿namespace StalTradeAPI.Dtos
 {
     public class UserDto
     {

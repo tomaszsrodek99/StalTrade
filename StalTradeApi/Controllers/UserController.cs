@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StalTradeApi.Dtos;
-using StalTradeApi.Interfaces;
+using StalTradeAPI.Dtos;
+using StalTradeAPI.Interfaces;
 
-namespace StalTradeApi.Controllers
+namespace StalTradeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,4 +1,4 @@
-﻿namespace StalTradeApi.Interfaces
+﻿namespace StalTradeAPI.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {

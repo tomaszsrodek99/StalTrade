@@ -4,15 +4,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using StalTradeApi.Dtos;
 using StalTradeAPI.Dtos;
-using StalTradeUi.Models;
+using StalTradeUI.Models;
 using System.Diagnostics;
 using System.Net;
-using StalTradeApi.Models;
+using StalTradeAPI.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace StalTradeUi.Controllers
+namespace StalTradeUI.Controllers
 {
     public class UserController : Controller
     {
@@ -105,6 +104,7 @@ namespace StalTradeUi.Controllers
         {
             Response.Cookies.Delete("JWTToken");
             Response.Cookies.Delete("UserId");
+            Response.Cookies.Delete("UserName");
             return RedirectToAction("LoginView");
         }
     }

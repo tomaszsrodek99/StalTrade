@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace StalTradeApi.Migrations
+namespace StalTradeAPI.Migrations
 {
     public partial class Init : Migration
     {

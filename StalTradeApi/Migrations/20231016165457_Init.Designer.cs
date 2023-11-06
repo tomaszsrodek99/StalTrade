@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StalTradeApi.Context;
+using StalTradeAPI.Context;
 
 #nullable disable
 
-namespace StalTradeApi.Migrations
+namespace StalTradeAPI.Migrations
 {
     [DbContext(typeof(StalTradeDbContext))]
     [Migration("20231016165457_Init")]

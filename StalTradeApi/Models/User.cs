@@ -1,4 +1,4 @@
-﻿namespace StalTradeApi.Models
+﻿namespace StalTradeAPI.Models
 {
     public class User
     {

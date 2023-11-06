@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using StalTradeApi.Context;
-using StalTradeApi.Helpers;
-using StalTradeApi.Interfaces;
-using StalTradeApi.Repositories;
+using StalTradeAPI.Context;
+using StalTradeAPI.Helpers;
+using StalTradeAPI.Interfaces;
+using StalTradeAPI.Repositories;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
@@ -17,6 +17,8 @@ builder.Services.AddDbContext<StalTradeDbContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 builder.Services.AddControllers();
 
