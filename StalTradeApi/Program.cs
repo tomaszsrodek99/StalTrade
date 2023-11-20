@@ -79,9 +79,11 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseCors();
-
+app.UseRouting();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllerRoute(
+    name: "api",
+    pattern: "api/{controller}/{action}/{id?}");
 
 app.Run();

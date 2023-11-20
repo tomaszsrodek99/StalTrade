@@ -22,7 +22,7 @@
 <body style="background-color: rgb(220,220,220);">
     <header>
         <div class="blur-overlay" id="blurOverlay"></div>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow">
+        <nav>
             <div class="d-flex justify-content-between w-100">
                 <h1 class="navbar-brand">Witaj, @userName !</h1>
                 <div class="d-flex">
@@ -36,19 +36,22 @@
             </div>
         </nav>
     </header>
-
+    
     <div class="container">
         <aside class="sidebar">
             <ul>
                 <li><a href="/Home"><i class="fa-regular fa-cash-register"></i>Kasa</a></li>
-                <li><a href="/Products"><i class="fa-solid fa-person"></i>Dostawcy i klienci</a></li>
+                <li><a asp-controller="Company" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "Company") ? "active" : "")"><i class="fa-solid fa-person"></i>Dostawcy i klienci</a></li>
                 <li><a href="/Services"><i class="fa-solid fa-magnifying-glass"></i>Magazyn</a></li>
                 <li><a href="/About"><i class="fa-solid fa-book"></i>Produkty</a></li>
                 <li><a href="/Contact"><i class="fa-solid fa-dollar-sign"></i>Sprzedaż</a></li>
                 <li><a href="/Contact"><i class="fa-solid fa-cart-shopping"></i>Zakupy</a></li>
             </ul>
+            <footer class="footer text-muted quest-footer">
+                &copy; 2023 - StalTrade
+            </footer>
         </aside>
-        <main role="main" class="content text-center">
+        <main role="main" class="content text-center user-background">
             @RenderBody()
         </main>      
     </div>
@@ -57,13 +60,11 @@
         <p>Wylogowano z powodu braku aktywności</p>
         <button id="acceptButton">Akceptuj</button>
     </div>
-    <footer class="border-top footer text-muted quest-footer">
-            &copy; 2023 - StalTrade
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/loading.js" asp-append-version="true"></script>
     <script src="~/js/user.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
     <script>

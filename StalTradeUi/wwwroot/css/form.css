@@ -3,6 +3,16 @@
     margin-bottom: 5px;
 }
 
+.search-bar {
+    border-radius: 7px;
+}
+
+.search-input {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 30%;
+}
+
 .btn-back {
     margin-right: 15px;
 }
@@ -16,6 +26,14 @@
     border-radius: 5px;
     margin-bottom: 15px;
     margin-top: 35px;
+}
+
+.contact-form {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    margin-bottom: 15px;
 }
 
 .form-control:focus {

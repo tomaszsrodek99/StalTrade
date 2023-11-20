@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StalTradeAPI.Context;
 
@@ -11,9 +12,10 @@ using StalTradeAPI.Context;
 namespace StalTradeAPI.Migrations
 {
     [DbContext(typeof(StalTradeDbContext))]
-    partial class StalTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231113130247_UpdateCompanyRelationsWithContact")]
+    partial class UpdateCompanyRelationsWithContact
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,13 +108,14 @@ namespace StalTradeAPI.Migrations
                         .HasColumnType("nvarchar(9)");
 
                     b.Property<string>("Phone2")
+                        .IsRequired()
                         .HasMaxLength(9)
                         .HasColumnType("nvarchar(9)");
 
                     b.Property<string>("Position")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("ContactID");
 

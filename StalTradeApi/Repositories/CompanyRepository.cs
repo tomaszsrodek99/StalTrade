@@ -1,4 +1,5 @@
-﻿using StalTradeAPI.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using StalTradeAPI.Context;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
 
@@ -12,6 +13,14 @@ namespace StalTradeAPI.Repositories
         {
             _context = context;
             _config = configuration;
+        }
+        public async Task<IEnumerable<Company>> GetAllCompaniesWithContactsAsync()
+        {
+            return await _context.Companies.Include(c => c.Contacts).ToListAsync();
+        }
+        public bool IsNIPExists(string nip, int companyId)
+        {
+            return !_context.Companies.Any(c => c.NIP == nip && c.CompanyID != companyId);
         }
     }
 }

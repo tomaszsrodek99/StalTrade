@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StalTradeAPI.Context;
 
@@ -11,9 +12,10 @@ using StalTradeAPI.Context;
 namespace StalTradeAPI.Migrations
 {
     [DbContext(typeof(StalTradeDbContext))]
-    partial class StalTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231106143948_CompanyWithContacts")]
+    partial class CompanyWithContacts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,13 +108,14 @@ namespace StalTradeAPI.Migrations
                         .HasColumnType("nvarchar(9)");
 
                     b.Property<string>("Phone2")
+                        .IsRequired()
                         .HasMaxLength(9)
                         .HasColumnType("nvarchar(9)");
 
                     b.Property<string>("Position")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.HasKey("ContactID");
 
@@ -142,9 +145,11 @@ namespace StalTradeAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
@@ -154,13 +159,11 @@ namespace StalTradeAPI.Migrations
 
             modelBuilder.Entity("StalTradeAPI.Models.Contact", b =>
                 {
-                    b.HasOne("StalTradeAPI.Models.Company", "Company")
+                    b.HasOne("StalTradeAPI.Models.Company", null)
                         .WithMany("Contacts")
                         .HasForeignKey("CompanyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Company", b =>

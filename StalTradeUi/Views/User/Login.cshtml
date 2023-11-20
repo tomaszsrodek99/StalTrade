@@ -17,7 +17,7 @@
             <form id="loginForm" asp-action="Login" asp-controller="User" class="my-form login-form">
                 <h2>Logowanie</h2>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                @Html.AntiForgeryToken()
                 <label asp-for="Email" class="control-label float-start">Email</label>
                 <div class="form-group form-floating">
                     <div class="input-group">
