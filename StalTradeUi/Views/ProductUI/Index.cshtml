@@ -6,14 +6,14 @@
     var number = 1;
 }
 
-<h2 class="text-center">Produkty</h2>
 <div class="row">
+    <h2 class="text-center">Produkty</h2>
     <div class="col-9">
         <div class="input-group search-input">
             <span class="input-group-text">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </span>
-            <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj..">
+            <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po numerze rysunku..">
         </div>
         <a class="btn btn-primary add-button" onclick="loadCreateProductForm()">Dodaj nowy produkt</a>
         @if (Model.Any())
