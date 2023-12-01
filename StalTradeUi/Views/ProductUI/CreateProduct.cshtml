@@ -1,0 +1,85 @@
+﻿@model StalTradeAPI.Dtos.ProductDto
+
+<div class="text-center">
+    <form id="productForm" asp-controller="ProductUI" method="post" class="my-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input asp-for="ProductId" class="form-control" hidden />
+        <div class="form-group">
+            <label asp-for="CompanyDrawingNumber" class="control-label"></label>
+            <input asp-for="CompanyDrawingNumber" class="form-control" />
+            <span asp-validation-for="CompanyDrawingNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CustomerDrawingNumber" class="control-label"></label>
+            <input asp-for="CustomerDrawingNumber" class="form-control" />
+            <span asp-validation-for="CustomerDrawingNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="PurchaseVat" class="control-label"></label>
+                    <input asp-for="PurchaseVat" class="form-control" type="number" min="0" max="100" />
+                    <span asp-validation-for="PurchaseVat" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="SalesVat" class="control-label"></label>
+                    <input asp-for="SalesVat" class="form-control" type="number" min="0" max="100" />
+                    <span asp-validation-for="SalesVat" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="ConsumptionStandard" class="control-label"></label>
+                    <input asp-for="ConsumptionStandard" class="form-control" type="number" step="0.01" min="0" />
+                    <span asp-validation-for="ConsumptionStandard" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Weight" class="control-label"></label>
+                    <input asp-for="Weight" class="form-control" type="number" step="0.01" min="0" />
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <label asp-for="ChargeProfile" class="control-label"></label>
+                <input asp-for="ChargeProfile" class="form-control" />
+                <span asp-validation-for="ChargeProfile" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="UnitOfMeasure" class="control-label"></label>
+                <select asp-for="UnitOfMeasure" class="form-control">
+                    <option></option>
+                    <option>szt</option>
+                    <option>kg</option>
+                </select>
+                <span asp-validation-for="UnitOfMeasure" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MaterialGrade" class="control-label"></label>
+            <input asp-for="MaterialGrade" class="form-control" />
+            <span asp-validation-for="MaterialGrade" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SubstituteGrade" class="control-label"></label>
+            <input asp-for="SubstituteGrade" class="form-control" />
+            <span asp-validation-for="SubstituteGrade" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <div class="btn-group">
+                <button style="margin-right: 15px" type="button" class="btn btn-secondary" onclick="CloseForm()">Wstecz</button>
+                <button type="submit" class="btn btn-primary">Zapisz</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+

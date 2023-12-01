@@ -27,14 +27,14 @@ namespace StalTradeUI.Helpers
 
             if (string.IsNullOrEmpty(token))
             {
-                if (context.Request.Path == "/" || context.Request.Path == "/User/LoginView" || context.Request.Path == "/User/Login")
+                if (context.Request.Path == "/" || context.Request.Path == "/UserUI/LoginView" || context.Request.Path == "/UserUI/Login")
                 {
                     await _next(context);
                     return;
                 }
                 else
                 {
-                    context.Response.Redirect("/User/LoginView");
+                    context.Response.Redirect("/UserUI/LoginView");
                     return;
                 }               
             } else
@@ -55,14 +55,14 @@ namespace StalTradeUI.Helpers
                         AttachUserToContext(context, newToken);
                         if (context.Request.Path == "/")
                         {
-                            context.Response.Redirect("/User/Index");
+                            context.Response.Redirect("/UserUI/Index");
                             return;
                         }
                     }
                     else
                     {
                         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        context.Response.Redirect("/User/LoginView");
+                        context.Response.Redirect("/UserUI/LoginView");
                         return;
                     }
                 }
@@ -94,7 +94,7 @@ namespace StalTradeUI.Helpers
             }
             catch
             {
-                context.Response.Redirect("/User/LoginView");
+                context.Response.Redirect("/UserUI/LoginView");
             }
         }
 

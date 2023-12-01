@@ -10,11 +10,11 @@ using System.Net;
 namespace StalTradeUI.Controllers
 {
     [Authorize]
-    public class CompanyController : Controller
+    public class CompanyUIController : Controller
     {
         private readonly HttpClient _httpClient;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public CompanyController(IWebHostEnvironment webHostEnvironment)
+        public CompanyUIController(IWebHostEnvironment webHostEnvironment)
         {
             _httpClient = new HttpClient
             {
@@ -33,12 +33,7 @@ namespace StalTradeUI.Controllers
                 {
                     var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
                     return View("Index", responseDto);
-                }
-                else
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    ViewBag.ErrorMessage = $"Nie udało się edytować rekordu.{response.ReasonPhrase + " " + content}";
-                }
+                }            
                 return View("Index", new List<CompanyDto>());
             }
             catch (Exception ex)

@@ -8,6 +8,8 @@ namespace StalTradeAPI.Context
         public DbSet<User>? Users { get; set; }
         public DbSet<Contact>? Contacts { get; set; }
         public DbSet<Company>? Companies { get; set; }
+        public DbSet<Product>? Products { get; set; }
+        public DbSet<PriceHistory>? PriceHistory { get; set; }
         public StalTradeDbContext(DbContextOptions options) : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

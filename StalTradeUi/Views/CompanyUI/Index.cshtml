@@ -6,8 +6,8 @@
     var number = 1;
 }
 
-<h2 class="text-center">Baza klientów i dostawców</h2>
 <div class="row">
+    <h2 class="text-center">Baza klientów i dostawców</h2>
     <div class="col-9">
         <div class="input-group search-input">
             <span class="input-group-text">
@@ -84,7 +84,7 @@
                                         <div class="btn-group" role="group">
                                             <a class="btn btn-primary" onclick="toggleContacts(@item.CompanyID);" style="margin-right: 5px;">Kontakty</a>
                                             <a class="btn btn-secondary update-btn" onclick="loadUpdateCompanyForm(this)" data-item='@Json.Serialize(item)' style="margin-right: 5px;">Edytuj</a>
-                                            @Html.ActionLink("Usuń", "RemoveCompany", "Company", new { id = item.CompanyID }, new { @class = "btn btn-danger", onclick = "return confirm('Czy na pewno chcesz usunąć rekord?');" })
+                                            @Html.ActionLink("Usuń", "RemoveCompany", "CompanyUI", new { id = item.CompanyID }, new { @class = "btn btn-danger", onclick = "return confirm('Czy na pewno chcesz usunąć rekord?');" })
                                         </div>
                                     </div>
                                 </td>
@@ -119,7 +119,7 @@
                                                         <td>
                                                             <div class="btn-group" role="group">
                                                                 <a class="btn btn-secondary update-btn" onclick="loadUpdateContactForm(this)" data-item='@Json.Serialize(contact)' style="margin-right: 5px;">Edytuj</a>
-                                                                @Html.ActionLink("Usuń", "RemoveContact", "Company", new { id = contact.ContactID }, new { @class = "btn btn-danger", onclick = "return confirm('Czy na pewno chcesz usunąć rekord?');" })
+                                                                @Html.ActionLink("Usuń", "RemoveContact", "CompanyUI", new { id = contact.ContactID }, new { @class = "btn btn-danger", onclick = "return confirm('Czy na pewno chcesz usunąć rekord?');" })
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -143,7 +143,7 @@
             <p>Brak danych do wyświetlenia.</p>
         }
     </div>
-    <div id="partial-view" class="col-3 hidden">
+    <div id="partial-view" class="partial-view col-3 hidden">
         @await Html.PartialAsync("CreateCompany", new StalTradeAPI.Dtos.CompanyDto()),
     </div>
 </div>
@@ -168,14 +168,87 @@
                         } else {
                             $('#uniqueNIPError').text('');
                         }
-                    },
-                    error: function () {
-                        var error = ('Błąd podczas sprawdzania unikalności NIPu.');
-                        var url = 'https://localhost:7090/User/Index';
-                        location.href = url;
                     }
                 });
             });
         });
+
+        function loadCreateCompanyForm() {
+            var form = document.getElementById("companyForm");
+            form.reset();
+            document.getElementById("companyForm").action = "AddCompany";
+            var partialView = document.getElementById("partial-view");
+            partialView.style.visibility = "visible";
+            blur();
+        }
+
+        function loadUpdateCompanyForm(element) {
+            var form = document.getElementById("companyForm");
+            form.reset();
+
+            form.action = "PutCompany";
+
+            var itemData = element.getAttribute("data-item");
+            var itemObject = JSON.parse(itemData);
+
+            document.getElementById("CompanyID").value = itemObject.companyID;
+            document.getElementById("Name").value = itemObject.name;
+            document.getElementById("ShortName").value = itemObject.shortName;
+            document.getElementById("Address").value = itemObject.address;
+            document.getElementById("City").value = itemObject.city;
+            document.getElementById("PostalCode").value = itemObject.postalCode;
+            document.getElementById("PostOffice").value = itemObject.postOffice;
+            document.getElementById("NIP").value = itemObject.nip;
+            document.getElementById("PaymentMethod").value = itemObject.paymentMethod;
+
+            var partialView = document.getElementById("partial-view");
+            partialView.style.visibility = "visible";
+            blur();
+        }
+
+        function loadCreateContactForm(id) {
+            var contactRow = document.getElementById(id);
+            var url = '/CompanyUI/CreateAddContactForm?companyId=' + id;
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var createContactContainer = contactRow.getElementsByClassName('text-center-contact')[0];
+                    createContactContainer.innerHTML = xhr.responseText;
+                }
+            };
+
+            xhr.open('GET', url, true);
+            xhr.send();
+            blur();
+        }
+
+        function loadUpdateContactForm(element) {
+            var itemData = element.getAttribute("data-item");
+            var itemObject = JSON.parse(itemData);
+            var contactRow = document.getElementById(itemObject.companyID);
+            var url = '/CompanyUI/CreateUpdateContactForm?contactId=' + itemObject.contactID;
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var createContactContainer = contactRow.getElementsByClassName('text-center-contact')[0];
+                    createContactContainer.innerHTML = xhr.responseText;
+                }
+            };
+
+            xhr.open('GET', url, true);
+            xhr.send();
+            blur();
+        }
+
+        function toggleContacts(id) {
+            var contactRow = document.getElementById(id);
+            document.getElementById('CompanyID').value = id;
+            if (contactRow.style.display === "none") {
+                contactRow.style.display = "";
+            } else
+                contactRow.style.display = "none";
+        }
     </script>
 }

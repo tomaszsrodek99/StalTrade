@@ -14,7 +14,7 @@
     <div class="col-md-6 login-form-background">
         <div class="text-center">
             <div class="blur-overlay" id="blurOverlay"></div>
-            <form id="loginForm" asp-action="Login" asp-controller="User" class="my-form login-form">
+            <form id="loginForm" asp-action="Login" asp-controller="UserUI" class="my-form login-form">
                 <h2>Logowanie</h2>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 @Html.AntiForgeryToken()

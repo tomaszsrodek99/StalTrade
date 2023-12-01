@@ -50,6 +50,7 @@ namespace StalTradeAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet]
         [Route("IsNIPUnique/{companyId}", Name = "IsNIPUnique")]
         public async Task<IActionResult> IsNIPUnique(int companyId, string nip) 

@@ -27,9 +27,7 @@ a {
 .content {
     margin-left: 15%;
     padding: 20px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    height: 86vh;
+    height: 93vh;
     /*background-image: url(/img/backgroundzlogo.png);*/
     background-size: cover;
 }

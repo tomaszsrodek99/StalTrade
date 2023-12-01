@@ -33,6 +33,7 @@ namespace StalTradeAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost("CreateContact")]
         public async Task<IActionResult> CreateContact(ContactDto dto)
         {
@@ -46,6 +47,7 @@ namespace StalTradeAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPut("UpdateContact")]
         public async Task<IActionResult> UpdateContact(ContactDto dto)
         {

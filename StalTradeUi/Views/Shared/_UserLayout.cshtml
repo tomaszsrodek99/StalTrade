@@ -28,7 +28,7 @@
                 <div class="d-flex">
                     <h1 class="navbar-brand clock"><span id="clock"></span></h1>
                     <h1 class="navbar-brand">
-                        <a class="nav-link no-link-style" asp-controller="User" asp-action="Logout">
+                        <a class="nav-link no-link-style" asp-controller="UserUI" asp-action="Logout">
                             <i class="fa-solid fa-right-from-bracket"></i> Wyloguj
                         </a>
                     </h1>
@@ -41,9 +41,9 @@
         <aside class="sidebar">
             <ul>
                 <li><a href="/Home"><i class="fa-regular fa-cash-register"></i>Kasa</a></li>
-                <li><a asp-controller="Company" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "Company") ? "active" : "")"><i class="fa-solid fa-person"></i>Dostawcy i klienci</a></li>
+                <li><a asp-controller="CompanyUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "CompanyUI") ? "active" : "")"><i class="fa-solid fa-person"></i>Dostawcy i klienci</a></li>
                 <li><a href="/Services"><i class="fa-solid fa-magnifying-glass"></i>Magazyn</a></li>
-                <li><a href="/About"><i class="fa-solid fa-book"></i>Produkty</a></li>
+                <li><a asp-controller="ProductUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "ProductUI") ? "active" : "")"><i class="fa-solid fa-book"></i>Produkty</a></li>
                 <li><a href="/Contact"><i class="fa-solid fa-dollar-sign"></i>Sprzedaż</a></li>
                 <li><a href="/Contact"><i class="fa-solid fa-cart-shopping"></i>Zakupy</a></li>
             </ul>

@@ -38,7 +38,7 @@ function handleTokenExpiration() {
     acceptButton.addEventListener("click", function () {
         $('#blurOverlay').hide();
         $('body').removeClass('blur-overlay-visible');
-        window.location.href = "/User/LoginView";
+        window.location.href = "/UserUI/LoginView";
     });
 }
 

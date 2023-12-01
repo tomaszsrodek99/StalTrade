@@ -13,10 +13,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace StalTradeUI.Controllers
 {
-    public class UserController : Controller
+    public class UserUIController : Controller
     {
         private readonly HttpClient _httpClient;
-        public UserController()
+        public UserUIController()
         {
             _httpClient = new HttpClient
             {
