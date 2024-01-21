@@ -43,43 +43,18 @@ namespace StalTradeUI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CreateUpdateContactForm(int contactId)
-        {
-            ViewBag.Action = "PutContact";
-            try
-            {
-                HttpResponseMessage response = await _httpClient.GetAsync($"api/Contact/GetContact{contactId}");
-                var responseDto = await response.Content.ReadFromJsonAsync<ContactDto>();
-                return PartialView("CreateContact", responseDto);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
-            }
-        }
-
-        [HttpGet]
-        public IActionResult CreateAddContactForm(int companyId)
-        {
-            ViewBag.Action = "AddContact";
-            var model = new ContactDto { CompanyID = companyId };
-            return PartialView("CreateContact", model);
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddCompany(CompanyDto dto)
         {
             try
             {
-                HttpResponseMessage addCompanyResponse = await _httpClient.PostAsJsonAsync("api/Company/CreateCompany", dto);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Company/CreateCompany", dto);
 
-                if (addCompanyResponse.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                     return RedirectToAction("Index");
 
-                var content = await addCompanyResponse.Content.ReadAsStringAsync();
-                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {addCompanyResponse.ReasonPhrase + " " + content}";
+                var content = await response.Content.ReadAsStringAsync();
+                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
                 return View("Error");
             }
             catch (Exception ex)
@@ -94,13 +69,13 @@ namespace StalTradeUI.Controllers
         {        
             try
             {
-                HttpResponseMessage addCompanyResponse = await _httpClient.PostAsJsonAsync("api/Contact/CreateContact", dto);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Contact/CreateContact", dto);
 
-                if (addCompanyResponse.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                     return RedirectToAction("Index");
 
-                var content = await addCompanyResponse.Content.ReadAsStringAsync();
-                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {addCompanyResponse.ReasonPhrase + " " + content}";
+                var content = await response.Content.ReadAsStringAsync();
+                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
                 return View("Error");
             }
             catch (Exception ex)

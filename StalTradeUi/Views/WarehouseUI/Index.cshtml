@@ -1,0 +1,115 @@
+﻿@model IEnumerable<StalTradeAPI.Dtos.ProductDto>
+@{
+    ViewData["Title"] = "Warehouse";
+    Layout = "_UserLayout";
+}
+
+<div class="row">
+    <h2 class="text-center">Magazyn</h2>  
+    <div class="text-center">
+        <div class="input-group search-input">
+            <span class="input-group-text">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po nazwie produktu..">
+            <div id="button-container">
+                <button class="btn btn-primary" onclick="loadCreateProductForm()">Dodaj nowy produkt</button>
+                <button id="edit-button" class="btn btn-secondary">Edytuj</button>
+                <button id="delete-button" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć produkt?');" }>Usuń</button>
+            </div>
+        </div>
+        
+        <table id="search-table" class="display table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="partial-view" class="partial-view hidden">
+    @await Html.PartialAsync("CreateProduct", new StalTradeAPI.Dtos.ProductDto()),
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/product.js"></script>
+}
+
+<script>
+    var data = @Html.Raw(Json.Serialize(Model));
+
+    $(document).ready(function () {      
+        var table = new DataTable('#search-table', {
+            data: data,
+            columns: [
+                { data: 'productId', title: 'Id', visible: false },
+                { data: 'name', title: 'Nazwa' },
+                { data: 'companyDrawingNumber', title: 'Rysunek' },
+                { data: 'customerDrawingNumber', title: 'Rysunek klienta' },
+                { data: 'unitOfMeasure', title: 'Miara' },
+                { data: 'purchaseVat', title: 'VAT zakupu' },
+                { data: 'salesVat', title: 'VAT sprzedaży' },
+                { data: 'consumptionStandard', title: 'Norma zużycia' },
+                { data: 'weight', title: 'Waga' },
+                { data: 'chargeProfile', title: 'Profil wsadu' },
+                { data: 'materialGrade', title: 'Gatunek materiału' },
+                { data: 'substituteGrade', title: 'Zamiennik' }
+            ],
+            searching: false,
+            buttons: [
+                'excel'
+            ],
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Polish.json'
+            },
+            select: {
+                info: false,
+                selector: 'tr',
+                style: 'single'
+            }
+        });
+
+        var selectedRow = null;
+
+        $('#edit-button, #delete-button').prop('disabled', true);
+
+        $('#search-table tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+
+                $(this).removeClass('selected');
+                selectedRow = null;
+                
+                $('#edit-button, #delete-button');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                selectedRow = table.row(this).data();
+            }
+
+            var isRowSelected = selectedRow !== null;
+            $('#edit-button, #delete-button').prop('disabled', !isRowSelected);
+
+            $('#edit-button, #delete-button').attr('data-product-id', isRowSelected ? selectedRow.productId : null);
+        });
+        
+        $('#edit-button').on('click', function () {
+            if (selectedRow !== null) {
+                console.log("Kliknięto Edytuj. Id produktu: " + selectedRow.productId);
+                loadUpdateProductForm(selectedRow);
+            }
+        });
+
+        $('#delete-button').on('click', function () {
+            if (selectedRow !== null) {
+                console.log("Kliknięto Usuń. Id produktu: " + selectedRow.productId);
+                // Dodaj kod obsługi usuwania
+            }
+        });
+    });
+</script>
+
+

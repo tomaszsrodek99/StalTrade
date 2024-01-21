@@ -15,7 +15,6 @@
             </span>
             <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po numerze rysunku..">
         </div>
-        <a class="btn btn-primary add-button" onclick="loadCreateProductForm()">Dodaj nowy produkt</a>
         @if (Model.Any())
         {
             <div class="text-center">
@@ -118,69 +117,18 @@
         {
             <p>Brak danych do wyświetlenia.</p>
         }
+        <a class="btn btn-primary add-button" onclick="loadCreateProductForm()">Dodaj nowy produkt</a>
     </div>
     <div id="partial-view" class="partial-view hidden col-3">
         @await Html.PartialAsync("CreateProduct", new StalTradeAPI.Dtos.ProductDto()),
     </div>
 </div>
+}
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
-        function checkUnique() {
-            var companyDrawingNumber = $('#CompanyDrawingNumber').val();
-            var productId = $('#ProductId').val();
-            console.log(companyDrawingNumber);
-            $.ajax({
-                url: 'https://localhost:7279/api/Product/IsProductUnique/' + productId + '?companyDrawingNumber=' + encodeURIComponent(companyDrawingNumber),
-                type: 'GET',
-                success: function (result) {
-                    if (!result) {
-                        $('#uniqueProductError').text('Taki produkt już istnieje.');
-                    } else {
-                        $('#uniqueProductError').text('');
-                    }
-                }
-            });
-        }
-
-        function loadCreateProductForm() {
-            var form = document.getElementById("productForm");
-            form.reset();
-            document.getElementById("productForm").action = "AddProduct";
-            var partialView = document.getElementById("partial-view");
-            partialView.style.visibility = "visible";
-            blur();
-        }
-
-        function loadUpdateProductForm(element) {
-            var form = document.getElementById("productForm");
-            form.reset();
-
-            form.action = "PutCroduct";
-
-            var itemData = element.getAttribute("data-item");
-            var itemObject = JSON.parse(itemData);
-
-            document.getElementById("ProductId").value = itemObject.productId;
-            document.getElementById("Name").value = itemObject.name;
-            document.getElementById("CompanyDrawingNumber").value = itemObject.companyDrawingNumber;
-            document.getElementById("CustomerDrawingNumber").value = itemObject.customerDrawingNumber;
-            document.getElementById("UnitOfMeasure").value = itemObject.unitOfMeasure;
-            document.getElementById("PurchaseVat").value = itemObject.purchaseVat;
-            document.getElementById("SalesVat").value = itemObject.salesVat;
-            document.getElementById("ConsumptionStandard").value = itemObject.consumptionStandard;
-            document.getElementById("Weight").value = itemObject.weight;
-            document.getElementById("ChargeProfile").value = itemObject.chargeProfile;
-            document.getElementById("MaterialGrade").value = itemObject.materialGrade;
-            document.getElementById("SubstituteGrade").value = itemObject.substituteGrade;
-
-            var partialView = document.getElementById("partial-view");
-            partialView.style.visibility = "visible";
-            blur();
-        }
-    </script>
+    <script src="~/js/product.js"></script>
 }
 

@@ -12,6 +12,7 @@ namespace StalTradeAPI.Helpers
             CreateMap<Contact, ContactDto>().ReverseMap();
             CreateMap<Company, CompanyDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<Expense, ExpenseDto>().ReverseMap();
         }
     }
 }

@@ -121,6 +121,59 @@ namespace StalTradeAPI.Migrations
                     b.ToTable("Contacts");
                 });
 
+            modelBuilder.Entity("StalTradeAPI.Models.Expense", b =>
+                {
+                    b.Property<int>("ExpenseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExpenseId"), 1L, 1);
+
+                    b.Property<decimal>("Brutto")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<string>("Contractor")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfPayment")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<decimal>("Netto")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<bool>("Paid")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("ExpenseId");
+
+                    b.ToTable("Expenses");
+                });
+
             modelBuilder.Entity("StalTradeAPI.Models.PriceHistory", b =>
                 {
                     b.Property<int>("PriceHistoryID")
@@ -176,11 +229,10 @@ namespace StalTradeAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("PurchaseVat")
-                        .IsRequired()
+                    b.Property<decimal>("PurchaseVat")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<decimal?>("SalesVat")
+                    b.Property<decimal>("SalesVat")
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("SubstituteGrade")

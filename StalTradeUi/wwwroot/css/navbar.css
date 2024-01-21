@@ -2,10 +2,12 @@
     height: 7vh;
     padding: 5px;
     z-index: 1;
-    position: relative;
+    position: sticky;
+    width: 100%;
+    top: 0;
     border-bottom: 1px solid black;
-    background-color: #1a6985; /* Dodane tło dla headera */
-    color: #fff; /* Kolor tekstu dla headera */
+    background-color: #1a6985; 
+    color: #fff; 
 }
 
 .navbar-brand {

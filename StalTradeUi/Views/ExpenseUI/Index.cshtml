@@ -1,0 +1,126 @@
+﻿@model IEnumerable<StalTradeAPI.Dtos.ExpenseDto>
+
+@{
+    ViewData["Title"] = "FixedCosts";
+    Layout = "_UserLayout";
+    var number = 1;
+}
+
+<div class="row">
+    <h2 class="text-center">Koszty</h2>
+    <div class="col-9">
+        
+        @if (Model.Any())
+        {
+            <div class="text-center">
+                <table id="search-table" class="table table-striped table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Date)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Contractor)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.InvoiceNumber)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Netto)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Brutto)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DateOfPayment)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Paid)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PaymentType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EventType)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @(
+                                number
+                                ).
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Contractor)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Netto)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Brutto)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateOfPayment)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Paid)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PaymentType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EventType)
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Actions">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-secondary update-btn" onclick="loadUpdateExpenseForm(this)" data-item='@Json.Serialize(item)' style="margin-right: 5px;">Edytuj</a>
+                                            @Html.ActionLink("Usuń", "RemoveExpense", "ExpenseUI", new { id = item.ExpenseId }, new { @class = "btn btn-danger", onclick = "return confirm('Czy na pewno chcesz usunąć rekord?');" })
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            number++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>Brak danych do wyświetlenia.</p>
+        }
+        <a class="btn btn-primary add-button" onclick="loadCreateExpenseForm()">Dodaj nowy wydatek</a>
+        </div>
+
+    <div id="partial-view" class="partial-view hidden col-3">
+        @await Html.PartialAsync("CreateExpense", new StalTradeAPI.Dtos.ExpenseDto())
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/expense.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+}

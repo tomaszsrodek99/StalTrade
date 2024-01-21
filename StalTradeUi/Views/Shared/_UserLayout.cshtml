@@ -8,11 +8,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - StalTrade</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>  
+    <script src="~/DataTables/datatables.min.js"></script>
+    <link rel="stylesheet" href="~/DataTables/datatables.min.css" />
     <link rel="icon" type="image/png" href="/img/logo.png">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
     <link rel="stylesheet" href="~/css/loading-spinner.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/form.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
@@ -40,17 +43,21 @@
     <div class="container">
         <aside class="sidebar">
             <ul>
-                <li><a href="/Home"><i class="fa-regular fa-cash-register"></i>Kasa</a></li>
                 <li><a asp-controller="CompanyUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "CompanyUI") ? "active" : "")"><i class="fa-solid fa-person"></i>Dostawcy i klienci</a></li>
-                <li><a href="/Services"><i class="fa-solid fa-magnifying-glass"></i>Magazyn</a></li>
+                <li>
+                    <a onclick="toggleSubMenu('kosztySubMenu')" class=""><i class="fa-solid"></i>Koszty</a>
+                    <ul id="kosztySubMenu" class="submenu">
+                        <li><a asp-controller="ExpenseUI" asp-action="CashRegister" class="@((ViewContext.RouteData.Values["action"] as string == "CashRegister") ? "active" : "")"><i class="fa-solid fa-cash-register"></i>Kasa</a></li>
+                        <li><a asp-controller="ExpenseUI" asp-action="FixedCosts" class="@((ViewContext.RouteData.Values["action"] as string == "FixedCosts") ? "active" : "")"><i class="fa-solid fa-bag-shopping"></i>Koszty stałe</a></li>
+                    </ul>
+                </li>
+                <li><a asp-controller="WarehouseUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "WarehouseUI") ? "active" : "")"><i class="fa-solid fa-magnifying-glass"></i>Magazyn</a></li>
                 <li><a asp-controller="ProductUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "ProductUI") ? "active" : "")"><i class="fa-solid fa-book"></i>Produkty</a></li>
                 <li><a href="/Contact"><i class="fa-solid fa-dollar-sign"></i>Sprzedaż</a></li>
                 <li><a href="/Contact"><i class="fa-solid fa-cart-shopping"></i>Zakupy</a></li>
             </ul>
-            <footer class="footer text-muted quest-footer">
-                &copy; 2023 - StalTrade
-            </footer>
         </aside>
+
         <main role="main" class="content text-center user-background">
             @RenderBody()
         </main>      
@@ -74,7 +81,7 @@
         }
         setInterval(updateClock, 1000);
 
-        updateClock();
+        updateClock();      
     </script>
 
 </body>

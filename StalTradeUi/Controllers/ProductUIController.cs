@@ -37,5 +37,69 @@ namespace StalTradeUI.Controllers
                 return View("Error");
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(ProductDto dto)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Product/CreateProduct", dto);
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("Index");
+
+                var content = await response.Content.ReadAsStringAsync();
+                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PutProduct(ProductDto dto)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PutAsJsonAsync("api/Product/UpdateProduct", dto);
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("Index");
+
+                var content = await response.Content.ReadAsStringAsync();
+                ViewBag.ErrorMessage = $"Nie udało się edytować rekordu.{response.ReasonPhrase + " " + content}";
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+        public async Task<IActionResult> RemoveProduct(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Product/DeleteProduct{id}");
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("Index");
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Nie udało się usunąć rekordu.{response.ReasonPhrase + " " + content}";
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
     }
 }

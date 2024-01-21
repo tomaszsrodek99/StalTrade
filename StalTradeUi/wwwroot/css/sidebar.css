@@ -8,6 +8,7 @@
     left: 0;
     top: 0;
     padding-top: 7vh;
+    color: #fff;
 }
 
     .sidebar ul {
@@ -49,3 +50,12 @@ a:hover {
     background-color: #5BC0DE;
     color: lightgreen;
 }
+
+.sidebar .submenu {
+    display: none;
+    padding-left: 25px;
+}
+
+    .sidebar .submenu.show {
+        display: block;
+    }

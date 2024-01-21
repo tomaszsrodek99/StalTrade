@@ -41,7 +41,7 @@ namespace StalTradeUI.Helpers
             {
                 if (IsTokenValid(token))
                 {
-                    var newToken = UpdateTokenExpiration(token, 10);
+                    var newToken = UpdateTokenExpiration(token, 60);
                     if (!string.IsNullOrEmpty(newToken))
                     {
                         var jwtCookie = new CookieOptions
@@ -49,7 +49,7 @@ namespace StalTradeUI.Helpers
                             HttpOnly = true,
                             Secure = true,
                             SameSite = SameSiteMode.Strict,
-                            Expires = DateTime.UtcNow.AddMinutes(10)
+                            Expires = DateTime.UtcNow.AddMinutes(60)
                         };
                         context.Response.Cookies.Append("JWTToken", newToken, jwtCookie);
                         AttachUserToContext(context, newToken);

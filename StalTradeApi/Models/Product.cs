@@ -6,6 +6,7 @@ namespace StalTradeAPI.Models
 {
     public class Product
     {
+        [Key]
         public int ProductId { get; set; }
         [Required]
         public string CompanyDrawingNumber { get; set; }

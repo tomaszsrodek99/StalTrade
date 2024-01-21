@@ -40,7 +40,7 @@ namespace StalTradeAPI.Controllers
 
         [HttpGet]
         [Route("IsProductUnique/{productId}", Name = "IsProductUnique")]
-        public async Task<IActionResult> IsProductUnique(int productId, string companyDrawingNumber)
+        public IActionResult IsProductUnique(int productId, string companyDrawingNumber)
         {
             return new JsonResult(_productRepository.IsProductExists(companyDrawingNumber, productId));
         }

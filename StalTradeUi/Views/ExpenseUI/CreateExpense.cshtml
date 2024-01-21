@@ -1,0 +1,82 @@
+﻿@model StalTradeAPI.Dtos.ExpenseDto
+
+<div class="text-center">
+    <form id="expenseForm" asp-controller="ExpensetUI" method="post" class="my-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input asp-for="ExpenseId" class="form-control" hidden />
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Date" class="control-label"></label>
+                    <input asp-for="Date" type="text" name="date" id="date" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Contractor" class="control-label"></label>
+                    <input asp-for="Contractor" class="form-control autocomplete-contractor" />
+                    <span asp-validation-for="Contractor" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="InvoiceNumber" class="control-label"></label>
+            <input asp-for="InvoiceNumber" class="form-control" />
+            <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <input asp-for="Description" class="form-control autocomplete-description" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Brutto" class="control-label"></label>
+                    <input asp-for="Brutto" class="form-control" type="number" min="0" max="100" step="0.1" />
+                    <span asp-validation-for="Brutto" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Netto" class="control-label"></label>
+                    <input asp-for="Netto" class="form-control" type="number" min="0" max="100" step="0.1" />
+                    <span asp-validation-for="Netto" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="DateOfPayment" class="control-label"></label>
+                    <input asp-for="DateOfPayment" class="form-control" type="date" />
+                    <span asp-validation-for="DateOfPayment" class="text-danger"></span>
+                </div>
+                <div class="col form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="Paid" /> @Html.DisplayNameFor(model => model.Paid)
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PaymentType" class="control-label"></label>
+            <input asp-for="PaymentType" class="form-control" />
+            <span asp-validation-for="PaymentType" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EventType" class="control-label"></label>
+            <input asp-for="EventType" class="form-control" />
+            <span asp-validation-for="EventType" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <div class="btn-group">
+                <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="CloseForm()">Wstecz</button>
+                <button type="submit" class="btn btn-primary">Zapisz</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $("#date").datepicker();
+</script>

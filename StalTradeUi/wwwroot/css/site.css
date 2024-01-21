@@ -129,3 +129,16 @@ pb-3 {
 .table {
     border: 2px solid black;
 }
+th:hover {
+    cursor: pointer;
+}
+
+#button-container {
+    position: fixed;
+    right: 25px;
+}
+
+button[disabled] {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
