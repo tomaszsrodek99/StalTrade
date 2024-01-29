@@ -27,12 +27,12 @@ namespace StalTradeAPI.Repositories
 
         public List<string> GetDescriptionsFromDatabase(string term)
         {
-            var matchingContractors = _context.Expenses
-                .Where(c => c.Contractor.Contains(term))
+            var matchingDescriptions = _context.Expenses
+                .Where(c => c.Description.Contains(term))
                 .Select(c => c.Description)
                 .ToList();
 
-            return matchingContractors;
+            return matchingDescriptions;
         }
     }
 }

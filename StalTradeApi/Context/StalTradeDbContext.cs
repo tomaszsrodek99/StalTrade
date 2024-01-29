@@ -11,6 +11,7 @@ namespace StalTradeAPI.Context
         public DbSet<Product>? Products { get; set; }
         public DbSet<PriceHistory>? PriceHistory { get; set; }
         public DbSet<Expense>? Expenses { get; set; }
+        public DbSet<PaymentMethod>? PaymentMethods { get; set; }
         public StalTradeDbContext(DbContextOptions options) : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Linq;
 
 namespace StalTradeAPI.Controllers
 {
@@ -11,7 +15,7 @@ namespace StalTradeAPI.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ICompanyRepository _companyRepository;
+        private readonly ICompanyRepository _companyRepository;      
         public CompanyController(IMapper mapper, ICompanyRepository companyRepository)
         {
             _mapper = mapper;
@@ -26,7 +30,7 @@ namespace StalTradeAPI.Controllers
                 var companies = await _companyRepository.GetAllCompaniesWithContactsAsync();
                 if (!companies.Any())
                 {
-                    return BadRequest("Nie znaleziono użytkowników");
+                    return BadRequest("Nie znaleziono użytkowników.");
                 }
                 var records = _mapper.Map<List<CompanyDto>>(companies);
                 return Ok(records);
@@ -56,7 +60,7 @@ namespace StalTradeAPI.Controllers
         public async Task<IActionResult> IsNIPUnique(int companyId, string nip) 
         {
             return new JsonResult(_companyRepository.IsNIPExists(nip, companyId));
-        }
+        }   
 
         [HttpPost("CreateCompany")]
         public async Task<IActionResult> CreateCompany(CompanyDto dto)
@@ -70,7 +74,7 @@ namespace StalTradeAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
+        }      
 
         [HttpPut("UpdateCompany")]
         public async Task<IActionResult> UpdateCompany(CompanyDto dto)
@@ -98,6 +102,6 @@ namespace StalTradeAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
+        }     
     }
 }

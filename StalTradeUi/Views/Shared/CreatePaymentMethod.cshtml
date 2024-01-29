@@ -1,0 +1,44 @@
+﻿@model StalTradeAPI.Models.PaymentMethod
+
+<div class="text-center row">
+    <div class="col-md-6">
+        <table class="display table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nazwa</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var method in ViewBag.Methods)
+                {
+                    <tr>
+                        <td>@method.Name</td>
+                        <td>
+                            <a class="btn btn-danger" href="CompanyUI/RemoveMethod/@method.Id" onclick="return confirm('Czy na pewno chcesz usunąć kontakt?')">Usuń</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h2>Nowa forma płatności</h2>
+        <form id="paymentMethodForm" class="my-form" asp-controller="CompanyUI" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input id="methodName" asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <span id="uniqueMethodError" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="btn-group">
+                    <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="CloseForm()">Wstecz</button>
+                    <button id="save-method-button" type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

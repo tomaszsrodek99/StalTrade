@@ -28,11 +28,14 @@ namespace StalTradeUI.Controllers
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync("api/Company/GetCompanies");
-                if (response.IsSuccessStatusCode)
+                HttpResponseMessage companies = await _httpClient.GetAsync("api/Company/GetCompanies");
+                HttpResponseMessage methods = await _httpClient.GetAsync("api/PaymentMethod/GetPaymentMethods");
+                if (companies.IsSuccessStatusCode && methods.IsSuccessStatusCode)
                 {
-                    var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
-                    return View("Index", responseDto);
+                    var companiesDto = await companies.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
+                    var methodsDto = await methods.Content.ReadFromJsonAsync<IEnumerable<PaymentMethod>>();
+                    ViewBag.Methods = methodsDto;
+                    return View("Index", companiesDto);
                 }            
                 return View("Index", new List<CompanyDto>());
             }
@@ -49,6 +52,27 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Company/CreateCompany", dto);
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("Index");
+
+                var content = await response.Content.ReadAsStringAsync();
+                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddMethod(PaymentMethod dto)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/PaymentMethod/CreatePaymentMethod", dto);
 
                 if (response.IsSuccessStatusCode)
                     return RedirectToAction("Index");
@@ -150,6 +174,27 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Contact/DeleteContact{id}");
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("Index");
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Nie udało się usunąć rekordu.{response.ReasonPhrase + " " + content}";
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+        public async Task<IActionResult> RemoveMethod(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"api/PaymentMethod/DeleteMethod{id}");
 
                 if (response.IsSuccessStatusCode)
                     return RedirectToAction("Index");

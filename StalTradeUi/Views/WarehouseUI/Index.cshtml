@@ -1,115 +1,123 @@
-﻿@model IEnumerable<StalTradeAPI.Dtos.ProductDto>
+﻿@model IEnumerable<StalTradeAPI.Dtos.CompanyDto>
+
 @{
-    ViewData["Title"] = "Warehouse";
+    ViewData["Title"] = "Companies";
     Layout = "_UserLayout";
 }
 
 <div class="row">
-    <h2 class="text-center">Magazyn</h2>  
+    <h2 class="text-center">Klienci i dostawcy</h2>
     <div class="text-center">
         <div class="input-group search-input">
-            <span class="input-group-text">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </span>
-            <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po nazwie produktu..">
+            @if (Model.Any())
+            {
+                <span class="input-group-text">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po nazwie firmy..">
+            }
             <div id="button-container">
-                <button class="btn btn-primary" onclick="loadCreateProductForm()">Dodaj nowy produkt</button>
-                <button id="edit-button" class="btn btn-secondary">Edytuj</button>
-                <button id="delete-button" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć produkt?');" }>Usuń</button>
+                <button class="btn btn-primary" onclick="loadCreateCompanyForm()">Dodaj nowy rekord</button>
+                <button id="add-contact-button" class="btn btn-warning">Dodaj nowy kontakt</button>
+                @if (Model.Any())
+                {
+                    <button id="edit-button" class="btn btn-secondary">Edytuj</button>
+                    <button id="delete-button" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć produkt?');" }>Usuń</button>
+                }
             </div>
         </div>
-        
         <table id="search-table" class="display table table-striped table-bordered table-hover">
             <thead class="thead-dark">
             </thead>
             <tbody>
+                
             </tbody>
         </table>
     </div>
 </div>
 
 <div id="partial-view" class="partial-view hidden">
-    @await Html.PartialAsync("CreateProduct", new StalTradeAPI.Dtos.ProductDto()),
+    @await Html.PartialAsync("CreateCompany", new StalTradeAPI.Dtos.CompanyDto()),
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/product.js"></script>
-}
+    <script src="~/js/company.js"></script>
+    <script>
+        var data = @Html.Raw(Json.Serialize(Model));
 
-<script>
-    var data = @Html.Raw(Json.Serialize(Model));
-
-    $(document).ready(function () {      
         var table = new DataTable('#search-table', {
             data: data,
             columns: [
-                { data: 'productId', title: 'Id', visible: false },
+                { data: 'companyID', title: 'Id', visible: false },
                 { data: 'name', title: 'Nazwa' },
-                { data: 'companyDrawingNumber', title: 'Rysunek' },
-                { data: 'customerDrawingNumber', title: 'Rysunek klienta' },
-                { data: 'unitOfMeasure', title: 'Miara' },
-                { data: 'purchaseVat', title: 'VAT zakupu' },
-                { data: 'salesVat', title: 'VAT sprzedaży' },
-                { data: 'consumptionStandard', title: 'Norma zużycia' },
-                { data: 'weight', title: 'Waga' },
-                { data: 'chargeProfile', title: 'Profil wsadu' },
-                { data: 'materialGrade', title: 'Gatunek materiału' },
-                { data: 'substituteGrade', title: 'Zamiennik' }
+                { data: 'shortName', title: 'Skrót' },
+                { data: 'address', title: 'Adres firmy' },
+                { data: 'city', title: 'Miasto' },
+                { data: 'postalCode', title: 'Kod pocztowy' },
+                { data: 'postOffice', title: 'Poczta' },
+                { data: 'nip', title: 'NIP' },
+                { data: 'paymentMethod', title: 'Forma płatności' },
+                {
+                    className: 'details-control', orderable: false, data: null, defaultContent: '', render: function (data, type, row) {
+                        return row.contacts && row.contacts.length > 0
+                            ? '<button class="show-details btn-info">Kontakty</button>'
+                            : '';
+                    }
+                }
             ],
             searching: false,
             buttons: [
-                'excel'
+                'print'
             ],
             language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Polish.json'
+                url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/pl.json'
             },
             select: {
                 info: false,
-                selector: 'tr',
+                selector: 'td:not(.details-control)',
                 style: 'single'
             }
         });
 
-        var selectedRow = null;
+        function format(data) {
+            var contacts = data.contacts;
 
-        $('#edit-button, #delete-button').prop('disabled', true);
+            var table = '<table style="margin-left:15px;" class="table subtable table-info table-bordered">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>Imię</th>' +
+                '<th>Nazwisko</th>' +
+                '<th>Stanowisko</th>' +
+                '<th>Telefon 1</th>' +
+                '<th>Telefon 2</th>' +
+                '<th>Email</th>' +
+                '<th></th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
 
-        $('#search-table tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-
-                $(this).removeClass('selected');
-                selectedRow = null;
-                
-                $('#edit-button, #delete-button');
-            } else {
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-                selectedRow = table.row(this).data();
+            for (var i = 0; i < contacts.length; i++) {
+                table += '<tr>' +
+                    '<td>' + contacts[i].firstname + '</td>' +
+                    '<td>' + contacts[i].lastname + '</td>' +
+                    '<td>' + contacts[i].position + '</td>' +
+                    '<td>' + contacts[i].phone1 + '</td>' +
+                    '<td>' + (contacts[i].phone2 || '') + '</td>' +
+                    '<td>' + contacts[i].email + '</td>' +
+                    '<td>' +
+                    '<div class="btn-group" role="group">' +
+                    '<a class="btn btn-secondary update-btn" onclick="loadUpdateContactForm(this)" data-item=\'' + JSON.stringify(contacts[i].contactID) + '\' style="margin-right: 5px;">Edytuj</a>' +
+                    '<a class="btn btn-danger" href="CompanyUI/RemoveContact/' + contacts[i].contactID + '" onclick="return confirm(\'Czy na pewno chcesz usunąć kontakt?\')">Usuń</a>' +
+                    '</div>' +
+                    '</td>' +
+                    '</tr>';
             }
 
-            var isRowSelected = selectedRow !== null;
-            $('#edit-button, #delete-button').prop('disabled', !isRowSelected);
-
-            $('#edit-button, #delete-button').attr('data-product-id', isRowSelected ? selectedRow.productId : null);
-        });
-        
-        $('#edit-button').on('click', function () {
-            if (selectedRow !== null) {
-                console.log("Kliknięto Edytuj. Id produktu: " + selectedRow.productId);
-                loadUpdateProductForm(selectedRow);
-            }
-        });
-
-        $('#delete-button').on('click', function () {
-            if (selectedRow !== null) {
-                console.log("Kliknięto Usuń. Id produktu: " + selectedRow.productId);
-                // Dodaj kod obsługi usuwania
-            }
-        });
-    });
-</script>
-
-
+            table += '</tbody></table>';
+            return table;
+        }
+    </script>
+}

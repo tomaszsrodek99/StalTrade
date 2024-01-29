@@ -19,13 +19,11 @@
 
 .my-form {
     max-width: 500px;
-    margin: 0 auto;
     padding: 10px 20px;
     background-color: #f8f9fa;
     border: 1px solid #ced4da;
     border-radius: 5px;
-    margin-bottom: 10px;
-    margin-top: 25px;
+    margin: 25px;
 }
 
 .contact-form {
@@ -98,6 +96,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#partial-view-method {
+    width: 100%;
+    padding: 15px;
 }
 
 .contact-form {

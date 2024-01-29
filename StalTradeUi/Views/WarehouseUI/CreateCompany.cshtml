@@ -3,7 +3,6 @@
 @using System.ComponentModel.DataAnnotations;
 
 <div class="text-center">
-    <h2>Dodaj firmę</h2>
     <form id="companyForm" asp-controller="CompanyUI" method="post" class="my-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input asp-for="CompanyID" class="form-control" hidden/>
@@ -47,26 +46,16 @@
         </div>
         <div class="form-group">
             <label asp-for="PaymentMethod" class="control-label"></label>
-            <select asp-for="PaymentMethod" class="form-control">
-                    @foreach (var method in ViewBag.Methods)
-                    {
-                        <option value="@method.Name">@method.Name</option>
-                    }
-            </select>
+            <select asp-for="PaymentMethod" class="form-control"></select>
             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
         </div>
         <div class="form-group">
             <div class="btn-group">
                 <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="CloseForm()">Wstecz</button>
-                <button id="add-method-button" type="button" class="btn btn-primary" style="margin-right: 15px">Nowa forma płatności</button>
-                <button id="save-company-button" type="submit" class="btn btn-primary">Zapisz</button>
+                <button type="submit" class="btn btn-primary">Zapisz</button>
             </div>
         </div>
     </form>
-</div>
-
-<div id="partial-view-method" class="partial-view hidden">
-    @await Html.PartialAsync("CreatePaymentMethod", new StalTradeAPI.Models.PaymentMethod()),
 </div>
 
 

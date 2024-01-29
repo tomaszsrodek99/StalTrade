@@ -1,19 +1,63 @@
-function checkUnique() {
-    var companyDrawingNumber = $('#CompanyDrawingNumber').val();
-    var productId = $('#ProductId').val();
-    console.log(companyDrawingNumber);
-    $.ajax({
-        url: 'https://localhost:7279/api/Product/IsProductUnique/' + productId + '?companyDrawingNumber=' + encodeURIComponent(companyDrawingNumber),
-        type: 'GET',
-        success: function (result) {
-            if (!result) {
-                $('#uniqueProductError').text('Taki produkt ju¿ istnieje.');
-            } else {
-                $('#uniqueProductError').text('');
-            }
+$(document).ready(function () {
+    var selectedRow = null;
+
+    $('#edit-button, #delete-button').prop('disabled', true);
+
+    $('#search-table tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+
+            $(this).removeClass('selected');
+            selectedRow = null;
+
+            $('#edit-button, #delete-button');
+        } else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+            selectedRow = table.row(this).data();
+        }
+
+        var isRowSelected = selectedRow !== null;
+        $('#edit-button, #delete-button').prop('disabled', !isRowSelected);
+
+        $('#edit-button, #delete-button').attr('data-product-id', isRowSelected ? selectedRow.productId : null);
+    });
+
+    $('#edit-button').on('click', function () {
+        if (selectedRow !== null) {
+            loadUpdateProductForm(selectedRow);
         }
     });
-}
+
+    var table = new DataTable('#search-table', {
+        data: data,
+        columns: [
+            { data: 'productId', title: 'Id', visible: false },
+            { data: 'name', title: 'Nazwa' },
+            { data: 'companyDrawingNumber', title: 'Rysunek' },
+            { data: 'customerDrawingNumber', title: 'Rysunek klienta' },
+            { data: 'unitOfMeasure', title: 'Miara' },
+            { data: 'purchaseVat', title: 'VAT zakupu' },
+            { data: 'salesVat', title: 'VAT sprzeda¿y' },
+            { data: 'consumptionStandard', title: 'Norma zu¿ycia' },
+            { data: 'weight', title: 'Waga' },
+            { data: 'chargeProfile', title: 'Profil wsadu' },
+            { data: 'materialGrade', title: 'Gatunek materia³u' },
+            { data: 'substituteGrade', title: 'Zamiennik' }
+        ],
+        searching: false,
+        buttons: [
+            'print'
+        ],
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/pl.json'
+        },
+        select: {
+            info: false,
+            selector: 'tr',
+            style: 'single'
+        }
+    });
+});
 
 function loadCreateProductForm() {
     var form = document.getElementById("productForm");
@@ -25,14 +69,10 @@ function loadCreateProductForm() {
 }
 
 function loadUpdateProductForm(itemObject) {
-    console.log(itemObject);
     var form = document.getElementById("productForm");
     form.reset();
 
     form.action = "PutProduct";
-
-    //var itemData = element.getAttribute("data-item");
-    //var itemObject = JSON.parse(itemData);
 
     document.getElementById("ProductId").value = itemObject.productId;
     document.getElementById("Name").value = itemObject.name;
@@ -50,4 +90,21 @@ function loadUpdateProductForm(itemObject) {
     var partialView = document.getElementById("partial-view");
     partialView.style.visibility = "visible";
     blur();
+}
+
+function checkUnique() {
+    var companyDrawingNumber = $('#CompanyDrawingNumber').val();
+    var productId = $('#ProductId').val();
+    console.log(companyDrawingNumber);
+    $.ajax({
+        url: 'https://localhost:7279/api/Product/IsProductUnique/' + productId + '?companyDrawingNumber=' + encodeURIComponent(companyDrawingNumber),
+        type: 'GET',
+        success: function (result) {
+            if (!result) {
+                $('#uniqueProductError').text('Taki produkt ju¿ istnieje.');
+            } else {
+                $('#uniqueProductError').text('');
+            }
+        }
+    });
 }

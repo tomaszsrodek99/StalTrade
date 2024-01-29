@@ -1,6 +1,7 @@
 ﻿@model StalTradeAPI.Dtos.ProductDto
 
 <div class="text-center">
+    <h2>Dodaj produkt</h2>
     <form id="productForm" asp-controller="ProductUI" method="post" class="my-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input asp-for="ProductId" class="form-control" hidden />

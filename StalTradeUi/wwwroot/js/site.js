@@ -1,8 +1,13 @@
 ﻿
 
 function CloseForm() {
-    var partialView = document.getElementById("partial-view");
-    partialView.style.visibility = "hidden";
+    var elements = document.getElementsByClassName("partial-view");
+
+    for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        element.style.visibility = "hidden";
+    }
+
     $('#blurOverlay').hide();
     $('body').removeClass('blur-overlay-visible');
 }
@@ -10,12 +15,6 @@ function CloseForm() {
 function blur() {
     $('#blurOverlay').show();
     $('body').addClass('blur-overlay-visible');
-}
-
-function CloseModal() {
-    $('#modal').modal('hide');
-    $('#blurOverlay').hide();
-    $('body').removeClass('blur-overlay-visible');
 }
 
 function PostalCodeFormat() {
@@ -36,7 +35,7 @@ function searchByName() {
     tr = table.getElementsByTagName("tr");
     console.log(tr);
     for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[1];
+        td = tr[i].getElementsByTagName("td")[0];
         if (td) {
             txtValue = td.textContent || td.innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
