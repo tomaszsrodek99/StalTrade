@@ -1,28 +1,32 @@
 ﻿@model IEnumerable<StalTradeAPI.Dtos.ExpenseDto>
 
 @{
-    ViewData["Title"] = "FixedCosts";
+    ViewData["Title"] = "Koszty";
     Layout = "_UserLayout";
+    var sum = ViewBag.BruttoExpensesUnpaid + ViewBag.BruttoExpensesPaid;
 }
 
 <div class="row">
     <h2 class="text-center">Wydatki</h2>
     <div class="text-center">
-        <div class="input-group search-input">
+        <div class="input-group search-input" style="margin-bottom: 35px">
             @if (Model.Any())
             {
                 <span class="input-group-text">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </span>
-                <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po numerze rysunku..">
-            }
+                <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po numerze faktury..">
+            }              
             <div id="button-container">
                 <button class="btn btn-primary" onclick="loadCreateExpenseForm()">Dodaj nowy wydatek</button>
                 @if (Model.Any())
                 {
                     <button id="edit-button" class="btn btn-secondary">Edytuj</button>
-                    <button id="delete-button" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć rekord?');" }>Usuń</button>
+                    <button id="delete-expense-button" class="btn btn-danger">Usuń</button>
                 }
+                <h6>Suma brutto wydatków opłaconych: @ViewBag.BruttoExpensesPaid</h6>
+                <h6>Suma brutto wydatków nieopłaconych: @ViewBag.BruttoExpensesUnpaid</h6>
+                <h6>Suma: @sum</h6>
             </div>
         </div>
         <table id="search-table" class="display table table-striped table-bordered table-hover">
@@ -47,6 +51,6 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
-        var data = @Html.Raw(Json.Serialize(Model));
+        var data = @Json.Serialize(Model);
     </script>
 }

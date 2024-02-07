@@ -4,43 +4,38 @@
     <h2>Dodaj wydatek</h2>
     <form id="expenseForm" asp-controller="ExpensetUI" method="post" class="my-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input asp-for="ExpenseId" class="form-control" hidden />
+        <input id="expenseId" asp-for="ExpenseId" class="form-control" hidden />
         <div class="form-group">
-            <div class="row">
-                <div class="col">
-                    <label asp-for="Date" class="control-label"></label>
-                    <input asp-for="Date" type="date" id="date"/>
-                    <span asp-validation-for="Date" class="text-danger"></span>
-                </div>
-                <div class="col">
-                    <label asp-for="Contractor" class="control-label"></label>
-                    <input asp-for="Contractor" class="form-control autocomplete-contractor" />
-                    <span asp-validation-for="Contractor" class="text-danger"></span>
-                </div>
-            </div>
+            <label asp-for="Date" class="control-label"></label>
+            <input asp-for="Date" type="date" id="date" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Contractor" class="control-label"></label>
+            <input id="contractor-input" asp-for="Contractor" class="form-control autocomplete-contractor" />
+            <span asp-validation-for="Contractor" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="InvoiceNumber" class="control-label"></label>
-            <input asp-for="InvoiceNumber" class="form-control" />
+            <input id="invoice-number" asp-for="InvoiceNumber" class="form-control" />
             <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Description" class="control-label"></label>
-            <input asp-for="Description" class="form-control autocomplete-description" />
+            <input id="description-input" asp-for="Description" class="form-control autocomplete-description" />
             <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <div class="form-group">
         </div>
         <div class="form-group">
             <div class="row">
                 <div class="col">
                     <label asp-for="Brutto" class="control-label"></label>
-                    <input asp-for="Brutto" class="form-control" type="number" min="0" max="100" step="0.1" />
+                    <input id="brutto" asp-for="Brutto" class="form-control" type="number" min="0" step="0.01" />
                     <span asp-validation-for="Brutto" class="text-danger"></span>
                 </div>
                 <div class="col">
                     <label asp-for="Netto" class="control-label"></label>
-                    <input asp-for="Netto" class="form-control" type="number" min="0" max="100" step="0.1" />
+                    <input id="netto" asp-for="Netto" class="form-control" type="number" min="0" step="0.01" />
                     <span asp-validation-for="Netto" class="text-danger"></span>
                 </div>
             </div>
@@ -49,25 +44,33 @@
             <div class="row">
                 <div class="col">
                     <label asp-for="DateOfPayment" class="control-label"></label>
-                    <input asp-for="DateOfPayment" class="form-control" type="date" id="dateOfPayment"/>
+                    <input asp-for="DateOfPayment" class="form-control" type="date" id="date-of-payment" />
                     <span asp-validation-for="DateOfPayment" class="text-danger"></span>
                 </div>
-                <div class="col form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" asp-for="Paid" /> @Html.DisplayNameFor(model => model.Paid)
-                    </label>
+                <div class="col">
+                    <label asp-for="Paid" class="control-label"></label>
+                    <div class="form-check my-form-check">
+                    <input class="form-checkbox-control" asp-for="Paid" type="checkbox" id="paid" asp-true-value="true" asp-false-value="false" />
+                    </div>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="PaymentType" class="control-label"></label>
-            <input asp-for="PaymentType" class="form-control" />
-            <span asp-validation-for="PaymentType" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="EventType" class="control-label"></label>
-            <input asp-for="EventType" class="form-control" />
-            <span asp-validation-for="EventType" class="text-danger"></span>
+            <div class="row">
+                <div class="col">
+                    <label asp-for="PaymentType" class="control-label"></label>
+                    <select id="payment-type" asp-for="PaymentType" class="form-control">
+                        <option value="Kasa">Kasa</option>
+                        <option value="Konto">Konto</option>
+                    </select>
+                    <span asp-validation-for="PaymentType" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <label asp-for="EventType" class="control-label"></label>
+                <input id="event-type-input" asp-for="EventType" class="form-control autocomplete-event-type" />
+                <span asp-validation-for="EventType" class="text-danger"></span>
+            </div>
         </div>
         <div class="form-group">
             <div class="btn-group">
@@ -77,8 +80,3 @@
         </div>
     </form>
 </div>
-
-<script>
-    document.getElementById('date').valueAsDate = new Date();
-    document.getElementById('dateOfPayment').valueAsDate = new Date();
-</script>

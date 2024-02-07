@@ -1,6 +1,4 @@
-﻿
-
-function CloseForm() {
+﻿function CloseForm() {
     var elements = document.getElementsByClassName("partial-view");
 
     for (var i = 0; i < elements.length; i++) {
@@ -47,76 +45,16 @@ function searchByName() {
     }
 }
 
-function toggleSubMenu(id) {
-    var submenu = document.getElementById(id);
-    submenu.classList.toggle('show');
-}
+document.addEventListener('DOMContentLoaded', function () {
+    var submenuToggle = document.getElementById('kosztySubMenuToggle');
+    var submenu = document.getElementById('kosztySubMenu');
 
-document.addEventListener('click', function (event) {
-    var target = event.target;
+    submenuToggle.addEventListener('click', function () {
+        submenu.classList.toggle('show');
+    });
 
-    // Sprawdź, czy kliknięto na nagłówek tabeli
-    if (target.tagName === 'TH' && target.parentNode.tagName === 'TR' && target.parentNode.parentNode.tagName === 'THEAD') {
-        // Znajdź tabelę, do której należy kliknięty nagłówek
-        var table = target.closest('table');
-
-        // Pobierz indeks kolumny
-        var columnIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
-
-        // Wywołaj funkcję sortującą dla znalezionej tabeli i indeksu kolumny
-        if (table && columnIndex !== -1) {
-            sortTable(table, columnIndex);
-        }
+    if (window.location.pathname.includes("/ExpenseUI/")) {
+        submenu.classList.add('show');
     }
 });
-
-function sortTable(table, columnIndex) {
-    var rows, switching, i, x, y, shouldSwitch;
-    switching = true;
-
-    // Ustal, czy sortować w porządku rosnącym czy malejącym
-    var direction = "asc";
-    if (table.getAttribute("data-sort-direction") === "asc") {
-        direction = "desc";
-    }
-
-    // Zapisz aktualny kierunek sortowania w atrybucie
-    table.setAttribute("data-sort-direction", direction);
-
-    while (switching) {
-        switching = false;
-        rows = table.rows;
-
-        for (i = 1; i < (rows.length - 1); i++) {
-            shouldSwitch = false;
-
-            // Pobierz wartości komórek do porównania
-            x = rows[i].getElementsByTagName("td")[columnIndex];
-            y = rows[i + 1].getElementsByTagName("td")[columnIndex];
-
-            // Porównaj wartości, zależnie od typu danych
-            if (direction === "asc") {
-                if (isNaN(x.innerHTML)) {
-                    shouldSwitch = x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase();
-                } else {
-                    shouldSwitch = parseFloat(x.innerHTML) > parseFloat(y.innerHTML);
-                }
-            } else if (direction === "desc") {
-                if (isNaN(x.innerHTML)) {
-                    shouldSwitch = x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase();
-                } else {
-                    shouldSwitch = parseFloat(x.innerHTML) < parseFloat(y.innerHTML);
-                }
-            }
-
-            if (shouldSwitch) {
-                // Zamień miejscami wiersze
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-                break;
-            }
-        }
-    }
-}
-
 

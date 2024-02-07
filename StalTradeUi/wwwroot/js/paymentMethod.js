@@ -1,7 +1,7 @@
-$(document).ready(function () {
+Ôªø$(document).ready(function () {
     $('#add-method-button').on('click', function () {
         loadCreateMethodForm();
-    });  
+    });
 });
 
 $(document).on('blur', '#methodName', function () {
@@ -11,7 +11,7 @@ $(document).on('blur', '#methodName', function () {
         type: 'POST',
         success: function (result) {
             if (!result) {
-                $('#uniqueMethodError').text('Taka metoda p≥atnoúci juø istnieje.');
+                $('#uniqueMethodError').text('Taka metoda p≈Çatno≈õci ju≈º istnieje.');
                 $('#save-method-button').prop('disabled', true);
             } else {
                 $('#uniqueMethodError').text('');
@@ -20,7 +20,7 @@ $(document).on('blur', '#methodName', function () {
         },
         error: function (textStatus, errorThrown) {
             console.log('AJAX error:', textStatus, errorThrown);
-            alert('Wystπpi≥ b≥πd podczas przetwarzania øadania.');
+            alert('WystƒÖpi≈Ç b≈ÇƒÖd podczas przetwarzania ≈ºadania.');
         }
     });
 });

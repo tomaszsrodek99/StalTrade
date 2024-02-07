@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
+using StalTradeAPI.Models;
 
 namespace StalTradeUI.Controllers
 {
@@ -27,9 +28,46 @@ namespace StalTradeUI.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ExpenseDto>>();
+                    ViewBag.BruttoExpensesPaid = responseDto.Where(e => e.Paid).Sum(e => e.Brutto);
+                    ViewBag.BruttoExpensesUnpaid = responseDto.Where(e => !e.Paid).Sum(e => e.Brutto);
                     return View("Index", responseDto);
                 }
                 return View("Index", new List<ExpenseDto>());
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CashRegister()
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync("api/Expense/GetExpenses");
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ExpenseDto>>();
+                    //ViewBag.BruttoExpensesPaid = responseDto.Where(e => e.Paid).Sum(e => e.Brutto);
+                    //ViewBag.BruttoExpensesUnpaid = responseDto.Where(e => !e.Paid).Sum(e => e.Brutto);
+                    // Grupowanie wydatków według miesiąca
+                    var monthlyExpenses = responseDto
+                        .GroupBy(e => e.DateOfPayment.ToString("MMMM yyyy"))
+                        .Select(group => new MonthlyExpenseViewModel
+                        {
+                            Month = group.Key,
+                            TotalBrutto = group.Sum(e => e.Brutto),
+                            Expenses = group.ToList()
+                        })
+                        .OrderByDescending(m => m.Month)
+                        .Take(12);
+
+                    return View("CashRegister", monthlyExpenses);
+                }
+
+                return View("CashRegister", new List<MonthlyExpenseViewModel>());
             }
             catch (Exception ex)
             {
@@ -61,7 +99,7 @@ namespace StalTradeUI.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> PutProduct(ProductDto dto)
+        public async Task<IActionResult> PutExpense(ExpenseDto dto)
         {
             try
             {

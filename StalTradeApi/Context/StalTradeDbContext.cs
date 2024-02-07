@@ -24,6 +24,14 @@ namespace StalTradeAPI.Context
                 .HasMany(c => c.Contacts)
                 .WithOne(e => e.Company)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.Date)
+                .HasColumnType("date");
+
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.DateOfPayment)
+                .HasColumnType("date");
         }
     }
 

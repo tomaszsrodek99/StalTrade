@@ -20,7 +20,7 @@
                 @if (Model.Any())
                 {
                     <button id="edit-button" class="btn btn-secondary">Edytuj</button>
-                    <button id="delete-button" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć produkt?');" }>Usuń</button>
+                    <button id="delete-product-button" class="btn btn-danger">Usuń</button>
                 }
             </div>
         </div>
@@ -44,8 +44,7 @@
     <script src="~/js/product.js"></script>
     <script>
         var data = @Html.Raw(Json.Serialize(Model));  
-        console.log(data);
-        </script>
+    </script>
 }
 
 

@@ -1,7 +1,7 @@
-$(document).ready(function () {
+Ôªø$(document).ready(function () {
     var selectedRow = null;
 
-    $('#edit-button, #delete-button').prop('disabled', true);
+    $('#edit-button, #delete-product-button').prop('disabled', true);
 
     $('#search-table tbody').on('click', 'tr', function () {
         if ($(this).hasClass('selected')) {
@@ -9,7 +9,7 @@ $(document).ready(function () {
             $(this).removeClass('selected');
             selectedRow = null;
 
-            $('#edit-button, #delete-button');
+            $('#edit-button, #delete-product-button');
         } else {
             table.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
@@ -17,14 +17,22 @@ $(document).ready(function () {
         }
 
         var isRowSelected = selectedRow !== null;
-        $('#edit-button, #delete-button').prop('disabled', !isRowSelected);
+        $('#edit-button, #delete-product-button').prop('disabled', !isRowSelected);
 
-        $('#edit-button, #delete-button').attr('data-product-id', isRowSelected ? selectedRow.productId : null);
+        $('#edit-button, #delete-product-button').attr('data-product-id', isRowSelected ? selectedRow.productId : null);
     });
 
     $('#edit-button').on('click', function () {
         if (selectedRow !== null) {
             loadUpdateProductForm(selectedRow);
+        }
+    });
+
+    $('#delete-product-button').on('click', function () {
+        if (selectedRow !== null) {
+            if (confirm('Czy na pewno chcesz usunƒÖƒá rekord?')) {
+                window.location.href = '/ProductUI/RemoveProduct/' + selectedRow.productId;
+            }
         }
     });
 
@@ -37,16 +45,17 @@ $(document).ready(function () {
             { data: 'customerDrawingNumber', title: 'Rysunek klienta' },
             { data: 'unitOfMeasure', title: 'Miara' },
             { data: 'purchaseVat', title: 'VAT zakupu' },
-            { data: 'salesVat', title: 'VAT sprzedaøy' },
-            { data: 'consumptionStandard', title: 'Norma zuøycia' },
+            { data: 'salesVat', title: 'VAT sprzeda≈ºy' },
+            { data: 'consumptionStandard', title: 'Norma zu≈ºycia' },
             { data: 'weight', title: 'Waga' },
             { data: 'chargeProfile', title: 'Profil wsadu' },
-            { data: 'materialGrade', title: 'Gatunek materia≥u' },
+            { data: 'materialGrade', title: 'Gatunek materia≈Çu' },
             { data: 'substituteGrade', title: 'Zamiennik' }
         ],
         searching: false,
+        dom: 'Blrtip',
         buttons: [
-            'print'
+            'print',
         ],
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/pl.json'
@@ -55,7 +64,11 @@ $(document).ready(function () {
             info: false,
             selector: 'tr',
             style: 'single'
-        }
+        },
+        pageLength: 10,
+        lengthMenu: [10, 25, 50],
+        scrollY: '300px',
+        scrollCollapse: true
     });
 });
 
@@ -95,13 +108,12 @@ function loadUpdateProductForm(itemObject) {
 function checkUnique() {
     var companyDrawingNumber = $('#CompanyDrawingNumber').val();
     var productId = $('#ProductId').val();
-    console.log(companyDrawingNumber);
     $.ajax({
         url: 'https://localhost:7279/api/Product/IsProductUnique/' + productId + '?companyDrawingNumber=' + encodeURIComponent(companyDrawingNumber),
         type: 'GET',
         success: function (result) {
             if (!result) {
-                $('#uniqueProductError').text('Taki produkt juø istnieje.');
+                $('#uniqueProductError').text('Taki produkt ju≈º istnieje.');
             } else {
                 $('#uniqueProductError').text('');
             }

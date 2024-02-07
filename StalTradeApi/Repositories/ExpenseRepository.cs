@@ -34,5 +34,15 @@ namespace StalTradeAPI.Repositories
 
             return matchingDescriptions;
         }
+
+        public List<string> GetEventTypesFromDatabase(string term)
+        {
+            var matchingEventTypes = _context.Expenses
+                .Where(c => c.EventType.Contains(term))
+                .Select(c => c.EventType)
+                .ToList();
+
+            return matchingEventTypes;
+        }
     }
 }

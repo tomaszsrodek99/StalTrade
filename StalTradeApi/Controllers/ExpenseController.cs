@@ -80,18 +80,41 @@ namespace StalTradeAPI.Controllers
             }
         }
 
+        [HttpPost("ChangePaidStatus/{id}")]
+        public async Task<IActionResult> ChangePaidStatus(int id)
+        {
+            try
+            {
+                var expense = await _expenseRepository.GetAsync(id);
+                expense.Paid = true;
+                await _expenseRepository.UpdateAsync(expense);
+                return Ok("Pomyślnie zaktualizowano status.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("AutocompleteContractor")]
         public IActionResult AutocompleteContractor(string term)
         {
             var contractors =  _expenseRepository.GetContractorsFromDatabase(term);
-            return Json(contractors);
+            return Json(contractors.Distinct());
         }
 
-        [HttpPost("AutocompleteDescription")]
+        [HttpGet("AutocompleteDescription")]
         public IActionResult AutocompleteDescription(string term)
         {
             var descriptions = _expenseRepository.GetDescriptionsFromDatabase(term);
-            return Json(descriptions);
+            return Json(descriptions.Distinct());
+        }
+
+        [HttpGet("AutocompleteEventType")]
+        public IActionResult AutocompleteEventType(string term)
+        {
+            var eventTypes = _expenseRepository.GetEventTypesFromDatabase(term);
+            return Json(eventTypes.Distinct());
         }
     }
 }

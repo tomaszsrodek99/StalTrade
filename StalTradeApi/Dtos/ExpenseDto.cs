@@ -8,6 +8,7 @@ namespace StalTradeAPI.Dtos
     {
         public int ExpenseId { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Data")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Date { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Dostawca"), MaxLength(64, ErrorMessage = "Maksymalna długość to 64 litery."), MinLength(2, ErrorMessage = "Minimalna długość to 2 litery."),
         RegularExpression(@"^[A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9 ]*$", ErrorMessage = "Pole musi zaczynać się od dużej litery.")]
@@ -25,14 +26,14 @@ namespace StalTradeAPI.Dtos
         [Column(TypeName = "decimal(5, 2)")]
         public decimal Brutto { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Termin płatności")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DateOfPayment { get; set; }
-        [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Zapłacono")]
+        [Display(Name = "Zapłacono?")]
         public bool Paid { get; set; }
-        [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Płatność"), RegularExpression(@"^[A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9 ]*$", ErrorMessage = "Pole musi zaczynać się od dużej litery."),
-        MaxLength(64, ErrorMessage = "Maksymalna długość to 64 litery."), MinLength(2, ErrorMessage = "Minimalna długość to 2 litery.")]
+        [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Płatność")]
         public string PaymentType { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Typ zdarzenia"), MaxLength(64, ErrorMessage = "Maksymalna długość to 64 litery."),
-        MinLength(2, ErrorMessage = "Minimalna długość to 2 litery."),RegularExpression(@"^[A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9 ]*$", ErrorMessage = "Pole musi zaczynać się od dużej litery.")]
+        MinLength(2, ErrorMessage = "Minimalna długość to 2 litery."), RegularExpression(@"^[A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9 ]*$", ErrorMessage = "Pole musi zaczynać się od dużej litery.")]
         public string EventType { get; set; }
     }
 }

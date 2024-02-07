@@ -1,5 +1,4 @@
-// -*- coding: utf-8 -*-
-$(document).ready(function () {
+ï»¿$(document).ready(function () {
     var selectedRow = null;
     $('#edit-company-button, #delete-company-button, #add-contact-button').prop('disabled', true);
 
@@ -46,6 +45,14 @@ $(document).ready(function () {
         }
     });
 
+    $('#delete-company-button').on('click', function () {
+        if (selectedRow !== null) {
+            if (confirm('Czy na pewno chcesz usunÄ…Ä‡ rekord?')) {
+                window.location.href = '/CompanyUI/RemoveCompany/' + selectedRow.companyID;
+            }
+        }
+    });
+
     $('#NIP').on('blur', function () {
         var nip = $('#NIP').val();
         var companyId = $('#CompanyID').val();
@@ -62,27 +69,26 @@ $(document).ready(function () {
                 }
             },
             error: function (textStatus, errorThrown) {
-                console.log('AJAX error:', textStatus, errorThrown);
-                alert('Wyst¹pi³ b³¹d podczas przetwarzania ¿adania.');
+                alert('WystÄ…piÅ‚ bÅ‚Ä…d podczas przetwarzania Å¼adania.' + textStatus + ' ' + errorThrown);
             }
         });
     });
-    
+
     var table = new DataTable('#search-table', {
         data: data,
         language: {
-            url: '/js/pl.json'
+            url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/pl.json'
         },
         columns: [
             { data: 'companyID', title: 'Id', visible: false },
             { data: 'name', title: 'Nazwa', class: 'selectable-td' },
-            { data: 'shortName', title: 'Skrot', class: 'selectable-td' },
+            { data: 'shortName', title: 'SkrÃ³t', class: 'selectable-td' },
             { data: 'address', title: 'Adres firmy', class: 'selectable-td' },
             { data: 'city', title: 'Miasto', class: 'selectable-td' },
             { data: 'postalCode', title: 'Kod pocztowy', class: 'selectable-td' },
             { data: 'postOffice', title: 'Poczta', class: 'selectable-td' },
             { data: 'nip', title: 'NIP', class: 'selectable-td' },
-            { data: 'paymentMethod', title: "Forma p³atnoœci", class: 'selectable-td' },
+            { data: 'paymentMethod', title: "Forma pÅ‚atnoÅ›ci", class: 'selectable-td' },
             {
                 className: 'details-control', orderable: false, data: null, defaultContent: '', render: function (data, type, row) {
                     return row.contacts && row.contacts.length > 0
@@ -92,14 +98,13 @@ $(document).ready(function () {
             }
         ],
         searching: false,
-        buttons: [
-            'print'
-        ],       
         select: {
             info: false,
             selector: 'td.selectable-td',
             style: 'single'
-        }
+        },
+        scrollY: '300px',
+        scrollCollapse: true
     });
 });
 
@@ -109,7 +114,7 @@ function format(data) {
     var table = '<table class="table subtable table-info table-bordered">' +
         '<thead>' +
         '<tr>' +
-        '<th>Imiê</th>' +
+        '<th>ImiÄ™</th>' +
         '<th>Nazwisko</th>' +
         '<th>Stanowisko</th>' +
         '<th>Telefon 1</th>' +
@@ -131,7 +136,7 @@ function format(data) {
             '<td>' +
             '<div class="btn-group" role="group">' +
             '<a class="btn btn-secondary update-btn" onclick="loadUpdateContactForm(this)" data-item=\'' + JSON.stringify(contacts[i]) + '\' style="margin-right: 5px;">Edytuj</a>' +
-            '<a class="btn btn-danger" href="CompanyUI/RemoveContact/' + contacts[i].contactID + '" onclick="return confirm(\'Czy na pewno chcesz usun¹æ kontakt?\')">Usuñ</a>' +
+            '<a class="btn btn-danger" href="RemoveContact/' + contacts[i].contactID + '" onclick="return confirm(\'Czy na pewno chcesz usunÄ…Ä‡ kontakt?\')">UsuÅ„</a>' +
             '</div>' +
             '</td>' +
             '</tr>';
@@ -206,5 +211,7 @@ function loadUpdateContactForm(element) {
     partialView.style.visibility = "visible";
     blur();
 }
+
+
 
 

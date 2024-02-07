@@ -35,7 +35,7 @@ namespace StalTradeAPI.Controllers
         }
 
         [HttpPost("MethodExists")]
-        public async Task<IActionResult> MethodExists(string request)
+        public IActionResult MethodExists(string request)
         {
             return new JsonResult(_paymentMethodRepository.MethodExists(request));
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StalTradeAPI.Context;
 
@@ -11,9 +12,10 @@ using StalTradeAPI.Context;
 namespace StalTradeAPI.Migrations
 {
     [DbContext(typeof(StalTradeDbContext))]
-    partial class StalTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240205173347_update_date_columns_repair")]
+    partial class update_date_columns_repair
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

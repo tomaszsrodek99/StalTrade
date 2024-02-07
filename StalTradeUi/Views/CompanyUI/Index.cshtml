@@ -22,7 +22,7 @@
                 @if (Model.Any())
                 {
                     <button id="edit-company-button" class="btn btn-secondary">Edytuj</button>
-                    <button id="delete-company-button" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć produkt?');" }>Usuń</button>
+                    <button id="delete-company-button" class="btn btn-danger">Usuń</button>
                 }
             </div>
         </div>
@@ -46,7 +46,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script charset="utf-8" src="~/js/company.js"></script>
+    <script src="~/js/company.js"></script>
     <script src="~/js/paymentMethod.js"></script>
     <script>
         var data = @Json.Serialize(Model);

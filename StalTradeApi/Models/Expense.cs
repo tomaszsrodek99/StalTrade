@@ -9,6 +9,7 @@ namespace StalTradeAPI.Models
         [Key]
         public int ExpenseId { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         [Required, MaxLength(64), MinLength(2)]
         public string Contractor { get; set; }
@@ -23,6 +24,7 @@ namespace StalTradeAPI.Models
         [Column(TypeName = "decimal(5, 2)")]
         public decimal Brutto { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime DateOfPayment { get; set; }
         [Required]
         public bool Paid { get; set; }

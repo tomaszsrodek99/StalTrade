@@ -6,5 +6,6 @@ namespace StalTradeAPI.Interfaces
     {
         List<string> GetContractorsFromDatabase(string term);
         List<string> GetDescriptionsFromDatabase(string term);
+        List<string> GetEventTypesFromDatabase(string term);
     }
 }

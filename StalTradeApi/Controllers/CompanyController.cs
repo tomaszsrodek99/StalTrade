@@ -57,7 +57,7 @@ namespace StalTradeAPI.Controllers
 
         [HttpGet]
         [Route("IsNIPUnique/{companyId}", Name = "IsNIPUnique")]
-        public async Task<IActionResult> IsNIPUnique(int companyId, string nip) 
+        public IActionResult IsNIPUnique(int companyId, string nip) 
         {
             return new JsonResult(_companyRepository.IsNIPExists(nip, companyId));
         }   

@@ -53,9 +53,19 @@ a:hover {
 
 .sidebar .submenu {
     display: none;
-    padding-left: 25px;
 }
 
     .sidebar .submenu.show {
         display: block;
+    }
+
+.sidebar .submenu li a {
+    padding-left: 25px;
+}
+
+    .sidebar .submenu li {
+        border-bottom: 2px solid #444;
+    }
+    .sidebar .submenu ul {
+        border-bottom: 2px solid #444;
     }

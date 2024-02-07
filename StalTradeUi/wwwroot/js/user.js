@@ -1,15 +1,15 @@
-function scheduleTokenExpiration(token) {
+ï»¿function scheduleTokenExpiration(token) {
     const tokenData = parseJwt(token);
     if (tokenData && tokenData.exp) {
-        const tokenExpiration = new Date(tokenData.exp * 1000); //Przekszta³æ `exp` w tokenie na datê
+        const tokenExpiration = new Date(tokenData.exp * 1000); //PrzeksztaÅ‚Ä‡ `exp` w tokenie na datÄ™
 
-        const countdownInterval = 1000; //Interwa³ odœwie¿ania
+        const countdownInterval = 1000;
 
         const countdown = setInterval(function () {
             const remainingTime = tokenExpiration - new Date();
 
             if (remainingTime <= 0) {
-                clearInterval(countdown); //Wy³¹cz odliczanie po wygaœniêciu tokenu
+                clearInterval(countdown); //WyÅ‚Ä…cz po zakoÅ„czeniu odliczania
                 handleTokenExpiration();
             }
         }, countdownInterval);

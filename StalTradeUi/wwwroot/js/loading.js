@@ -9,7 +9,7 @@ function hideLoadingIcon() {
     $('body').removeClass('blur-overlay-visible');
 }
 
-let shouldShowLoading = false; 
+let shouldShowLoading = false;
 
 function loading() {
     if (shouldShowLoading) {
@@ -29,7 +29,7 @@ function loading() {
 }
 
 window.addEventListener('beforeunload', () => {
-    shouldShowLoading = true;   
+    shouldShowLoading = true;
     loading();
 });
 
