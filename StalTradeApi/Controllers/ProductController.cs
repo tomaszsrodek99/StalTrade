@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
-using StalTradeAPI.Repositories;
 
 namespace StalTradeAPI.Controllers
 {

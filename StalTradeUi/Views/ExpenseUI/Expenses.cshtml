@@ -1,0 +1,114 @@
+﻿@model IEnumerable<StalTradeAPI.Dtos.ExpenseDto>
+
+@{
+    ViewData["Title"] = "Koszty";
+    Layout = "_UserLayout";
+    var sum = ViewBag.BruttoExpensesUnpaid + ViewBag.BruttoExpensesPaid;
+}
+<h1>Koszty</h1>
+<div>
+    <h6>Suma wydatków opłaconych: @ViewBag.BruttoExpensesPaid zł</h6>
+    <h6>Suma wydatków nieopłaconych: @ViewBag.BruttoExpensesUnpaid zł</h6>
+    <h6>Suma: @sum zł</h6>
+</div>
+<div class="text-center">
+    <div class="input-group search-input float-start">
+        <span class="input-group-text">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po numerze faktury..">
+    </div>
+    <div class="position-float-right">
+        <button id="add-expense-button" class="btn btn-primary" onclick="loadCreateExpenseForm()">Dodaj nowy wydatek</button>
+        <button id="edit-expense-button" class="btn btn-secondary">Edytuj</button>
+        <button id="delete-expense-button" class="btn btn-danger">Usuń</button>
+    </div>
+    @if (Model.Any())
+    {
+        <table id="search-table" class="display table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th hidden></th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceNumber)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.Date)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.Contractor)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.Description)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.Netto)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.Brutto)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.DateOfPayment)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.Paid)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.PaymentType)</th>
+                    <th style="display: none;">@Html.DisplayNameFor(modelItem => modelItem.EventType)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td id="expenseId-@item.ExpenseId" hidden>
+                            @Html.DisplayFor(modelItem => item.ExpenseId)
+                        </td>
+                        <td id="invoice-number-@item.ExpenseId" class="selectable-td">
+                            @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                        </td>
+                        <td id="date-@item.ExpenseId" class="selectable-td">
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td id="contractor-@item.ExpenseId" class="selectable-td">
+                            @Html.DisplayFor(modelItem => item.Contractor)
+                        </td>
+                        <td id="description-@item.ExpenseId" class="selectable-td">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td id="netto-@item.ExpenseId" class="selectable-td">
+                            @Html.DisplayFor(modelItem => item.Netto)
+                        </td>
+                        <td id="brutto-@item.ExpenseId" class="selectable-td">
+                            @Html.DisplayFor(modelItem => item.Brutto)
+                        </td>
+                        <td id="date-of-payment-@item.ExpenseId" class="selectable-td">
+                            @Html.DisplayFor(modelItem => item.DateOfPayment)
+                        </td>
+                        <td id="paid-@item.ExpenseId" class="selectable-td">
+                            <input type="checkbox" id="paid-checkbox-@item.ExpenseId" value="@item.ExpenseId" @(item.Paid ? "checked" : "") disabled>
+                        </td>
+                        <td id="payment-type-@item.ExpenseId" class="selectable-td">
+                            @Html.DisplayFor(modelItem => item.PaymentType)
+                        </td>
+                        <td id="event-type-@item.ExpenseId" hidden>
+                            @Html.DisplayFor(modelItem => item.EventType)
+                        </td>
+                        <td class="payment-control">
+                            @if (!item.Paid)
+                            {
+                                <button id="mark-as-paid-button-@item.ExpenseId" class="change-status btn btn-info" onclick="updateStatus(@item.ExpenseId)">Zapłać</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Brak zapisanych wydatków w bazie danych.</p>
+    }
+</div>
+
+<div id="partial-view-expense" class="partial-view hidden">
+    @await Html.PartialAsync("_CreateExpense", new StalTradeAPI.Dtos.ExpenseDto())
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/expense.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        var data = @Json.Serialize(Model);
+    </script>
+}

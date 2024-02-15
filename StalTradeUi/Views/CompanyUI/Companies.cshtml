@@ -1,0 +1,106 @@
+﻿@model IEnumerable<StalTradeAPI.Dtos.CompanyDto>
+
+@{
+    ViewData["Title"] = "Firmy";
+    Layout = "_UserLayout";
+}
+
+
+<h2 class="text-center">Firmy</h2>
+<div class="text-center">
+    <div class="input-group search-input">
+        <span class="input-group-text">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po nazwie firmy..">
+        <div id="button-container">
+            <button id="add-company-button" class="btn btn-primary">Dodaj nową firmę</button>
+            <button id="add-contact-button" class="btn btn-warning">Dodaj nowy kontakt</button>
+            <button id="edit-company-button" class="btn btn-secondary">Edytuj</button>
+            <button id="delete-company-button" class="btn btn-danger">Usuń</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            @if (Model.Any())
+            {
+                <table id="search-table" class="display table table-striped table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th hidden></th>
+                            <th>@Html.DisplayNameFor(modelItem => modelItem.Name)</th>
+                            <th>@Html.DisplayNameFor(modelItem => modelItem.ShortName)</th>
+                            <th>@Html.DisplayNameFor(modelItem => modelItem.Address)</th>
+                            <th>@Html.DisplayNameFor(modelItem => modelItem.City)</th>
+                            <th>@Html.DisplayNameFor(modelItem => modelItem.PostalCode)</th>
+                            <th>@Html.DisplayNameFor(modelItem => modelItem.PostOffice)</th>
+                            <th>@Html.DisplayNameFor(modelItem => modelItem.NIP)</th>
+                            <th>@Html.DisplayNameFor(modelItem => modelItem.PaymentMethod)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td id="countryId-@item.CompanyID" hidden>
+                                    @Html.DisplayFor(modelItem => item.CompanyID)
+                                </td>
+                                <td id="name-@item.CompanyID" class="selectable-td">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td id="short-name-@item.CompanyID" class="selectable-td">
+                                    @Html.DisplayFor(modelItem => item.ShortName)
+                                </td>
+                                <td id="address-@item.CompanyID" class="selectable-td">
+                                    @Html.DisplayFor(modelItem => item.Address)
+                                </td>
+                                <td id="city-@item.CompanyID" class="selectable-td">
+                                    @Html.DisplayFor(modelItem => item.City)
+                                </td>
+                                <td id="postal-code-@item.CompanyID" class="selectable-td">
+                                    @Html.DisplayFor(modelItem => item.PostalCode)
+                                </td>
+                                <td id="post-office-@item.CompanyID" class="selectable-td">
+                                    @Html.DisplayFor(modelItem => item.PostOffice)
+                                </td>
+                                <td id="nip-@item.CompanyID" class="selectable-td">
+                                    @Html.DisplayFor(modelItem => item.NIP)
+                                </td>
+                                <td id="payment-method-@item.CompanyID" class="selectable-td">
+                                    @Html.DisplayFor(modelItem => item.PaymentMethod)
+                                </td>
+                                <td>
+                                    @if (item.Contacts.Count() != 0)
+                                    {
+                                        <button class="show-contacts btn-info" data-item='@Html.Raw(Json.Serialize(item.Contacts))'>Kontakty</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Brak zapisanych firm w bazie danych.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="partial-view-company" class="partial-view hidden">
+    @await Html.PartialAsync("_CreateCompany", new StalTradeAPI.Dtos.CompanyDto()),
+</div>
+<div id="partial-view-contact" class="partial-view hidden">
+    @await Html.PartialAsync("_CreateContact", new StalTradeAPI.Dtos.ContactDto()),
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/company.js"></script>
+    <script src="~/js/paymentMethod.js"></script>
+}
+

@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
-using StalTradeAPI.Repositories;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace StalTradeAPI.Controllers
 {

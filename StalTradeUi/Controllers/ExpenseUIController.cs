@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
-using StalTradeAPI.Models;
 
 namespace StalTradeUI.Controllers
 {
@@ -30,9 +29,9 @@ namespace StalTradeUI.Controllers
                     var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ExpenseDto>>();
                     ViewBag.BruttoExpensesPaid = responseDto.Where(e => e.Paid).Sum(e => e.Brutto);
                     ViewBag.BruttoExpensesUnpaid = responseDto.Where(e => !e.Paid).Sum(e => e.Brutto);
-                    return View("Index", responseDto);
+                    return View("Expenses", responseDto);
                 }
-                return View("Index", new List<ExpenseDto>());
+                return View("Expenses", new List<ExpenseDto>());
             }
             catch (Exception ex)
             {
@@ -47,12 +46,16 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.GetAsync("api/Expense/GetExpenses");
+                HttpResponseMessage responseDeposit = await _httpClient.GetAsync("api/Expense/GetDeposites");
+
                 if (response.IsSuccessStatusCode)
                 {
                     var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ExpenseDto>>();
-                    //ViewBag.BruttoExpensesPaid = responseDto.Where(e => e.Paid).Sum(e => e.Brutto);
-                    //ViewBag.BruttoExpensesUnpaid = responseDto.Where(e => !e.Paid).Sum(e => e.Brutto);
-                    // Grupowanie wydatków według miesiąca
+                    responseDto = responseDto.OrderBy(x => x.DateOfPayment);
+                    var depositesDto = await responseDeposit.Content.ReadFromJsonAsync<IEnumerable<DepositDto>>();
+                    ViewData["Deposites"] = depositesDto;
+                    ViewData["Cash"] = depositesDto.Select(x=>x.Cash).Sum() - responseDto.Where(x => x.Paid == true).Select(x => x.Brutto).Sum();
+
                     var monthlyExpenses = responseDto
                         .GroupBy(e => e.DateOfPayment.ToString("MMMM yyyy"))
                         .Select(group => new MonthlyExpenseViewModel
@@ -97,7 +100,6 @@ namespace StalTradeUI.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<IActionResult> PutExpense(ExpenseDto dto)
         {
@@ -118,6 +120,29 @@ namespace StalTradeUI.Controllers
                 return View("Error");
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddDeposit(DepositDto deposit)
+        {
+            try
+            {
+                deposit.Date = DateTime.Now;
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Expense/CreateDeposit", deposit);
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("CashRegister");
+
+                var content = await response.Content.ReadAsStringAsync();
+                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
         public async Task<IActionResult> RemoveExpense(int id)
         {
             try
@@ -126,6 +151,27 @@ namespace StalTradeUI.Controllers
 
                 if (response.IsSuccessStatusCode)
                     return RedirectToAction("FixedCosts");
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Nie udało się usunąć rekordu.{response.ReasonPhrase + " " + content}";
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+        public async Task<IActionResult> RemoveDeposit(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Expense/DeleteDeposit{id}");
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("CashRegister");
                 else
                 {
                     var content = await response.Content.ReadAsStringAsync();

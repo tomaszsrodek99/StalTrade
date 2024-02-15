@@ -7,12 +7,10 @@ namespace StalTradeAPI.Repositories
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        private IConfiguration _config;
         private readonly StalTradeDbContext _context;
-        public ProductRepository(StalTradeDbContext context, IConfiguration configuration) : base(context)
+        public ProductRepository(StalTradeDbContext context) : base(context)
         {
             _context = context;
-            _config = configuration;
         }
         public async Task<IEnumerable<Product>> GetAllProductWithPricesAsync()
         {

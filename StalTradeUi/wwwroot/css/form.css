@@ -52,7 +52,7 @@
     }
 
     .my-form input[type="number"] {
-        width: 70px;
+        width: 100px;
         border: 1px solid #ced4da;
         border-radius: 5px;
         margin: auto;
@@ -112,4 +112,8 @@
 .my-form-check {
     padding-left: 0;
     padding-top: 5px;
+}
+
+.form-container {
+    padding: 10px;
 }

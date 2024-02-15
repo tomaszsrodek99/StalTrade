@@ -1,34 +1,40 @@
 ﻿$(document).ready(function () {
     var selectedRow = null;
+
     $('#edit-company-button, #delete-company-button, #add-contact-button').prop('disabled', true);
 
-    $('#search-table tbody').on('click', 'td.selectable-td', function () {
-        if ($(this).hasClass('selected')) {
-            $(this).removeClass('selected');
+    $('#search-table tbody').on('click', 'td.selectable-td', function (e) {
+        e.stopPropagation();
+
+        var currentRow = $(this).closest('tr');
+
+        if (currentRow.hasClass('selected')) {
+            currentRow.removeClass('selected');
             selectedRow = null;
             $('#edit-company-button, #delete-company-button, #add-contact-button').prop('disabled', true);
         } else {
-            table.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-            selectedRow = table.row(this).data();
+            table.rows().deselect();
+            currentRow.addClass('selected');
+            selectedRow = table.row(currentRow).data();
         }
 
         var isRowSelected = selectedRow !== null;
         $('#edit-company-button, #delete-company-button, #add-contact-button').prop('disabled', !isRowSelected);
-        $('#edit-company-button, #delete-company-button, #add-contact-button').attr('data-company-id', isRowSelected ? selectedRow.companyID : null);
+        $('#edit-company-button, #delete-company-button, #add-contact-button').attr('data-company-id', isRowSelected ? selectedRow[0] : null);
     });
-    $('#search-table tbody').on('click', 'button.show-details', function () {
+    $('#search-table tbody').on('click', 'button.show-contacts', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
-
+        var contactsData = $(this).data('item');
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
         } else {
-            row.child(format(row.data())).show();
+            row.child(showContacts(contactsData)).show();
             tr.addClass('shown');
         }
     });
+
     $('#add-company-button').on('click', function () {
         loadCreateCompanyForm();
     });
@@ -72,46 +78,27 @@
                 alert('Wystąpił błąd podczas przetwarzania żadania.' + textStatus + ' ' + errorThrown);
             }
         });
-    });
+    }); 
 
     var table = new DataTable('#search-table', {
-        data: data,
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/pl.json'
         },
-        columns: [
-            { data: 'companyID', title: 'Id', visible: false },
-            { data: 'name', title: 'Nazwa', class: 'selectable-td' },
-            { data: 'shortName', title: 'Skrót', class: 'selectable-td' },
-            { data: 'address', title: 'Adres firmy', class: 'selectable-td' },
-            { data: 'city', title: 'Miasto', class: 'selectable-td' },
-            { data: 'postalCode', title: 'Kod pocztowy', class: 'selectable-td' },
-            { data: 'postOffice', title: 'Poczta', class: 'selectable-td' },
-            { data: 'nip', title: 'NIP', class: 'selectable-td' },
-            { data: 'paymentMethod', title: "Forma płatności", class: 'selectable-td' },
-            {
-                className: 'details-control', orderable: false, data: null, defaultContent: '', render: function (data, type, row) {
-                    return row.contacts && row.contacts.length > 0
-                        ? '<button class="show-details btn-info">Kontakty</button>'
-                        : '';
-                }
-            }
-        ],
         searching: false,
+        dom: 'Blrtip',
         select: {
             info: false,
             selector: 'td.selectable-td',
             style: 'single'
         },
-        scrollY: '300px',
+        pageLength: 10,
+        lengthMenu: [10, 25, 50],
+        scrollY: '800px',
         scrollCollapse: true
     });
 });
-
-function format(data) {
-    var contacts = data.contacts;
-
-    var table = '<table class="table subtable table-info table-bordered">' +
+function showContacts(data) {
+    var table = '<table class="table subtable table-info table-bordered table-hover">' +
         '<thead>' +
         '<tr>' +
         '<th>Imię</th>' +
@@ -125,18 +112,19 @@ function format(data) {
         '</thead>' +
         '<tbody>';
 
-    for (var i = 0; i < contacts.length; i++) {
+    for (var i = 0; i < data.length; i++) {
         table += '<tr>' +
-            '<td>' + contacts[i].firstname + '</td>' +
-            '<td>' + contacts[i].lastname + '</td>' +
-            '<td>' + contacts[i].position + '</td>' +
-            '<td>' + contacts[i].phone1 + '</td>' +
-            '<td>' + (contacts[i].phone2 || '-') + '</td>' +
-            '<td>' + contacts[i].email + '</td>' +
+            '<td hidden>' + data[i].countryID + '</td>' +
+            '<td>' + data[i].firstname + '</td>' +
+            '<td>' + data[i].lastname + '</td>' +
+            '<td>' + data[i].position + '</td>' +
+            '<td>' + data[i].phone1 + '</td>' +
+            '<td>' + (data[i].phone2 || '-') + '</td>' +
+            '<td>' + data[i].email + '</td>' +
             '<td>' +
             '<div class="btn-group" role="group">' +
-            '<a class="btn btn-secondary update-btn" onclick="loadUpdateContactForm(this)" data-item=\'' + JSON.stringify(contacts[i]) + '\' style="margin-right: 5px;">Edytuj</a>' +
-            '<a class="btn btn-danger" href="RemoveContact/' + contacts[i].contactID + '" onclick="return confirm(\'Czy na pewno chcesz usunąć kontakt?\')">Usuń</a>' +
+            '<a class="btn btn-secondary update-btn" onclick="loadUpdateContactForm(this)" data-item=\'' + JSON.stringify(data[i]) + '\' style="margin-right: 5px;">Edytuj</a>' +
+            '<a class="btn btn-danger" href="RemoveContact/' + data[i].contactID + '" onclick="return confirm(\'Czy na pewno chcesz usunąć kontakt?\')">Usuń</a>' +
             '</div>' +
             '</td>' +
             '</tr>';
@@ -149,30 +137,29 @@ function format(data) {
 function loadCreateCompanyForm() {
     var form = document.getElementById("companyForm");
     form.reset();
+    document.getElementById("company-form-name").innerHTML = "Dodaj firmę";
     document.getElementById("companyForm").action = "AddCompany";
     var partialView = document.getElementById("partial-view-company");
     partialView.style.visibility = "visible";
     blur();
 }
 
-function loadUpdateCompanyForm(element) {
+function loadUpdateCompanyForm(data) {
     var form = document.getElementById("companyForm");
     form.reset();
 
     form.action = "PutCompany";
+    document.getElementById("company-form-name").innerHTML = "Edytuj firmę";
 
-    var itemData = $(element).attr("data-item");
-    var itemObject = JSON.parse(itemData);
-
-    document.getElementById("CompanyID").value = itemObject.companyID;
-    document.getElementById("Name").value = itemObject.name;
-    document.getElementById("ShortName").value = itemObject.shortName;
-    document.getElementById("Address").value = itemObject.address;
-    document.getElementById("City").value = itemObject.city;
-    document.getElementById("PostalCode").value = itemObject.postalCode;
-    document.getElementById("PostOffice").value = itemObject.postOffice;
-    document.getElementById("NIP").value = itemObject.nip;
-    document.getElementById("PaymentMethod").value = itemObject.paymentMethod;
+    document.getElementById("companyId").value = data[0];
+    document.getElementById("name").value = data[1];
+    document.getElementById("short-name").value = data[2];
+    document.getElementById("address").value = data[3];
+    document.getElementById("city").value = data[4];
+    document.getElementById("postal-code").value = data[5];
+    document.getElementById("post-office").value = data[6];
+    document.getElementById("nip").value = data[7];
+    document.getElementById("payment-method").value = data[8];
 
     var partialView = document.getElementById("partial-view-company");
     partialView.style.visibility = "visible";
@@ -182,6 +169,7 @@ function loadUpdateCompanyForm(element) {
 function loadCreateContactForm(id) {
     var form = document.getElementById("contactForm");
     form.reset();
+    document.getElementById("contact-form-name").innerHTML = "Dodaj kontakt";
     document.getElementById("contactForm").action = "AddContact";
     document.getElementById("CompanyID").value = id;
     var partialView = document.getElementById("partial-view-contact");
@@ -192,20 +180,20 @@ function loadCreateContactForm(id) {
 function loadUpdateContactForm(element) {
     var form = document.getElementById("contactForm");
     form.reset();
-
+    document.getElementById("contact-form-name").innerHTML = "Edytuj kontakt";
     form.action = "PutContact";
 
     var itemData = $(element).attr("data-item");
     var itemObject = JSON.parse(itemData);
 
-    document.getElementById("CompanyID").value = itemObject.companyID;
-    document.getElementById("ContactID").value = itemObject.contactID;
-    document.getElementById("Firstname").value = itemObject.firstname;
-    document.getElementById("Lastname").value = itemObject.lastname;
-    document.getElementById("Position").value = itemObject.position;
-    document.getElementById("Phone1").value = itemObject.phone1;
-    document.getElementById("Phone2").value = itemObject.phone2;
-    document.getElementById("Email").value = itemObject.email;
+    document.getElementById("companyId").value = itemObject.companyID;
+    document.getElementById("contactId").value = itemObject.contactID;
+    document.getElementById("firstname").value = itemObject.firstname;
+    document.getElementById("lastname").value = itemObject.lastname;
+    document.getElementById("position").value = itemObject.position;
+    document.getElementById("phone1").value = itemObject.phone1;
+    document.getElementById("phone2").value = itemObject.phone2;
+    document.getElementById("email").value = itemObject.email;
 
     var partialView = document.getElementById("partial-view-contact");
     partialView.style.visibility = "visible";

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
@@ -18,11 +16,9 @@ namespace StalTradeAPI.Controllers
     {
         private IConfiguration _config;
         private readonly IUserRepository _repository;
-        private readonly IMapper _mapper;
 
-        public AuthController(IConfiguration configuration, IUserRepository userRepository, IMapper mapper)
+        public AuthController(IConfiguration configuration, IUserRepository userRepository)
         {
-            _mapper = mapper;
             _config = configuration;
             _repository = userRepository;
         }
@@ -45,7 +41,6 @@ namespace StalTradeAPI.Controllers
                 };
 
                 await _repository.AddAsync(newUser);
-
                 return Ok("Poprawna rejestracja");
             }
             catch (Exception ex)

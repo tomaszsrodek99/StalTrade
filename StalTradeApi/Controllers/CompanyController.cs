@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
 
 namespace StalTradeAPI.Controllers
 {

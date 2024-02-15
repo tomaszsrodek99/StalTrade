@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using StalTradeAPI.Models;
+﻿using StalTradeAPI.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace StalTradeAPI.Dtos

@@ -2,56 +2,56 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 @using System.ComponentModel.DataAnnotations;
 
-<div class="text-center">
-    <h2>Dodaj firmę</h2>
+<div class="text-center form-container">
+    <h2 id="company-form-name">Dodaj firmę</h2>
     <form id="companyForm" asp-controller="CompanyUI" method="post" class="my-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input asp-for="CompanyID" class="form-control" hidden/>
+        <input id="companyId" asp-for="CompanyID" class="form-control" hidden/>
         <div class="form-group">
             <label asp-for="Name" class="control-label"></label>
-            <input asp-for="Name" class="form-control" />
+            <input id="name" asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="ShortName" class="control-label"></label>
-            <input asp-for="ShortName" class="form-control" />
+            <input id="short-name" asp-for="ShortName" class="form-control" />
             <span asp-validation-for="ShortName" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Address" class="control-label"></label>
-            <input asp-for="Address" class="form-control" />
+            <input id="address" asp-for="Address" class="form-control" />
             <span asp-validation-for="Address" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="City" class="control-label"></label>
-            <input asp-for="City" class="form-control" />
+            <input id="city" asp-for="City" class="form-control" />
             <span asp-validation-for="City" class="text-danger"></span>
         </div>
         <div class="form-group row">
             <div class="col-md-6">
                 <label asp-for="PostalCode" class="control-label"></label>
-                <input id="PostalCode" asp-for="PostalCode" class="form-control" oninput="PostalCodeFormat()" />
+                <input id="postal-code" asp-for="PostalCode" class="form-control" oninput="PostalCodeFormat()" />
                 <span asp-validation-for="PostalCode" class="text-danger"></span>
             </div>
             <div class="col-md-6">
                 <label asp-for="PostOffice" class="control-label"></label>
-                <input asp-for="PostOffice" class="form-control" />
+                <input id="post-office" asp-for="PostOffice" class="form-control" />
                 <span asp-validation-for="PostOffice" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="NIP" class="control-label"></label>
-            <input asp-for="NIP" class="form-control" />
+            <input id="nip" asp-for="NIP" class="form-control" />
             <span asp-validation-for="NIP" class="text-danger"></span>
             <span id="uniqueNIPError" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="PaymentMethod" class="control-label"></label>
-            <select asp-for="PaymentMethod" class="form-control">
-                    @foreach (var method in ViewBag.Methods)
-                    {
-                        <option value="@method.Name">@method.Name</option>
-                    }
+            <select id="payment-method" asp-for="PaymentMethod" class="form-control">
+                @foreach (var method in ViewBag.Methods)
+                {
+                            <option value="@method.Name">@method.Name</option>
+                }
             </select>
             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
         </div>
@@ -66,7 +66,7 @@
 </div>
 
 <div id="partial-view-method" class="partial-view hidden">
-    @await Html.PartialAsync("CreatePaymentMethod", new StalTradeAPI.Models.PaymentMethod()),
+    @await Html.PartialAsync("_CreatePaymentMethod", new StalTradeAPI.Models.PaymentMethod()),
 </div>
 
 

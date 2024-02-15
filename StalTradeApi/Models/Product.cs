@@ -17,10 +17,10 @@ namespace StalTradeAPI.Models
         public string UnitOfMeasure { get; set; }
         [Required]
         [Column(TypeName = "decimal(5, 2)")]
-        public decimal PurchaseVat { get; set; }
+        public int PurchaseVat { get; set; }
         [Column(TypeName = "decimal(5, 2)")]
         [Required]
-        public decimal SalesVat { get; set; }
+        public int SalesVat { get; set; }
         [Column(TypeName = "decimal(5, 2)")]
         public decimal? ConsumptionStandard { get; set; }
         [Column(TypeName = "decimal(5, 2)")]

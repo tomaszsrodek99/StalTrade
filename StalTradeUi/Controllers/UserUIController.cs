@@ -1,15 +1,7 @@
-﻿using AutoMapper.Configuration;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using StalTradeAPI.Dtos;
-using StalTradeUI.Models;
-using System.Diagnostics;
 using System.Net;
-using StalTradeAPI.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace StalTradeUI.Controllers
 {
@@ -107,5 +99,7 @@ namespace StalTradeUI.Controllers
             Response.Cookies.Delete("UserName");
             return RedirectToAction("LoginView");
         }
+
+
     }
 }

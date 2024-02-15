@@ -3,49 +3,114 @@
 @{
     ViewData["Title"] = "Kasa";
     Layout = "_UserLayout";
-    var number = 1;
-    //var sum = ViewBag.BruttoExpensesUnpaid + ViewBag.BruttoExpensesPaid;
 }
 
 <h1 class="text-center">Wirtualna kasa</h1>
-@if (Model.Any())
-{
-    <div class="text-center col-md-6">
-        @foreach (var monthlyExpense in Model)
-        {
-            <h3>@monthlyExpense.Month</h3>
-            <table class="table table-striped table-bordered table-hover cash-register-table">
+<div class="row">
+    @if (Model.Any())
+    {
+        <div class="text-center col-8">
+            @foreach (var monthlyExpense in Model)
+            {
+                <h3>@monthlyExpense.Month</h3>
+                <table class="table table-striped table-bordered table-hover cash-register-table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Data operacji</th>
+                            <th>Numer faktury</th>
+                            <th>Opis</th>
+                            <th>Wartość</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in monthlyExpense.Expenses)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.DateOfPayment)</td>
+                                <td>@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Brutto)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div class="text-center col-4">
+            <h3>Podsumowanie</h3>
+            <button id="deposit-button" class="btn btn-primary" type="button" onclick="loadDepositForm()">Wpłata do kasy</button>
+            <button id="deposit-list-button" class="btn btn-info" type="button" onclick="loadDepositesList()">Wyświetl wpłaty</button>
+            <h6 class="float-end">Stan kasy: @ViewData["Cash"] zł</h6>
+            <table class="table table-striped table-bordered">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Lp.</th>
-                        <th>Data operacji</th>
-                        <th>Numer faktury</th>
-                        <th>Opis</th>
-                        <th>Wartość</th>
+                        <th>Miesiąc</th>
+                        <th>Suma wydatków brutto</th>
+                        <th>Ilość operacji</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in monthlyExpense.Expenses)
+                    @foreach (var monthlyExpense in Model)
                     {
                         <tr>
-                            <td>@(number).</td>
-                            <td>@Html.DisplayFor(modelItem => item.DateOfPayment)</td>
-                            <td>@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Brutto)</td>
+                            <td>@monthlyExpense.Month</td>
+                            <td>@monthlyExpense.TotalBrutto</td>
+                            <td>@monthlyExpense.Expenses.Count()</td>
+                            <td>
+                                <button class="show-details btn-info" data-toggle="collapse" data-target="details-@monthlyExpense.Month">Szczegóły</button>
+                            </td>
                         </tr>
-                        number++;
+                        <tr id="details-@monthlyExpense.Month" class="collapse">
+                            <td colspan="4">
+                                <div class="text-center">
+                                    <table class="table table-info table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Dostawca</th>
+                                                <th>Netto</th>
+                                                <th>Brutto</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var group in monthlyExpense.Expenses.GroupBy(e => e.Contractor))
+                                            {
+                                                <tr>
+                                                    <td>@group.Key</td>
+                                                    <td>@group.Sum(e => e.Netto)</td>
+                                                    <td>@group.Sum(e => e.Brutto)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
-        }
-    </div>
-}
-else
+        </div>
+    }
+    else
+    {
+        <p>Brak operacji do wyświetlenia.</p>
+    }
+</div>
+
+<div id="partial-view-deposit" class="partial-view hidden">
+    @await Html.PartialAsync("_UpdateDeposit", new StalTradeAPI.Dtos.DepositDto()),
+</div>
+
+@if (ViewData["Deposites"] != null)
 {
-    <p>Brak pozycji do wyświetlenia.</p>
+    <div id="partial-view-deposit-list" class="partial-view hidden">
+        @await Html.PartialAsync("_DepositesList", ViewData["Deposites"]),
+    </div>
 }
 
 @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script src="~/js/cashRegister.js"></script>
 }

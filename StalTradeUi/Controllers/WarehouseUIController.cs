@@ -21,10 +21,10 @@ namespace StalTradeUI.Controllers
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync("api/Company/GetCompanies");
+                HttpResponseMessage response = await _httpClient.GetAsync("api/Product/GetProducts");
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
+                    var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
                     return View("Index", responseDto);
                 }
                 return View("Index", new List<CompanyDto>());

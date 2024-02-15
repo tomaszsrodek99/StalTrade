@@ -19,10 +19,10 @@ namespace StalTradeAPI.Dtos
         public string UnitOfMeasure { get; set; }
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "VAT zakupu")]
         [Column(TypeName = "decimal(5, 2)")]
-        public decimal PurchaseVat { get; set; }
+        public int PurchaseVat { get; set; }
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "VAT sprzedaży")]
         [Column(TypeName = "decimal(5, 2)")]
-        public decimal SalesVat { get; set; }
+        public int SalesVat { get; set; }
         [Column(TypeName = "decimal(5, 2)")]
         [Display(Name = "Norma zużycia")]
         public decimal? ConsumptionStandard { get; set; }

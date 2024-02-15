@@ -14,4 +14,38 @@
             scrollCollapse: true
         });
     });
+
+    var isCollapsed = true;
+    $('.show-details').on('click', function () {
+        var targetId = $(this).data('target');
+
+        var targetElement = document.getElementById(targetId);
+
+        if (isCollapsed) {
+            targetElement.classList.remove('collapse');
+        } else {
+            targetElement.classList.add('collapse');
+        }
+
+        isCollapsed = !isCollapsed;
+    });
 });
+
+function deleteDeposit(id) {
+    if (confirm('Czy na pewno chcesz anulować wpłatę?')) {
+        window.location.href = '/ExpenseUI/RemoveDeposit/' + id;
+    }
+}
+
+function loadDepositForm() {
+    var form = document.getElementById("depositListForm");
+    var partialView = document.getElementById("partial-view-deposit");
+    partialView.style.visibility = "visible";
+    blur();
+}
+
+function loadDepositesList() {
+    var partialView = document.getElementById("partial-view-deposit-list");
+    partialView.style.visibility = "visible";
+    blur();
+}

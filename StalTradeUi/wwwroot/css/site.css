@@ -28,7 +28,6 @@ a {
     margin-left: 15%;
     padding: 20px;
     height: 93vh;
-    /*background-image: url(/img/backgroundzlogo.png);*/
     background-size: cover;
 }
 
@@ -49,8 +48,7 @@ button.accept-policy {
     line-height: inherit;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
+
 html {
     margin: 0;
     padding: 0;
@@ -138,6 +136,10 @@ th:hover {
     right: 25px;
 }
 
+.position-float-right {
+    float: right;
+}
+
 button[disabled] {
     background-color: #e0e0e0;
     cursor: not-allowed;
@@ -145,4 +147,15 @@ button[disabled] {
 
 .btn-group {
     margin-top: 10px;
+}
+
+#payment-to-the-cash {
+    margin-bottom: 0.333em;
+    float: left;
+}
+
+#deposit-button {
+    float: left;
+    position: relative;
+    margin-bottom: 5px;
 }

@@ -16,7 +16,7 @@ function loading() {
         showLoadingIcon();
         setTimeout(async function () {
             hideLoadingIcon();
-        }, 9999);
+        }, 99999);
 
         const allSpans = document.getElementsByTagName("span");
         for (const span of allSpans) {

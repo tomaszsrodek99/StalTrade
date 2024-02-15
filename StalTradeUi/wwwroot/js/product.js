@@ -1,28 +1,30 @@
 ﻿$(document).ready(function () {
     var selectedRow = null;
 
-    $('#edit-button, #delete-product-button').prop('disabled', true);
+    $('#edit-product-button, #delete-product-button').prop('disabled', true);
 
-    $('#search-table tbody').on('click', 'tr', function () {
-        if ($(this).hasClass('selected')) {
+    $('#search-table tbody').on('click', 'td.selectable-td', function (e) {
+        e.stopPropagation();
 
-            $(this).removeClass('selected');
+        var currentRow = $(this).closest('tr');
+
+        if (currentRow.hasClass('selected')) {
+            currentRow.removeClass('selected');
             selectedRow = null;
-
-            $('#edit-button, #delete-product-button');
+            $('#edit-product-button, #delete-product-button').prop('disabled', true);
         } else {
-            table.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-            selectedRow = table.row(this).data();
+            table.rows().deselect();
+            currentRow.addClass('selected');
+            selectedRow = table.row(currentRow).data();
         }
 
         var isRowSelected = selectedRow !== null;
-        $('#edit-button, #delete-product-button').prop('disabled', !isRowSelected);
+        $('#edit-product-button, #delete-product-button').prop('disabled', !isRowSelected);
 
-        $('#edit-button, #delete-product-button').attr('data-product-id', isRowSelected ? selectedRow.productId : null);
+        $('#edit-product-button, #delete-product-button').attr('data-product-id', isRowSelected ? selectedRow[0] : null);
     });
 
-    $('#edit-button').on('click', function () {
+    $('#edit-product-button').on('click', function () {
         if (selectedRow !== null) {
             loadUpdateProductForm(selectedRow);
         }
@@ -30,28 +32,13 @@
 
     $('#delete-product-button').on('click', function () {
         if (selectedRow !== null) {
-            if (confirm('Czy na pewno chcesz usunąć rekord?')) {
+            if (confirm('Czy na pewno chcesz usunąć produkt?')) {
                 window.location.href = '/ProductUI/RemoveProduct/' + selectedRow.productId;
             }
         }
     });
 
     var table = new DataTable('#search-table', {
-        data: data,
-        columns: [
-            { data: 'productId', title: 'Id', visible: false },
-            { data: 'name', title: 'Nazwa' },
-            { data: 'companyDrawingNumber', title: 'Rysunek' },
-            { data: 'customerDrawingNumber', title: 'Rysunek klienta' },
-            { data: 'unitOfMeasure', title: 'Miara' },
-            { data: 'purchaseVat', title: 'VAT zakupu' },
-            { data: 'salesVat', title: 'VAT sprzedaży' },
-            { data: 'consumptionStandard', title: 'Norma zużycia' },
-            { data: 'weight', title: 'Waga' },
-            { data: 'chargeProfile', title: 'Profil wsadu' },
-            { data: 'materialGrade', title: 'Gatunek materiału' },
-            { data: 'substituteGrade', title: 'Zamiennik' }
-        ],
         searching: false,
         dom: 'Blrtip',
         buttons: [
@@ -67,7 +54,7 @@
         },
         pageLength: 10,
         lengthMenu: [10, 25, 50],
-        scrollY: '300px',
+        scrollY: '800px',
         scrollCollapse: true
     });
 });
@@ -76,29 +63,32 @@ function loadCreateProductForm() {
     var form = document.getElementById("productForm");
     form.reset();
     document.getElementById("productForm").action = "AddProduct";
+    document.getElementById("product-form-name").innerHTML = "Dodaj produkt";
     var partialView = document.getElementById("partial-view");
     partialView.style.visibility = "visible";
     blur();
 }
 
-function loadUpdateProductForm(itemObject) {
+function loadUpdateProductForm(data) {
+    console.log(data);
     var form = document.getElementById("productForm");
     form.reset();
 
     form.action = "PutProduct";
+    document.getElementById("product-form-name").innerHTML = "Edytuj product";
 
-    document.getElementById("ProductId").value = itemObject.productId;
-    document.getElementById("Name").value = itemObject.name;
-    document.getElementById("CompanyDrawingNumber").value = itemObject.companyDrawingNumber;
-    document.getElementById("CustomerDrawingNumber").value = itemObject.customerDrawingNumber;
-    document.getElementById("UnitOfMeasure").value = itemObject.unitOfMeasure;
-    document.getElementById("PurchaseVat").value = itemObject.purchaseVat;
-    document.getElementById("SalesVat").value = itemObject.salesVat;
-    document.getElementById("ConsumptionStandard").value = itemObject.consumptionStandard;
-    document.getElementById("Weight").value = itemObject.weight;
-    document.getElementById("ChargeProfile").value = itemObject.chargeProfile;
-    document.getElementById("MaterialGrade").value = itemObject.materialGrade;
-    document.getElementById("SubstituteGrade").value = itemObject.substituteGrade;
+    document.getElementById("productId").value = data[0];
+    document.getElementById("name").value = data[1];
+    document.getElementById("company-drawing-number").value = data[2];
+    document.getElementById("customer-drawing-number").value = data[3];
+    document.getElementById("unit-of-measure").value = data[4];
+    document.getElementById("purchase-vat").value = data[5];
+    document.getElementById("sales-vat").value = data[6];
+    document.getElementById("consumption-standard").value = data[7].replace(',', '.');
+    document.getElementById("weight").value = data[8].replace(',', '.');
+    document.getElementById("charge-profile").value = data[9];
+    document.getElementById("material-grade").value = data[10];
+    document.getElementById("substitute-grade").value = data[11];
 
     var partialView = document.getElementById("partial-view");
     partialView.style.visibility = "visible";
@@ -106,8 +96,8 @@ function loadUpdateProductForm(itemObject) {
 }
 
 function checkUnique() {
-    var companyDrawingNumber = $('#CompanyDrawingNumber').val();
-    var productId = $('#ProductId').val();
+    var companyDrawingNumber = $('#company-drawing-number').val();
+    var productId = $('#productId').val();
     $.ajax({
         url: 'https://localhost:7279/api/Product/IsProductUnique/' + productId + '?companyDrawingNumber=' + encodeURIComponent(companyDrawingNumber),
         type: 'GET',

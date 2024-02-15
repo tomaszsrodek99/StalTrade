@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StalTradeAPI.Context;
+﻿using StalTradeAPI.Context;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
 
@@ -7,12 +6,10 @@ namespace StalTradeAPI.Repositories
 {
     public class ExpenseRepository : GenericRepository<Expense>, IExpenseRepository
     {
-        private IConfiguration _config;
         private readonly StalTradeDbContext _context;
-        public ExpenseRepository(StalTradeDbContext context, IConfiguration configuration) : base(context)
+        public ExpenseRepository(StalTradeDbContext context) : base(context)
         {
             _context = context;
-            _config = configuration;
         }
 
         public List<string> GetContractorsFromDatabase(string term)

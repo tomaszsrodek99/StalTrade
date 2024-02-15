@@ -4,10 +4,10 @@ using StalTradeAPI.Models;
 
 namespace StalTradeAPI.Repositories
 {
-    public class ContactRepository : GenericRepository<Contact>, IContactRepository
+    public class DepositRepository : GenericRepository<Deposit>, IDepositRepository
     {
         private readonly StalTradeDbContext _context;
-        public ContactRepository(StalTradeDbContext context) : base(context)
+        public DepositRepository(StalTradeDbContext context) : base(context)
         {
             _context = context;
         }

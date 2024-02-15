@@ -1,11 +1,7 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Models;
-using System.Net;
 
 namespace StalTradeUI.Controllers
 {
@@ -35,9 +31,9 @@ namespace StalTradeUI.Controllers
                     var companiesDto = await companies.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
                     var methodsDto = await methods.Content.ReadFromJsonAsync<IEnumerable<PaymentMethod>>();
                     ViewBag.Methods = methodsDto;
-                    return View("Index", companiesDto);
+                    return View("Companies", companiesDto);
                 }            
-                return View("Index", new List<CompanyDto>());
+                return View("Companies", new List<CompanyDto>());
             }
             catch (Exception ex)
             {

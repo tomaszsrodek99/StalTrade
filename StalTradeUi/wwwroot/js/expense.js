@@ -1,28 +1,30 @@
 ﻿$(document).ready(function () {
     var selectedRow = null;
 
-    $('#edit-button, #delete-expense-button').prop('disabled', true);
+    $('#edit-expense-button, #delete-expense-button').prop('disabled', true);
 
-    $('#search-table tbody').on('click', 'tr', function () {
-        if ($(this).hasClass('selected')) {
+    $('#search-table tbody').on('click', 'td.selectable-td', function (e) {
+        e.stopPropagation();
 
-            $(this).removeClass('selected');
+        var currentRow = $(this).closest('tr');
+
+        if (currentRow.hasClass('selected')) {
+            currentRow.removeClass('selected');
             selectedRow = null;
-
-            $('#edit-button, #delete-expense-button');
+            $('#edit-expense-button, #delete-expense-button').prop('disabled', true);
         } else {
-            table.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-            selectedRow = table.row(this).data();
+            table.rows().deselect();
+            currentRow.addClass('selected');
+            selectedRow = table.row(currentRow).data();
         }
 
         var isRowSelected = selectedRow !== null;
-        $('#edit-button, #delete-expense-button').prop('disabled', !isRowSelected);
+        $('#edit-expense-button, #delete-expense-button').prop('disabled', !isRowSelected);
 
-        $('#edit-button, #delete-expense-button').attr('data-expense-id', isRowSelected ? selectedRow.expenseId : null);
+        $('#edit-expense-button, #delete-expense-button').attr('data-expense-id', isRowSelected ? selectedRow[0] : null);
     });
 
-    $('#edit-button').on('click', function () {
+    $('#edit-expense-button').on('click', function () {
         if (selectedRow !== null) {
             loadUpdateExpenseForm(selectedRow);
         }
@@ -30,71 +32,14 @@
 
     $('#delete-expense-button').on('click', function () {
         if (selectedRow !== null) {
-            if (confirm('Czy na pewno chcesz usunąć rekord?')) {
-                window.location.href = '/ExpenseUI/RemoveExpense/' + selectedRow.expenseId;
+            if (confirm('Czy na pewno chcesz usunąć wydatek?')) {
+                window.location.href = '/ExpenseUI/RemoveExpense/' + selectedRow[0];
             }
         }
     });
 
     var table = new DataTable('#search-table', {
-        order: [[2, 'asc']],
-        data: data,
-        columns: [
-            { data: 'expenseId', title: 'Id', visible: false },
-            { data: 'invoiceNumber', title: 'Nr. faktury klienta', class: 'selectable-td' },
-            { data: 'date', title: 'Data',
-                render: function (data, type, row) {
-                    if (type === 'display') {
-                        var date = new Date(data);
-                        return date.toLocaleDateString();
-                    }
-                    return data;
-                }
-                , class: 'selectable-td'
-            },
-            { data: 'contractor', title: 'Dostawca', class: 'selectable-td' },
-            { data: 'description', title: 'Opis', class: 'selectable-td' },
-            { data: 'netto', title: 'Netto', class: 'selectable-td' },
-            { data: 'brutto', title: 'Brutto', class: 'selectable-td' },
-            {
-                data: 'dateOfPayment',
-                title: 'Termin płatności',
-                render: function (data, type, row) {
-                    if (type === 'display') {
-                        var date = new Date(data);
-                        return date.toLocaleDateString();
-                    }
-                    return data;
-                }
-                , class: 'selectable-td'
-            },
-            {
-                data: 'paid',
-                title: 'Zapłacone?',
-                render: function (data, type, row) {
-                    if (type === 'display') {
-                        return '<input type="checkbox" id="paid-checkbox-' + row.expenseId + '" value="' + row.expenseId + '" ' + (row.paid ? 'checked' : '') + ' disabled>';
-                    }
-                    return data;
-                },
-                class: 'selectable-td'
-            },
-            { data: 'paymentType', title: 'Płatność', class: 'selectable-td' },
-            { data: 'eventType', title: 'Typ zdarzenia', class: 'selectable-td' },
-            {
-                className: 'payment-control',
-                orderable: false,
-                data: null,
-                defaultContent: '',
-                render: function (data, type, row) {
-                    if (!row.paid) {
-                        return '<button id="mark-as-paid-button-' + row.expenseId + '" class="change-status btn btn-info" onclick="updateStatus(' + row.expenseId + ')">Oznacz jako opłacone</button>';
-                    } else {
-                        return '';
-                    }
-                }
-            },
-        ],
+        order: [[1, 'asc']],     
         searching: false,
         dom: 'Blrtip',
         buttons: ['print'],
@@ -117,28 +62,32 @@ function loadCreateExpenseForm() {
     var form = document.getElementById("expenseForm");
     form.reset();
     document.getElementById("expenseForm").action = "AddExpense";
+    document.getElementById("expense-form-name").innerHTML = "Dodaj wydatek";
     var partialView = document.getElementById("partial-view-expense");
     partialView.style.visibility = "visible";
     blur();
 }
 
-function loadUpdateExpenseForm(itemObject) {
+function loadUpdateExpenseForm(data) {
+    console.log(data);
     var form = document.getElementById("expenseForm");
     form.reset();
 
     form.action = "PutExpense";
+    document.getElementById("expense-form-name").innerHTML = "Edytuj wydatek";
 
-    document.getElementById("expenseId").value = itemObject.expenseId;
-    document.getElementById("date").value = itemObject.date;
-    document.getElementById("contractor-input").value = itemObject.contractor;
-    document.getElementById("invoice-number").value = itemObject.invoiceNumber;
-    document.getElementById("description-input").value = itemObject.description;
-    document.getElementById("netto").value = itemObject.netto;
-    document.getElementById("brutto").value = itemObject.brutto;  
-    document.getElementById("date-of-payment").value = itemObject.dateOfPayment;
-    document.getElementById("paid").checked = itemObject.paid;
-    document.getElementById("payment-type").value = itemObject.paymentType;
-    document.getElementById("event-type-input").value = itemObject.eventType;
+    document.getElementById("date").value = formatDateForInput(data[2]);
+    document.getElementById("expenseId").value = data[0];
+    document.getElementById("contractor").value = data[3];
+    document.getElementById("invoice-number").value = data[1];
+    document.getElementById("expenseId").value = data[0];
+    document.getElementById("description").value = data[4];
+    document.getElementById("brutto").value = data[6].replace(',', '.');
+    document.getElementById("netto").value = data[5].replace(',', '.');
+    document.getElementById("date-of-payment").value = formatDateForInput(data[7]);
+    document.getElementById("paid").checked = data[8].includes("checked");
+    document.getElementById("payment-type").value = data[9];
+    document.getElementById("event-type").value = data[10];
 
     var partialView = document.getElementById("partial-view-expense");
     partialView.style.visibility = "visible";
@@ -216,4 +165,14 @@ function updateStatus(id) {
             alert('Wystąpił błąd podczas przetwarzania żądania.' + error);
         }
     });
+}
+
+function formatDateForInput(dateString) {
+    var parts = dateString.split('/');
+
+    var formattedDate = new Date(parts[2], parts[1] - 1, parts[0]); 
+
+    var formattedDateString = formattedDate.toISOString().split('T')[0];
+
+    return formattedDateString;
 }

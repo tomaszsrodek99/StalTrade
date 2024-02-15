@@ -13,7 +13,7 @@ namespace StalTradeAPI.Models
         [ForeignKey("ProductID")]
         public Product Product { get; set; }
         [Required]
-        [Column(TypeName = "decimal(5, 2)"), Display(Name = "Cena")]
+        [DataType(DataType.Currency)]
         public decimal Price { get; set; }
         [Required]
         public bool IsPurchase { get; set; } 

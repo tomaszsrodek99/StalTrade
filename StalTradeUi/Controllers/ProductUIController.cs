@@ -27,9 +27,9 @@ namespace StalTradeUI.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
-                    return View("Index", responseDto);
+                    return View("Products", responseDto);
                 }
-                return View("Index", new List<ProductDto>());
+                return View("Products", new List<ProductDto>());
             }
             catch (Exception ex)
             {
