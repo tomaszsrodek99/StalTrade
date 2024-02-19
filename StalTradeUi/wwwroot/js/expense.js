@@ -39,7 +39,7 @@
     });
 
     var table = new DataTable('#search-table', {
-        order: [[1, 'asc']],     
+        order: [[7, 'desc']],     
         searching: false,
         dom: 'Blrtip',
         buttons: ['print'],
@@ -69,7 +69,6 @@ function loadCreateExpenseForm() {
 }
 
 function loadUpdateExpenseForm(data) {
-    console.log(data);
     var form = document.getElementById("expenseForm");
     form.reset();
 
@@ -168,10 +167,10 @@ function updateStatus(id) {
 }
 
 function formatDateForInput(dateString) {
-    var parts = dateString.split('/');
+    var parts = dateString.split('.');
 
-    var formattedDate = new Date(parts[2], parts[1] - 1, parts[0]); 
-
+    var formattedDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    console.log(formattedDate);
     var formattedDateString = formattedDate.toISOString().split('T')[0];
 
     return formattedDateString;

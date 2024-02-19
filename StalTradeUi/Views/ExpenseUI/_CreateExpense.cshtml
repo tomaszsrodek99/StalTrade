@@ -1,7 +1,7 @@
 ﻿@model StalTradeAPI.Dtos.ExpenseDto
 
 <div class="text-center form-container">
-    <h2 id="expense-form-name">Dodaj wydatek</h2>
+    <h2 id="expense-form-name"></h2>
     <form id="expenseForm" asp-controller="ExpenseUI" method="post" class="my-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input id="expenseId" asp-for="ExpenseId" class="form-control" hidden />

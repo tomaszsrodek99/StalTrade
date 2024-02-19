@@ -1,0 +1,28 @@
+﻿@model StalTradeAPI.Dtos.PriceDto
+
+<div class="text-center form-container">
+    <h2 id="price-form-name"></h2>
+    <form id="priceForm" asp-controller="WarehouseUI" method="post" class="my-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input id="product-id" asp-for="ProductId" class="form-control" hidden />
+        <input id="price-id" asp-for="PriceId" class="form-control" hidden />
+        <div class="form-group">
+            <label asp-for="CompanyId" class="control-label"></label>
+            <select id="company-id" asp-for="CompanyId" class="form-control"></select>
+            <span asp-validation-for="CompanyId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Netto" class="control-label"></label>
+            <input id="netto" asp-for="Netto" class="form-control" type="number" step="0.01" min="0" />
+            <span asp-validation-for="Netto" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <div class="btn-group">
+                <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="CloseForm()">Wstecz</button>
+                <button type="submit" class="btn btn-primary">Zapisz</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+

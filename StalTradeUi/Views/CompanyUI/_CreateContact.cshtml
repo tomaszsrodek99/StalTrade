@@ -1,11 +1,11 @@
 ﻿@model StalTradeAPI.Dtos.ContactDto
 
 <div class="text-center form-container">
-    <h2 id="contact-form-name">Kontakt</h2>
+    <h2 id="contact-form-name"></h2>
     <form class="contact-form" asp-controller="CompanyUI" id="contactForm" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input id="companyId" asp-for="CompanyID" class="form-control" hidden />
-        <input id="contactId" asp-for="ContactID" class="form-control" hidden />
+        <input id="CompanyID" asp-for="CompanyID" class="form-control" type="hidden" />
+        <input id="contactId" asp-for="ContactID" class="form-control" type="hidden" />
         <div class="form-group">
             <label asp-for="Firstname" class="control-label"></label>
             <input id="firstname" asp-for="Firstname" class="form-control" />
@@ -44,3 +44,4 @@
         </div>
     </form>
 </div>
+

@@ -1,0 +1,104 @@
+﻿@model IEnumerable<StalTradeAPI.Dtos.StockStatusDto>
+
+@{
+    ViewData["Title"] = "Magazyn";
+    Layout = "_UserLayout";
+}
+
+<h2 class="text-center">Magazyn</h2>
+<div class="text-center">
+    <div class="input-group search-input">
+        <span class="input-group-text">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po numerze rysunku..">
+    </div>
+    @if (Model.Any())
+    {
+        <table id="search-table" class="display table table-striped table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th hidden></th>
+                    <th>Pozycja</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.PurchasedQuantity)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.ActualQuantity)</th>
+                    <th>+/-</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.SoldQuantity)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.InStock)</th>
+                    <th>
+                        <div class="text-center">
+                            @ViewData["PurchasedValue"]
+                        </div>
+                        @Html.DisplayNameFor(modelItem => modelItem.PurchasedValue)
+                    </th>
+                    <th>
+                        <div class="text-center">
+                            @ViewData["SoldValue"]
+                        </div>
+                        @Html.DisplayNameFor(modelItem => modelItem.SoldValue)
+                    </th>
+                    <th>
+                        <div class="text-center">
+                            @ViewData["MarginValue"]
+                        </div>
+                        @Html.DisplayNameFor(modelItem => modelItem.MarginValue)
+                    </th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.Margin)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td hidden>
+                            @Html.DisplayFor(modelItem => item.StockStatusId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.CompanyDrawingNumber) - @Html.DisplayFor(modelItem => item.Product.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PurchasedQuantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ActualQuantity)
+                        </td>
+                        <td>
+                            @((item.PurchasedQuantity - item.ActualQuantity).ToString("N2"))
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SoldQuantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InStock)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PurchasedValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SoldValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MarginValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Margin)                        
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Brak produktów do wyświetlenia.</p>
+    }
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/warehouse.js"></script>
+}

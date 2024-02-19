@@ -4,8 +4,9 @@ namespace StalTradeAPI.Dtos
 {
     public class MonthlyExpenseViewModel
     {
+        [Display(Name = "Miesiąc")]
         public string Month { get; set; }
-        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Suma")]
         [DataType(DataType.Currency)]
         public decimal TotalBrutto { get; set; }
         public IEnumerable<ExpenseDto> Expenses { get; set; }

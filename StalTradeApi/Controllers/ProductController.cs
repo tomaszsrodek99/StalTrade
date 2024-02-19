@@ -12,10 +12,12 @@ namespace StalTradeAPI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
-        public ProductController(IMapper mapper, IProductRepository productRepository)
+        private readonly IStockStatusRepository _stockStatusRepository;
+        public ProductController(IMapper mapper, IProductRepository productRepository, IStockStatusRepository stockStatusRepository)
         {
             _mapper = mapper;
             _productRepository = productRepository;
+            _stockStatusRepository = stockStatusRepository;
         }
 
         [HttpGet("GetProducts")]
@@ -23,7 +25,7 @@ namespace StalTradeAPI.Controllers
         {
             try
             {
-                var products = await _productRepository.GetAllProductWithPricesAsync();
+                var products = await _productRepository.GetAllProductsAsync();
                 if (!products.Any())
                 {
                     return BadRequest("Nie znaleziono produktów");
@@ -49,7 +51,29 @@ namespace StalTradeAPI.Controllers
         {
             try
             {
-                await _productRepository.AddAsync(_mapper.Map<Product>(dto));
+                var product = _mapper.Map<Product>(dto);
+                await _productRepository.AddAsync(product);
+
+                var stockStatus = new StockStatus
+                {
+                    ProductId = product.ProductId,
+                    Product = product,
+                    PurchasedQuantity = 0,
+                    ActualQuantity = 0,
+                    SoldQuantity = 0,
+                    InStock = 0,
+                    PurchasedValue = 0,
+                    SoldValue = 0,
+                    MarginValue = 0,
+                    Margin = 0,
+                };
+
+                await _stockStatusRepository.AddAsync(stockStatus);
+
+                product.StockStatusId = stockStatus.StockStatusId;
+
+                await _productRepository.UpdateAsync(product);
+
                 return Ok();
             }
             catch (Exception ex)

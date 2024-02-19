@@ -33,12 +33,13 @@
     $('#delete-product-button').on('click', function () {
         if (selectedRow !== null) {
             if (confirm('Czy na pewno chcesz usunąć produkt?')) {
-                window.location.href = '/ProductUI/RemoveProduct/' + selectedRow.productId;
+                window.location.href = '/ProductUI/RemoveProduct/' + selectedRow[0];
             }
         }
     });
 
     var table = new DataTable('#search-table', {
+        order: [[3, 'asc']],
         searching: false,
         dom: 'Blrtip',
         buttons: [

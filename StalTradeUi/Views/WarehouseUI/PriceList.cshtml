@@ -1,0 +1,103 @@
+﻿@model IEnumerable<StalTradeAPI.Dtos.ProductDto>
+
+@{
+    ViewData["Title"] = "Cennik";
+    Layout = "_UserLayout";
+}
+
+<h2>Cennik</h2>
+<div class="position-float-right">
+    <div id="button-container">
+        <button id="add-price-button" class="btn btn-primary">Dodaj nową cenę</button>
+        <button id="edit-price-button" class="btn btn-secondary">Edytuj</button>
+        <button id="delete-price-button" class="btn btn-danger">Usuń ostatnią cenę</button>
+    </div>
+</div>
+<div class="text-center row" style="margin-top: 50px;">
+    @if (Model.Any())
+    {
+        <div class="col-4">
+            <h4 class="text-center">Produkty</h4>
+            <table id="product-table" class="display table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th hidden></th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.CompanyDrawingNumber)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.Name)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.UnitOfMeasure)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td hidden>
+                                @Html.DisplayFor(modelItem => item.ProductId)
+                            </td>
+                            <td class="selectable-td">
+                                @Html.DisplayFor(modelItem => item.CompanyDrawingNumber)
+                            </td>
+                            <td class="selectable-td">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td class="selectable-td">
+                                @Html.DisplayFor(modelItem => item.UnitOfMeasure)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            <h4 class="text-center">Ceny dla firm</h4>
+            <table id="price-table" class="display table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th hidden></th>
+                        <th hidden></th>
+                        <th hidden></th>
+                        <th>Firma</th>
+                        <th>Data</th>
+                        <th>Cena netto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td hidden></td>
+                        <td class="selectable-td"></td>
+                        <td class="selectable-td"></td>
+                        <td class="selectable-td"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            <div id="chart-container" class="chart-container"></div>
+        </div>
+    }
+    else
+    {
+        <p>Brak produktów.</p>
+    }
+</div>
+
+
+
+<div id="partial-view-price" class="partial-view hidden">
+    @await Html.PartialAsync("_CreatePrice", new StalTradeAPI.Dtos.PriceDto())
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        var allCompanies = @Html.Raw(Json.Serialize(ViewBag.Companies));
+        var productList = @Html.Raw(Json.Serialize(Model));
+        var latestPrices = @Html.Raw(Json.Serialize(ViewBag.LatestPrices));
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/warehouse.js"></script>
+}

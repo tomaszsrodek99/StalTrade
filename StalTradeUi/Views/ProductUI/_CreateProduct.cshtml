@@ -1,7 +1,7 @@
 ﻿@model StalTradeAPI.Dtos.ProductDto
 
 <div class="text-center form-container">
-    <h2 id="product-form-name">Dodaj produkt</h2>
+    <h2 id="product-form-name"></h2>
     <form id="productForm" asp-controller="ProductUI" method="post" class="my-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input id="productId" asp-for="ProductId" class="form-control" hidden />
@@ -42,7 +42,7 @@
                     <span asp-validation-for="ConsumptionStandard" class="text-danger"></span>
                 </div>
                 <div class="col">
-                    <label asp-for="Weight" class="control-label"></label>
+                    <label asp-for="Weight" class="control-label">(kg)</label>
                     <input id="weight" asp-for="Weight" class="form-control" type="number" step="0.01" min="0" />
                     <span asp-validation-for="Weight" class="text-danger"></span>
                 </div>

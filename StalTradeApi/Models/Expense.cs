@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StalTradeAPI.Models
 {
@@ -18,9 +19,11 @@ namespace StalTradeAPI.Models
         public string Description { get; set; }
         [Required]
         [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(5, 2)")]
         public decimal Netto { get; set; }
         [Required]
         [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(5, 2)")]
         public decimal Brutto { get; set; }
         [Required]
         [DataType(DataType.Date)]

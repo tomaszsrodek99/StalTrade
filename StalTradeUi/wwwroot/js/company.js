@@ -41,7 +41,8 @@
 
     $('#add-contact-button').on('click', function () {
         if (selectedRow !== null) {
-            loadCreateContactForm(selectedRow.companyID);
+            console.log(selectedRow[0]);
+            loadCreateContactForm(selectedRow[0]);
         }
     });
 
@@ -54,7 +55,7 @@
     $('#delete-company-button').on('click', function () {
         if (selectedRow !== null) {
             if (confirm('Czy na pewno chcesz usunąć rekord?')) {
-                window.location.href = '/CompanyUI/RemoveCompany/' + selectedRow.companyID;
+                window.location.href = '/CompanyUI/RemoveCompany/' + selectedRow[0];
             }
         }
     });
@@ -186,7 +187,7 @@ function loadUpdateContactForm(element) {
     var itemData = $(element).attr("data-item");
     var itemObject = JSON.parse(itemData);
 
-    document.getElementById("companyId").value = itemObject.companyID;
+    document.getElementById("CompanyID").value = itemObject.companyID;
     document.getElementById("contactId").value = itemObject.contactID;
     document.getElementById("firstname").value = itemObject.firstname;
     document.getElementById("lastname").value = itemObject.lastname;

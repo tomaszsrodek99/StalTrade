@@ -52,5 +52,10 @@ namespace StalTradeAPI.Repositories
             _context.Update(entity);
             await _context.SaveChangesAsync();
         }
+
+        public void Detach(T entity)
+        {
+            _context.Entry(entity).State = EntityState.Detached;
+        }
     }
 }

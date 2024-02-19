@@ -40,7 +40,7 @@
             <h3>Podsumowanie</h3>
             <button id="deposit-button" class="btn btn-primary" type="button" onclick="loadDepositForm()">Wpłata do kasy</button>
             <button id="deposit-list-button" class="btn btn-info" type="button" onclick="loadDepositesList()">Wyświetl wpłaty</button>
-            <h6 class="float-end">Stan kasy: @ViewData["Cash"] zł</h6>
+            <h6 class="position-float-right">Stan kasy: @ViewData["Cash"] zł</h6>
             <table class="table table-striped table-bordered">
                 <thead class="thead-dark">
                     <tr>
@@ -85,6 +85,9 @@
                                     </table>
                                 </div>
                             </td>
+                            <td colspan="4" class="partial-view">
+                                <div id="chart-container" class="chart-container"></div>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -113,4 +116,8 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="~/js/cashRegister.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var chartData = @Html.Raw(ViewBag.ChartData);
+    </script>
 }

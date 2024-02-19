@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StalTradeAPI.Context;
 
@@ -11,9 +12,10 @@ using StalTradeAPI.Context;
 namespace StalTradeAPI.Migrations
 {
     [DbContext(typeof(StalTradeDbContext))]
-    partial class StalTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240216201725_create-warehouse")]
+    partial class createwarehouse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,17 +224,11 @@ namespace StalTradeAPI.Migrations
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsPurchase")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Netto")
-                        .HasColumnType("decimal(5,2)");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(5,2)");
 
                     b.HasKey("PriceId");
 
@@ -241,6 +237,33 @@ namespace StalTradeAPI.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Prices");
+                });
+
+            modelBuilder.Entity("StalTradeAPI.Models.PriceHistory", b =>
+                {
+                    b.Property<int>("PriceHistoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PriceHistoryID"), 1L, 1);
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPurchase")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.HasKey("PriceHistoryID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("PriceHistory");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Product", b =>
@@ -399,6 +422,17 @@ namespace StalTradeAPI.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("StalTradeAPI.Models.PriceHistory", b =>
+                {
+                    b.HasOne("StalTradeAPI.Models.Product", "Product")
+                        .WithMany("PriceHistory")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("StalTradeAPI.Models.StockStatus", b =>
                 {
                     b.HasOne("StalTradeAPI.Models.Product", "Product")
@@ -417,9 +451,12 @@ namespace StalTradeAPI.Migrations
 
             modelBuilder.Entity("StalTradeAPI.Models.Product", b =>
                 {
+                    b.Navigation("PriceHistory");
+
                     b.Navigation("Prices");
 
-                    b.Navigation("StockStatus");
+                    b.Navigation("StockStatus")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

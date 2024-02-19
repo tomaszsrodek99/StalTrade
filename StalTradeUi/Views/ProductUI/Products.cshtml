@@ -4,7 +4,7 @@
     Layout = "_UserLayout";
 }
 
-<h2 class="text-center">Produkty</h2>
+<h2>Produkty</h2>
 <div class="text-center">
     <div class="input-group search-input">
         <span class="input-group-text">
@@ -53,19 +53,19 @@
                             @Html.DisplayFor(modelItem => item.CustomerDrawingNumber)
                         </td>
                         <td id="unit-of-measuer-@item.ProductId" class="selectable-td">
-                            @Html.DisplayFor(modelItem => item.UnitOfMeasure)
+                            @Html.DisplayFor(modelItem => item.UnitOfMeasure).
                         </td>
                         <td id="purchase-vat-@item.ProductId" class="selectable-td">
-                            @Html.DisplayFor(modelItem => item.PurchaseVat)
+                            @Html.DisplayFor(modelItem => item.PurchaseVat)%
                         </td>
                         <td id="sales-vat-@item.ProductId" class="selectable-td">
-                            @Html.DisplayFor(modelItem => item.SalesVat)
+                            @Html.DisplayFor(modelItem => item.SalesVat)%
                         </td>
                         <td id="consumption-standard-@item.ProductId" class="selectable-td">
                             @Html.DisplayFor(modelItem => item.ConsumptionStandard)
                         </td>
                         <td id="weight-@item.ProductId" class="selectable-td">
-                            @Html.DisplayFor(modelItem => item.Weight)
+                            @Html.DisplayFor(modelItem => item.Weight)kg
                         </td>
                         <td id="charge-profile-@item.ProductId" class="selectable-td">
                             @Html.DisplayFor(modelItem => item.ChargeProfile)

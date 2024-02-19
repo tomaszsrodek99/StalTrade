@@ -9,10 +9,11 @@ namespace StalTradeAPI.Context
         public DbSet<Contact>? Contacts { get; set; }
         public DbSet<Company>? Companies { get; set; }
         public DbSet<Product>? Products { get; set; }
-        public DbSet<PriceHistory>? PriceHistory { get; set; }
         public DbSet<Expense>? Expenses { get; set; }
         public DbSet<PaymentMethod>? PaymentMethods { get; set; }
         public DbSet<Deposit>? Deposit { get; set; }
+        public DbSet<StockStatus>? StockStatuses { get; set; }
+        public DbSet<Price>? Prices { get; set; }
         public StalTradeDbContext(DbContextOptions options) : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -26,14 +27,54 @@ namespace StalTradeAPI.Context
                 .WithOne(e => e.Company)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Expense>()
-                .Property(e => e.Date)
-                .HasColumnType("date");
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.Prices)
+                .WithOne(ph => ph.Product)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Expense>()
-                .Property(e => e.DateOfPayment)
-                .HasColumnType("date");
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.StockStatus)
+                .WithOne(ph => ph.Product)
+                .HasForeignKey<StockStatus>(ss => ss.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Price>()
+                .HasOne(pr => pr.Product)
+                .WithMany(p => p.Prices)
+                .HasForeignKey(pr => pr.ProductId);
+
+            modelBuilder.Entity<Price>()
+                .HasOne(pr => pr.Company)
+                .WithMany()
+                .HasForeignKey(pr => pr.CompanyId);
+        }
+
+        public override int SaveChanges()
+        {
+            ApplyCustomLogic();
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ApplyCustomLogic();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void ApplyCustomLogic()
+        {
+            var entries = ChangeTracker.Entries<StockStatus>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Modified)
+                {
+                    var stockStatus = entry.Entity;
+
+                    stockStatus.MarginValue = stockStatus.SoldValue - stockStatus.PurchasedValue;
+                    stockStatus.Margin = stockStatus.PurchasedValue != 0 ? (stockStatus.MarginValue / stockStatus.PurchasedValue) * 100 : 0;
+                }
+            }
         }
     }
-
 }

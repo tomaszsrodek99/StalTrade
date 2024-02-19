@@ -2,6 +2,7 @@
 using StalTradeAPI.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace StalTradeAPI.Dtos
 {
@@ -18,16 +19,14 @@ namespace StalTradeAPI.Dtos
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Miara")]
         public string UnitOfMeasure { get; set; }
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "VAT zakupu")]
-        [Column(TypeName = "decimal(5, 2)")]
         public int PurchaseVat { get; set; }
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "VAT sprzedaży")]
-        [Column(TypeName = "decimal(5, 2)")]
         public int SalesVat { get; set; }
-        [Column(TypeName = "decimal(5, 2)")]
         [Display(Name = "Norma zużycia")]
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public decimal? ConsumptionStandard { get; set; }
-        [Column(TypeName = "decimal(5, 2)")]
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Waga")]
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public decimal Weight { get; set; }
         [Display(Name = "Profil wsadu")]
         public string? ChargeProfile { get; set; } = string.Empty;
@@ -35,6 +34,9 @@ namespace StalTradeAPI.Dtos
         public string? MaterialGrade { get; set; } = string.Empty;
         [Display(Name = "Zamiennik")]
         public string? SubstituteGrade { get; set; } = string.Empty;
-        public List<PriceHistory>? PriceEvents { get; set; }
+        public int? StockStatusId { get; set; }
+        [JsonIgnore]
+        public StockStatusDto? StockStatus { get; set; }
+        public List<PriceDto>? Prices { get; set; }
     }
 }

@@ -4,7 +4,8 @@ namespace StalTradeAPI.Interfaces
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        Task<IEnumerable<Product>> GetAllProductWithPricesAsync();
+        Task<IEnumerable<Product>> GetAllProductsAsync();
         bool IsProductExists(string companyDrawingNumber, int productId);
+        Task<IEnumerable<Product>> GetAllProductWithPrices();
     }
 }

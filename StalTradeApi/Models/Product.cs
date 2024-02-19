@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace StalTradeAPI.Models
 {
@@ -22,13 +23,18 @@ namespace StalTradeAPI.Models
         [Required]
         public int SalesVat { get; set; }
         [Column(TypeName = "decimal(5, 2)")]
+        [DataType(DataType.Currency)]
         public decimal? ConsumptionStandard { get; set; }
         [Column(TypeName = "decimal(5, 2)")]
+        [DataType(DataType.Currency)]
         [Required]
         public decimal Weight { get; set; }
         public string? ChargeProfile { get; set; } = string.Empty;
         public string? MaterialGrade { get; set; } = string.Empty;
         public string? SubstituteGrade { get; set; } = string.Empty;
-        public List<PriceHistory>? PriceEvents { get; set; }
+        public int StockStatusId {  get; set; }
+        [JsonIgnore]
+        public StockStatus? StockStatus { get; set; }
+        public List<Price>? Prices { get; set; }
     }
 }

@@ -28,7 +28,15 @@ namespace StalTradeAPI.Controllers
                 {
                     return BadRequest("Nie znaleziono użytkowników.");
                 }
+                var contactMap = companies.SelectMany(c => c.Contacts).ToList();
+                var contactDtos = _mapper.Map<List<ContactDto>>(contactMap);
                 var records = _mapper.Map<List<CompanyDto>>(companies);
+
+                foreach (var companyDto in records)
+                {
+                    companyDto.Contacts = contactDtos.Where(c => c.CompanyID == companyDto.CompanyID).ToList();
+                }
+
                 return Ok(records);
             }
             catch (Exception ex)

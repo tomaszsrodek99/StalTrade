@@ -12,9 +12,9 @@ namespace StalTradeAPI.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Product>> GetAllProductWithPricesAsync()
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            return await _context.Products.Include(c => c.PriceEvents).ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
         public bool IsProductExists(string companyDrawingNumber, int productId)
@@ -22,6 +22,14 @@ namespace StalTradeAPI.Repositories
             return !_context.Products.Any(c => c.CompanyDrawingNumber == companyDrawingNumber && c.ProductId != productId);
         }
 
-        
+        public async Task<IEnumerable<Product>> GetAllProductWithPrices()
+        {
+            var products = await _context.Products             
+                .Include(p => p.Prices)
+                .ThenInclude(price => price.Company)
+                .ToListAsync();
+
+            return products;
+        }
     }
 }

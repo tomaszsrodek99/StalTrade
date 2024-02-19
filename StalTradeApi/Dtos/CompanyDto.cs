@@ -33,6 +33,6 @@ namespace StalTradeAPI.Dtos
         public string NIP { get; set; } = string.Empty;
         [Display(Name = "Forma płatności"), Required(ErrorMessage = "Pole jest wymagane.")]
         public string PaymentMethod { get; set; } = string.Empty;
-        public List<Contact>? Contacts { get; set; }
+        public List<ContactDto>? Contacts { get; set; }
     }
 }

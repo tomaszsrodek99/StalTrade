@@ -14,6 +14,8 @@ namespace StalTradeAPI.Helpers
             CreateMap<Product, ProductDto>().ReverseMap();
             CreateMap<Expense, ExpenseDto>().ReverseMap();
             CreateMap<Deposit, DepositDto>().ReverseMap();
+            CreateMap<StockStatus, StockStatusDto>().ReverseMap();
+            CreateMap<Price, PriceDto>().ReverseMap();
         }
     }  
 }

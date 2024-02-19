@@ -1,0 +1,162 @@
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using StalTradeAPI.Dtos;
+using StalTradeAPI.Interfaces;
+using StalTradeAPI.Models;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using System.Diagnostics;
+using StalTradeAPI.Repositories;
+using Microsoft.EntityFrameworkCore;
+
+namespace StalTradeAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class WarehouseController : Controller
+    {
+        private readonly IMapper _mapper;
+        private readonly IStockStatusRepository _stockStatusRepository;
+        private readonly IPriceRepository _priceRepository;
+        private readonly IProductRepository _productRepository;
+        public WarehouseController(IMapper mapper, IPriceRepository priceRepository, IStockStatusRepository stockStatusRepository, IProductRepository productRepository)
+        {
+            _mapper = mapper;
+            _priceRepository = priceRepository;
+            _stockStatusRepository = stockStatusRepository;
+            _productRepository = productRepository;
+        }
+
+        [HttpGet("GetProducts")]
+        public async Task<ActionResult<IEnumerable<StockStatusDto>>> GetProducts()
+        {
+            try
+            {
+                var productsList = await _stockStatusRepository.GetAllProductsAsync();
+                if (!productsList.Any())
+                {
+                    return BadRequest("Nie znaleziono produktów.");
+                }
+                var products = productsList.Select(c => c.Product).ToList();
+                var productDtos = _mapper.Map<List<ProductDto>>(products);
+                var records = _mapper.Map<List<StockStatusDto>>(productsList);
+
+                foreach (var item in records)
+                {
+                    item.Product = productDtos.Where(c => c.StockStatusId == item.StockStatusId).FirstOrDefault();
+                }
+
+                return Ok(records);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetPrices")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetPrices()
+        {
+            try
+            {
+                var productList = await _productRepository.GetAllProductWithPrices();
+
+                if (!productList.Any())
+                {
+                    return BadRequest("Nie znaleziono produktów.");
+                }
+
+                var productDtos = productList.Select(p => new ProductDto
+                {
+                    ProductId = p.ProductId,
+                    CompanyDrawingNumber = p.CompanyDrawingNumber,
+                    Name = p.Name,
+                    UnitOfMeasure = p.UnitOfMeasure,
+                    PurchaseVat = p.PurchaseVat,
+                    SalesVat = p.SalesVat,
+                    StockStatusId = p.StockStatusId,
+                    ChargeProfile = p.ChargeProfile,
+                    ConsumptionStandard = p.ConsumptionStandard,
+                    CustomerDrawingNumber = p.CustomerDrawingNumber,
+                    MaterialGrade = p.MaterialGrade,
+                    SubstituteGrade = p.SubstituteGrade,                  
+                    Prices = p.Prices
+                        .Select(price => new PriceDto
+                        {
+                            PriceId = price.PriceId,
+                            ProductId = price.ProductId,
+                            CompanyId = price.CompanyId,
+                            Company = _mapper.Map<CompanyDto>(price.Company),
+                            Netto = price.Netto,
+                            Date = price.Date,
+                            IsPurchase = price.IsPurchase
+                        })
+                        .ToList(),
+                }).ToList();
+
+                return Ok(productDtos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("CreatePrice")]
+        public async Task<IActionResult> CreatePrice(PriceDto dto)
+        {
+            try
+            {
+                await _priceRepository.AddAsync(_mapper.Map<Price>(dto));
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("UpdatePrice")]
+        public async Task<IActionResult> UpdatePrice(PriceDto dto)
+        {
+            try
+            {
+                var previousPrice = await _priceRepository.GetAsync(dto.PriceId);
+                _priceRepository.Detach(previousPrice);
+
+                if (previousPrice.CompanyId == dto.CompanyId && previousPrice.Netto == dto.Netto)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    dto.PriceId = 0;
+                    dto.CompanyId = previousPrice.CompanyId;
+                    await _priceRepository.AddAsync(_mapper.Map<Price>(dto));
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeletePrice{id}")]
+        public async Task<IActionResult> DeletePrice(int id)
+        {
+            try
+            {
+                await _priceRepository.DeleteAsync(id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    }
+}
