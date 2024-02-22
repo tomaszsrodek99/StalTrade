@@ -1,6 +1,7 @@
 ﻿using StalTradeAPI.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace StalTradeAPI.Dtos
 {
@@ -8,6 +9,7 @@ namespace StalTradeAPI.Dtos
     {
         public int PriceId { get; set; }
         public int ProductId { get; set; }
+        [JsonIgnore]
         public ProductDto? Product { get; set; }
         [Display(Name = "Firma"), Required(ErrorMessage = "Ceny dla wszystkich dostępnych firm są już ustalone.")]
         public int CompanyId { get; set; }

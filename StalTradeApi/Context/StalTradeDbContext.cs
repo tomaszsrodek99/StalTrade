@@ -14,6 +14,8 @@ namespace StalTradeAPI.Context
         public DbSet<Deposit>? Deposit { get; set; }
         public DbSet<StockStatus>? StockStatuses { get; set; }
         public DbSet<Price>? Prices { get; set; }
+        public DbSet<Invoice>? Invoices { get; set; }
+        public DbSet<InvoiceProduct>? InvoiceProducts { get; set; }
         public StalTradeDbContext(DbContextOptions options) : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -47,6 +49,21 @@ namespace StalTradeAPI.Context
                 .HasOne(pr => pr.Company)
                 .WithMany()
                 .HasForeignKey(pr => pr.CompanyId);
+
+             modelBuilder.Entity<Invoice>()
+                 .HasMany(p => p.ProductsList)
+                 .WithOne(ph => ph.Invoice)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<InvoiceProduct>()
+                .HasOne(ip => ip.Product)
+                .WithMany()
+                .HasForeignKey(ip => ip.ProductId);
+
+            modelBuilder.Entity<InvoiceProduct>()
+                .HasOne(ip => ip.Invoice)
+                .WithMany(i => i.ProductsList)
+                .HasForeignKey(ip => ip.InvoiceId);
         }
 
         public override int SaveChanges()

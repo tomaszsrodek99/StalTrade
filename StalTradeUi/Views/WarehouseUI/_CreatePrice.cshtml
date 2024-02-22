@@ -6,6 +6,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input id="product-id" asp-for="ProductId" class="form-control" hidden />
         <input id="price-id" asp-for="PriceId" class="form-control" hidden />
+        <input class="form-checkbox-control" asp-for="IsPurchase" type="checkbox" id="is-purchase" asp-true-value="true" asp-false-value="false" hidden/>
         <div class="form-group">
             <label asp-for="CompanyId" class="control-label"></label>
             <select id="company-id" asp-for="CompanyId" class="form-control"></select>

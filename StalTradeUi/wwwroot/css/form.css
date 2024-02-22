@@ -26,6 +26,10 @@
     margin: 25px;
 }
 
+.wide-form {
+    max-width: 1000px;
+}
+
 .contact-form {
     padding: 20px;
     background-color: #f8f9fa;
@@ -52,7 +56,8 @@
     }
 
     .my-form input[type="number"] {
-        width: 100px;
+        min-width: 100px;
+        max-width: 150px;
         border: 1px solid #ced4da;
         border-radius: 5px;
         margin: auto;
@@ -96,6 +101,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding: 10px;
 }
 
 #partial-view-method {
@@ -116,4 +122,8 @@
 
 .form-container {
     padding: 10px;
+}
+
+.display-none {
+    visibility: hidden;
 }

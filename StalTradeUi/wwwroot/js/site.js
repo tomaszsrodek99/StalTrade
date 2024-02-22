@@ -10,6 +10,10 @@
     $('body').removeClass('blur-overlay-visible');
 }
 
+function goBack() {
+    history.back();
+}
+
 function blur() {
     $('#blurOverlay').show();
     $('body').addClass('blur-overlay-visible');

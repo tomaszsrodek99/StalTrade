@@ -4,7 +4,7 @@ var currentPriceRow = null;
 var chartId = null;
 $(document).ready(function () {
     console.log(productList);
-    $('#edit-price-button, #delete-price-button, #add-price-button').prop('disabled', true);
+    $('#edit-price-button, #delete-price-button, #add-price-button, #sale-prices-button, #purchase-prices-button').prop('disabled', true);
 
     $('#product-table tbody').on('click', 'td.selectable-td', function (e) {
         e.stopPropagation();
@@ -13,23 +13,23 @@ $(document).ready(function () {
         if (currentProductRow.hasClass('selected')) {
             currentProductRow.removeClass('selected');
             selectedProductRow = null;
-            $('#add-price-button').prop('disabled', true);
-            $('#edit-price-button, #delete-price-button').prop('disabled', true);
+            $('#add-price-button, #sale-prices-button, #purchase-prices-button, #edit-price-button, #delete-price-button').prop('disabled', true);
+            var priceTableBody = $('#price-table tbody');
+            priceTableBody.empty();
         } else {
             productTable.rows().deselect();
             currentProductRow.addClass('selected');
-            selectedProductRow = productTable.row(currentProductRow).data();
-            var latestPricesForSelectedProduct = latestPrices.filter(price => price.productId == selectedProductRow[0]);
-            updatePriceTable(latestPricesForSelectedProduct);
-            var availableCompanies = getAvailableCompanies();
-            updateCompanyOptions(availableCompanies);
+            selectedProductRow = productTable.row(currentProductRow).data();           
 
             if (chartId != null)
                 removeChart(chartId);
         }
         var isProductRowSelected = selectedProductRow != null;
-        $('#add-price-button').prop('disabled', !isProductRowSelected);
+        $('#edit-price-button, #delete-price-button, #add-price-button').prop('disabled', true);
+        $('#sale-prices-button, #purchase-prices-button').prop('disabled', false);
         $('#add-price-button').attr('data-product-id', isProductRowSelected ? selectedProductRow[0] : null);
+        var priceTableBody = $('#price-table tbody');
+        priceTableBody.empty();
     });
 
     $('#price-table tbody').on('click', 'tr', function (e) {
@@ -46,6 +46,9 @@ $(document).ready(function () {
 
             selectedPriceRow = null;
         } else {
+            var availableCompanies = getAvailableCompanies();
+            updateCompanyOptions(availableCompanies);
+
             $('#price-table tbody tr.selected').removeClass('selected');
             if (chartId != null)
                 removeChart(chartId);
@@ -53,16 +56,16 @@ $(document).ready(function () {
                 return $(this).text();
             }).get();
 
-            console.log(selectedPriceRow);
             currentPriceRow.addClass('selected');
             $('#edit-price-button, #delete-price-button').attr('data-price-id', selectedPriceRow[2]);
             $('#edit-price-button, #delete-price-button').prop('disabled', false);
 
-            //console.log(selectedProduct);
+            //console.log(selectedProductRow);
+            //console.log(selectedPriceRow);
             chartId = 'chart-' + selectedPriceRow[2];
             
             var chartData = prepareChartData(productList, selectedPriceRow[2], selectedProductRow[0]);
-            console.log(chartData);
+            //console.log(chartData);
             if (chartData.length > 1) {
                 createChart(chartId, chartData);
             }
@@ -81,6 +84,36 @@ $(document).ready(function () {
         if (confirm('Czy na pewno chcesz usunąć cenę?')) {
             window.location.href = '/WarehouseUI/RemovePrice/' + selectedPriceRow[0];
         }
+    });
+
+    $('#sale-prices-button').on('click', function () {      
+        var latestPricesForSelectedProduct = latestSalePrices.filter(price => price.productId == selectedProductRow[0]);
+        updatePriceTable(latestPricesForSelectedProduct);
+        var availableCompanies = getAvailableCompanies();
+        updateCompanyOptions(availableCompanies);
+        $('#add-price-button').prop('disabled', false);
+        document.getElementById("price-table-header").innerHTML = "Ceny sprzedaży";
+        var form = document.getElementById("priceForm");
+        form.action = "AddSalePrice";
+
+        $('#sale-prices-button, #edit-price-button, #delete-price-button').prop('disabled', true);
+        $('#purchase-prices-button').prop('disabled', false);
+        removeChart(chartId);
+    });
+
+    $('#purchase-prices-button').on('click', function () {
+        var latestPricesForSelectedProduct = latestPurchasePrices.filter(price => price.productId == selectedProductRow[0]);
+        updatePriceTable(latestPricesForSelectedProduct);
+        var availableCompanies = getAvailableCompanies();
+        updateCompanyOptions(availableCompanies);
+        $('#add-price-button').prop('disabled', false);
+        document.getElementById("price-table-header").innerHTML = "Ceny zakupu";
+        var form = document.getElementById("priceForm");
+        form.action = "AddPurchasePrice";
+
+        $('#sale-prices-button').prop('disabled', false);
+        $('#purchase-prices-button, #edit-price-button, #delete-price-button').prop('disabled', true);
+        removeChart(chartId);
     });
 
     var table = new DataTable('#search-table', {
@@ -148,6 +181,7 @@ function updatePriceTable(prices) {
                     <td id="company-name-${price.company.name}">${price.company.name}</td>
                     <td id="price-data-${price.date}">${new Date(price.date).toLocaleDateString()}</td>
                     <td id="netto-${price.netto}">${price.netto}</td>
+                    <td id="is-purchase-${price.isPurchase}" hidden>${price.isPurchase}</td>
                 </tr>
             `);
         });
@@ -163,7 +197,6 @@ function updatePriceTable(prices) {
 function loadCreatePriceForm(data) {
     var form = document.getElementById("priceForm");
     form.reset();
-    form.action = "AddPrice";
     document.getElementById("product-id").value = data;
     document.getElementById("price-form-name").innerHTML = "Dodaj cenę";
 
@@ -173,10 +206,10 @@ function loadCreatePriceForm(data) {
 }
 
 function loadUpdatePriceForm(data) {
+    //console.log(data);
     var form = document.getElementById("priceForm");
     form.reset();
     form.action = "PutPrice";
-    console.log(data);
     document.getElementById("price-form-name").innerHTML = "Edytuj cenę dla " + data[3];
 
     var companySelect = $('#company-id');
@@ -197,6 +230,7 @@ function loadUpdatePriceForm(data) {
     document.getElementById("product-id").value = data[1];
     document.getElementById("company-id").value = data[2];
     document.getElementById("netto").value = data[5];
+    document.getElementById("is-purchase").value = data[6];
 
     var partialView = document.getElementById("partial-view-price");
     partialView.style.visibility = "visible";
@@ -235,8 +269,10 @@ function getUsedCompanyIds() {
 
     $('#price-table tbody tr').each(function () {
         var companyId = $(this).find('td:eq(2)').text();
+        //console.log(companyId);
         usedCompanyIds.push(parseInt(companyId));
     });
+
     //console.log("uzywane " + usedCompanyIds);
     return usedCompanyIds;
 }
@@ -260,10 +296,21 @@ function removeChart(chartId) {
 }
 
 function prepareChartData(productList, companyId, productId) {
-    var selectedProduct = productList.find(product => product.productId == productId);
+    console.log(productList);
+    console.log(productId, companyId)
+    var selectedProduct = productList.find(product => product.productId == parseInt(productId));
     console.log(selectedProduct);
     if (selectedProduct) {
-        var selectedPrices = selectedProduct.prices.filter(price => price.companyId == companyId);
+        var selectedPrices = null;
+
+        if ($('#sale-prices-button').prop('disabled')) {
+            console.log("sprzedaz dola firma " + companyId + " dla produkt " + productId);
+            selectedPrices = selectedProduct.prices.filter(price => price.companyId == companyId && !price.isPurchase && price.productId == productId);
+        } else {
+            console.log("kupno");
+            selectedPrices = selectedProduct.prices.filter(price => price.companyId == companyId && price.isPurchase);
+        }
+        
         console.log(selectedPrices);
         var chartData = selectedPrices.map(price => ({
             date: new Date(price.date).toLocaleDateString(),

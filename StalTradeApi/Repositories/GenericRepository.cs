@@ -19,7 +19,8 @@ namespace StalTradeAPI.Repositories
             return entity;
         }
 
-        public async Task DeleteAsync(int id)
+        //wirtualna do nadpisania
+        public virtual async Task DeleteAsync(int id)
         {
             var entity = await GetAsync(id);
             _context.Set<T>().Remove(entity);

@@ -1,0 +1,112 @@
+﻿@model IEnumerable<StalTradeAPI.Dtos.InvoiceDto>
+@{
+    ViewData["Title"] = "Faktury";
+    Layout = "_UserLayout";
+}
+
+<h2>Faktury</h2>
+<div class="position-float-right">
+    <div id="button-container">
+        <button id="add-invoice-sale-button" class="btn btn-primary">Dodaj nową fakturę sprzedaży</button>
+        <button id="add-invoice-purchase-button" class="btn btn-primary">Dodaj nową fakturę zakupu</button>
+        <button id="delete-invoice-button" class="btn btn-danger">Usuń</button>
+    </div>
+</div>
+<div class="row text-center justify-content-center" style="margin-top: 50px;">
+    @if (Model.Any())
+    {
+        <div class="col-6">
+            <h4 class="text-center">Sprzedaż</h4>
+            <table id="invoice-sale-table" class="display table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th hidden></th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceDate)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceNumber)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.Netto)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.Brutto)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.PaymentDate)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        @if (item.IsPurchase == false)
+                        {
+                            <tr>
+                                <td id="invoiceId-@item.InvoiceId" hidden>@Html.DisplayFor(modelItem => item.InvoiceId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.InvoiceDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Netto)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Brutto)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PaymentDate)</td>
+                        <td>
+                                    <button class="show-contacts btn-info" data-item='@Html.Raw(Json.Serialize(item.ProductsList))'>Szczegóły</button>
+                        </td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-6">
+            <h4 class="text-center">Zakupy</h4>
+            <table id="invoice-purchase-table" class="display table table-striped table-bordered table-hover">
+                <thead class="thead-dark text-center">
+                    <tr>
+                        <th hidden></th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceDate)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceNumber)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.Netto)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.Brutto)</th>
+                        <th>@Html.DisplayNameFor(modelItem => modelItem.PaymentDate)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        @if (item.IsPurchase == true)
+                        {
+                            <tr>
+                                <td id="invoiceId-@item.InvoiceId" hidden>@Html.DisplayFor(modelItem => item.InvoiceId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.InvoiceDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Netto)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Brutto)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PaymentDate)</td>
+                                <td>
+                                    <button class="show-contacts btn-info" data-item='@Html.Raw(Json.Serialize(item.ProductsList))'>Szczegóły</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>Brak zapisanych faktur.</p>
+    }
+</div>
+
+<div id="partial-view-purchase-form" class="partial-view hidden">
+    @await Html.PartialAsync("_CreatePurchaseInvoice", new StalTradeAPI.Dtos.InvoiceDto())
+</div>
+
+<div id="partial-view-sale-form" class="partial-view hidden">
+    @await Html.PartialAsync("_CreateSaleInvoice", new StalTradeAPI.Dtos.InvoiceDto())
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/invoice.js"></script>
+    <script>
+        var data = @Json.Serialize(Model);
+        var companies = @Json.Serialize(ViewBag.Companies);
+    </script>
+}

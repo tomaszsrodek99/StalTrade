@@ -25,6 +25,8 @@ builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IDepositRepository, DepositRepository>();
 builder.Services.AddScoped<IPriceRepository, PriceRepository>();
 builder.Services.AddScoped<IStockStatusRepository, StockStatusRepository>();
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IInvoiceProductRepository, InvoiceProductRepository>();
 
 builder.Services.AddControllers();
 

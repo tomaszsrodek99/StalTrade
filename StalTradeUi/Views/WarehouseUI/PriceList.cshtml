@@ -8,6 +8,8 @@
 <h2>Cennik</h2>
 <div class="position-float-right">
     <div id="button-container">
+        <button id="sale-prices-button" class="btn btn-info">Sprzedaż</button>
+        <button id="purchase-prices-button" class="btn btn-info">Zakupy</button>
         <button id="add-price-button" class="btn btn-primary">Dodaj nową cenę</button>
         <button id="edit-price-button" class="btn btn-secondary">Edytuj</button>
         <button id="delete-price-button" class="btn btn-danger">Usuń ostatnią cenę</button>
@@ -49,7 +51,7 @@
             </table>
         </div>
         <div class="col-4">
-            <h4 class="text-center">Ceny dla firm</h4>
+            <h4 id="price-table-header" class="text-center">Ceny</h4>
             <table id="price-table" class="display table table-striped table-bordered table-hover">
                 <thead class="thead-dark text-center">
                     <tr>
@@ -59,6 +61,7 @@
                         <th>Firma</th>
                         <th>Data</th>
                         <th>Cena netto</th>
+                        <th hidden></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,6 +72,7 @@
                         <td class="selectable-td"></td>
                         <td class="selectable-td"></td>
                         <td class="selectable-td"></td>
+                        <td hidden></td>
                     </tr>
                 </tbody>
             </table>
@@ -96,7 +100,8 @@
     <script>
         var allCompanies = @Html.Raw(Json.Serialize(ViewBag.Companies));
         var productList = @Html.Raw(Json.Serialize(Model));
-        var latestPrices = @Html.Raw(Json.Serialize(ViewBag.LatestPrices));
+        var latestPurchasePrices = @Html.Raw(Json.Serialize(ViewBag.LatestPurchasePrices));
+        var latestSalePrices = @Html.Raw(Json.Serialize(ViewBag.LatestSalePrices));
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/warehouse.js"></script>

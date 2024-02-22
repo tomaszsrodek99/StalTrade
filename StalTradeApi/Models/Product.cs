@@ -33,7 +33,6 @@ namespace StalTradeAPI.Models
         public string? MaterialGrade { get; set; } = string.Empty;
         public string? SubstituteGrade { get; set; } = string.Empty;
         public int StockStatusId {  get; set; }
-        [JsonIgnore]
         public StockStatus? StockStatus { get; set; }
         public List<Price>? Prices { get; set; }
     }

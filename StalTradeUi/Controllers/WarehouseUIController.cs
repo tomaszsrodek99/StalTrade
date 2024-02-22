@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using StalTradeAPI.Dtos;
 using System.Net.Http;
 
 namespace StalTradeUI.Controllers
 {
+    [Authorize]
     public class WarehouseUIController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -53,13 +55,19 @@ namespace StalTradeUI.Controllers
                     var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
                     ViewBag.Companies = await companyResponse.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
 
-                    var latestPrices = responseDto
+                    var latestPurchasePrices = responseDto
+                        .SelectMany(p => p.Prices ?? Enumerable.Empty<PriceDto>())
+                        .Where(price => price.IsPurchase)
+                        .GroupBy(price => new { price.ProductId, price.CompanyId })
+                        .Select(group => group.OrderByDescending(price => price.Date).FirstOrDefault());
+                    ViewBag.LatestPurchasePrices = latestPurchasePrices;
+
+                    var latestSalePrices = responseDto
                         .SelectMany(p => p.Prices ?? Enumerable.Empty<PriceDto>())
                         .Where(price => !price.IsPurchase)
                         .GroupBy(price => new { price.ProductId, price.CompanyId })
                         .Select(group => group.OrderByDescending(price => price.Date).FirstOrDefault());
-
-                    ViewBag.LatestPrices = latestPrices;
+                    ViewBag.LatestSalePrices = latestSalePrices;
 
                     return View("PriceList", responseDto);
                 }
@@ -73,7 +81,7 @@ namespace StalTradeUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPrice(PriceDto dto)
+        public async Task<IActionResult> AddSalePrice(PriceDto dto)
         {
             try
             {
@@ -95,6 +103,28 @@ namespace StalTradeUI.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddPurchasePrice(PriceDto dto)
+        {
+            try
+            {
+                dto.Date = DateTime.Now;
+                dto.IsPurchase = true;
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Warehouse/CreatePrice", dto);
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("PriceList");
+
+                var content = await response.Content.ReadAsStringAsync();
+                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> PutPrice(PriceDto dto)

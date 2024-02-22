@@ -66,34 +66,8 @@ namespace StalTradeAPI.Controllers
                     return BadRequest("Nie znaleziono produktów.");
                 }
 
-                var productDtos = productList.Select(p => new ProductDto
-                {
-                    ProductId = p.ProductId,
-                    CompanyDrawingNumber = p.CompanyDrawingNumber,
-                    Name = p.Name,
-                    UnitOfMeasure = p.UnitOfMeasure,
-                    PurchaseVat = p.PurchaseVat,
-                    SalesVat = p.SalesVat,
-                    StockStatusId = p.StockStatusId,
-                    ChargeProfile = p.ChargeProfile,
-                    ConsumptionStandard = p.ConsumptionStandard,
-                    CustomerDrawingNumber = p.CustomerDrawingNumber,
-                    MaterialGrade = p.MaterialGrade,
-                    SubstituteGrade = p.SubstituteGrade,                  
-                    Prices = p.Prices
-                        .Select(price => new PriceDto
-                        {
-                            PriceId = price.PriceId,
-                            ProductId = price.ProductId,
-                            CompanyId = price.CompanyId,
-                            Company = _mapper.Map<CompanyDto>(price.Company),
-                            Netto = price.Netto,
-                            Date = price.Date,
-                            IsPurchase = price.IsPurchase
-                        })
-                        .ToList(),
-                }).ToList();
-
+                var productDtos = _mapper.Map<IEnumerable<ProductDto>>(productList);
+                
                 return Ok(productDtos);
             }
             catch (Exception ex)

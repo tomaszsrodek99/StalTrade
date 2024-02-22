@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StalTradeAPI.Context;
 
@@ -11,9 +12,10 @@ using StalTradeAPI.Context;
 namespace StalTradeAPI.Migrations
 {
     [DbContext(typeof(StalTradeDbContext))]
-    partial class StalTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240220150528_Create-Invoices")]
+    partial class CreateInvoices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +73,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasKey("CompanyID");
 
-                    b.ToTable("Companies", (string)null);
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Contact", b =>
@@ -118,7 +120,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasIndex("CompanyID");
 
-                    b.ToTable("Contacts", (string)null);
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Deposit", b =>
@@ -137,7 +139,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Deposit", (string)null);
+                    b.ToTable("Deposit");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Expense", b =>
@@ -190,7 +192,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasKey("ExpenseId");
 
-                    b.ToTable("Expenses", (string)null);
+                    b.ToTable("Expenses");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Invoice", b =>
@@ -228,7 +230,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Invoices", (string)null);
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.InvoiceProduct", b =>
@@ -260,7 +262,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("InvoiceProducts", (string)null);
+                    b.ToTable("InvoiceProducts");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.PaymentMethod", b =>
@@ -278,7 +280,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethods", (string)null);
+                    b.ToTable("PaymentMethods");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Price", b =>
@@ -310,7 +312,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Prices", (string)null);
+                    b.ToTable("Prices");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Product", b =>
@@ -362,7 +364,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.StockStatus", b =>
@@ -405,7 +407,7 @@ namespace StalTradeAPI.Migrations
                     b.HasIndex("ProductId")
                         .IsUnique();
 
-                    b.ToTable("StockStatuses", (string)null);
+                    b.ToTable("StockStatuses");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.User", b =>
@@ -436,7 +438,7 @@ namespace StalTradeAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("StalTradeAPI.Models.Contact", b =>
