@@ -33,6 +33,8 @@ namespace StalTradeUI.Controllers
                     ViewBag.BruttoExpensesUnpaid = responseDto.Where(e => !e.Paid).Sum(e => e.Brutto);
                     return View("Expenses", responseDto);
                 }
+                ViewBag.BruttoExpensesPaid = 0;
+                ViewBag.BruttoExpensesUnpaid = 0;
                 return View("Expenses", new List<ExpenseDto>());
             }
             catch (Exception ex)
@@ -49,14 +51,10 @@ namespace StalTradeUI.Controllers
             {
                 HttpResponseMessage response = await _httpClient.GetAsync("api/Expense/GetExpenses");
                 HttpResponseMessage responseDeposit = await _httpClient.GetAsync("api/Expense/GetDeposites");
-
-                if (response.IsSuccessStatusCode && responseDeposit.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
                     var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ExpenseDto>>();
                     responseDto = responseDto.OrderBy(x => x.DateOfPayment);
-                    var depositesDto = await responseDeposit.Content.ReadFromJsonAsync<IEnumerable<DepositDto>>();
-                    ViewData["Deposites"] = depositesDto;
-                    ViewData["Cash"] = depositesDto.Select(x => x.Cash).Sum() - responseDto.Where(x => x.Paid == true).Select(x => x.Brutto).Sum();
 
                     var monthlyExpenses = responseDto
                         .GroupBy(e => e.DateOfPayment.ToString("MMMM yyyy"))
@@ -71,7 +69,7 @@ namespace StalTradeUI.Controllers
 
                     var chartData = new
                     {
-                        labels = monthlyExpenses.SelectMany(m => m.Expenses.Select(e => e.DateOfPayment.ToString("yyyy-MM-dd"))).Reverse(),
+                        labels = monthlyExpenses.SelectMany(m => m.Expenses.Select(e => e.DateOfPayment.ToString("yyyy-MM-dd"))),
                         datasets = new[]
                         {
                             new
@@ -84,11 +82,17 @@ namespace StalTradeUI.Controllers
                             }
                         }
                     };
-
                     ViewBag.ChartData = JsonConvert.SerializeObject(chartData);
+                    ViewData["Cash"] = 0 - responseDto.Where(x => x.Paid == true).Select(x => x.Brutto).Sum();
+                    if (responseDeposit.IsSuccessStatusCode)
+                    {
+                        var depositesDto = await responseDeposit.Content.ReadFromJsonAsync<IEnumerable<DepositDto>>();
+                        ViewData["Deposites"] = depositesDto;
+                        ViewData["Cash"] = depositesDto.Select(x => x.Cash).Sum() - responseDto.Where(x => x.Paid == true).Select(x => x.Brutto).Sum();
+                        return View("CashRegister", monthlyExpenses);
+                    }
                     return View("CashRegister", monthlyExpenses);
                 }
-
                 return View("CashRegister", new List<MonthlyExpenseViewModel>());
             }
             catch (Exception ex)

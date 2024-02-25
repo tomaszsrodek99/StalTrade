@@ -4,6 +4,7 @@ namespace StalTradeAPI.Interfaces
 {
     public interface IStockStatusRepository : IGenericRepository<StockStatus>
     {
-        Task<IEnumerable<StockStatus>> GetAllProductsAsync();
+        Task<IEnumerable<Product>> GetAllProductsWithStockStatusAsync();
+        Task<StockStatus> GetAsyncByProductId(int id);
     }
 }

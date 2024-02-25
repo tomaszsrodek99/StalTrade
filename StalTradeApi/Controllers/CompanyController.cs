@@ -26,7 +26,7 @@ namespace StalTradeAPI.Controllers
                 var companies = await _companyRepository.GetAllCompaniesWithContactsAsync();
                 if (!companies.Any())
                 {
-                    return BadRequest("Nie znaleziono użytkowników.");
+                    return BadRequest("Nie znaleziono zapisanych użytkowników.");
                 }
                 var contactMap = companies.SelectMany(c => c.Contacts).ToList();
                 var contactDtos = _mapper.Map<List<ContactDto>>(contactMap);

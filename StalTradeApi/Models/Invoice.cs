@@ -25,12 +25,12 @@ namespace StalTradeAPI.Models
         [ForeignKey("CompanyId")]
         public Company? Company { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         [Required]
         public decimal Netto { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         [Required]
         public decimal Brutto { get; set; }

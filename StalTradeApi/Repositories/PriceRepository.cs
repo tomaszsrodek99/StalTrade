@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StalTradeAPI.Context;
-using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
 

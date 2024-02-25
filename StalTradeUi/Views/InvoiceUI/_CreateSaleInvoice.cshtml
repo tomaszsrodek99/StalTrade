@@ -1,100 +1,98 @@
 ﻿@model StalTradeAPI.Dtos.InvoiceDto
 @{
-    var number = 0;
+    ViewData["Title"] = "Sprzedaż";
+    Layout = "_UserLayout";
 }
-<div class="text-center form-container">
-    <h2>Dodaj fakturę</h2>
-    <div class="row">
-        <form id="invoicePurchaseForm" asp-controller="InvoiceUI" asp-action="AddPurchase" method="post" class="my-form">
+<div class="text-center">
+    <h2 id="sale-header">Dodaj fakturę sprzedaży</h2>
+    <form id="invoiceForm" asp-controller="InvoiceUI" asp-action="AddSale" method="post" class="my-form wide-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label asp-for="InvoiceDate" class="control-label"></label>
-                    <input id="invoice-date" asp-for="InvoiceDate" class="form-control" type="datetime-local" />
-                    <span asp-validation-for="InvoiceDate" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="InvoiceNumber" class="control-label"></label>
-                    <input id="invoice-number" asp-for="InvoiceNumber" class="form-control" />
-                    <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="CompanyId" class="control-label"></label>
-                    <select id="invoice-companyId" asp-for="CompanyId" class="form-control">
-                        @foreach (var company in ViewBag.Companies)
-                        {
-                            <option value="@company.CompanyID">@company.Name</option>
-                        }
-                    </select>
-                    <span asp-validation-for="CompanyId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col">
-                            <label asp-for="Netto" class="control-label"></label>
-                            <input id="invoice-netto" asp-for="Netto" class="form-control" type="number" min="0" step="0.01" disabled />
-                            <span asp-validation-for="Netto" class="text-danger"></span>
-                        </div>
-                        <<div class="col">
-                            <label asp-for="Brutto" class="control-label"></label>
-                            <input id="invoice-brutto" asp-for="Brutto" class="form-control" type="number" min="0" step="0.01" disabled />
-                            <span asp-validation-for="Brutto" class="text-danger"></span>
-                        </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="InvoiceDate" class="control-label"></label>
+                        <input id="invoice-date" asp-for="InvoiceDate" class="form-control" type="date" onchange="enableCompany()" />
+                        <span asp-validation-for="InvoiceDate" class="text-danger"></span>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="PaymentDate" class="control-label"></label>
-                    <input id="invoice-payment-date" asp-for="PaymentDate" class="form-control" type="date" />
-                    <span asp-validation-for="PaymentDate" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="btn-group">
-                        <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="goBack()">Wstecz</button>
-                        <button type="submit" class="btn btn-primary">Zapisz</button>
+                    <div class="col">
+                        <label asp-for="InvoiceNumber" class="control-label"></label>
+                        <input id="invoice-number" asp-for="InvoiceNumber" class="form-control" />
+                        <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
                     </div>
                 </div>
             </div>
-            <div id="product-entries" class="my-form col-6">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="CompanyId" class="control-label"></label>
+                    <select id="invoice-companyId" asp-for="CompanyId" class="form-control" onchange="updatePaymentDate(products)" readonly>
+                            @foreach (var company in ViewBag.Companies)
+                            {
+                                <option value="@company.CompanyID">@company.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="CompanyId" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                    <label id="invoice-date-label" class="control-label">Data płatności</label>
+                    <input id="invoice-payment-date" asp-for="PaymentDate" class="form-control" type="date" readonly />
+                        <span asp-validation-for="PaymentDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Netto" class="control-label"></label> zł
+                    <input id="invoice-netto" asp-for="Netto" class="form-control" type="number" readonly />
+                        <span asp-validation-for="Netto" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Brutto" class="control-label"></label> zł
+                    <input id="invoice-brutto" asp-for="Brutto" class="form-control" type="number" readonly />
+                        <span asp-validation-for="Brutto" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="btn-group">
+                    <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="goBack()">Wstecz</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </div>
+            <div id="product-entries text-center">
                 <div class="product-entry">
-                    <label>Wybierz produkty:</label>                   
-                    @foreach (var product in ViewBag.Products)
-                    {
-                        <input type="number" name="Products[@number].ProductId" value="@product.ProductId" hidden />
-                        <div class="form-group">
-                            <label>Nazwa</label>
-                            <input type="number" value="@product.CompanyDrawingNumber - @product.Name" disabled />
-                        </div>
-                        <div class="form-group">
-                            <label>Ilość</label>
-                            <input name="Products[@number].Quantity" id="product-quantity-@product.ProductId" type="number" class="form-control" required min="0" step="1"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Jednostka miary</label>
-                            <input value="@product.UnitOfMeasure" type="text" class="form-control" disabled />
-                        </div>
-                        <div class="form-group">
-                            <label>Cena netto</label>
-                            <input name="Products[@number].Netto" id="product-netto-@product.ProductId" type="number" class="form-control" oninput="updateBrutto(this)" required min="0" step="0.01"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Cena brutto</label>
-                            <input name="Products[@number].Brutto" id="product-brutto-@product.ProductId" type="number" class="form-control" min="0" step="0.01" disabled />
-                        </div>
-                        <div class="form-group">
-                            <label>VAT</label>
-                            <input id="product-vat-@product.ProductId" value="@product.PurchaseVat" type="number" class="form-control" disabled />
-                        </div>
-                        @(number++);
-                    }
+                    <label>Wybierz produkty zwiększając ilość:</label>
+                    <span asp-validation-for="ProductsList" class="text-danger"></span>
+                    <table id="product-table" class="display table table-striped table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th hidden></th>
+                                <th>Nazwa</th>
+                                <th>Ilość</th>
+                                <th>Rzeczywista ilość</th>
+                                <th>Jednostka miary</th>
+                                <th>Cena jednostkowa</th>
+                                <th>Cena netto zł</th>
+                                <th>Suma brutto zł</th>
+                                <th>VAT %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </form>
-    </div>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/js/invoice.js"></script>
+    <script src="~/js/createInvoice.js"></script>
+    <script>
+        var companies = @Json.Serialize(ViewBag.Companies);
+        var products = @Json.Serialize(ViewBag.Products);
+    </script>
 }

@@ -21,17 +21,18 @@ namespace StalTradeAPI.Dtos
         public int ProductId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Ilość")]
         public int Quantity { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Realna ilość")]
+        public int ActualQuantity { get; set; }
+
         [DataType(DataType.Currency)]
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Netto")]
         public decimal Netto { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
         [DataType(DataType.Currency)]
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Brutto")]
         public decimal Brutto { get; set; }

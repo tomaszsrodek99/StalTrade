@@ -76,15 +76,15 @@ function loadUpdateProductForm(data) {
     form.reset();
 
     form.action = "PutProduct";
-    document.getElementById("product-form-name").innerHTML = "Edytuj product";
+    document.getElementById("product-form-name").innerHTML = "Edytuj produkt";
 
     document.getElementById("productId").value = data[0];
     document.getElementById("name").value = data[1];
     document.getElementById("company-drawing-number").value = data[2];
     document.getElementById("customer-drawing-number").value = data[3];
-    document.getElementById("unit-of-measure").value = data[4];
-    document.getElementById("purchase-vat").value = data[5];
-    document.getElementById("sales-vat").value = data[6];
+    document.getElementById("unit-of-measure").value = data[4].replace('.','');
+    document.getElementById("purchase-vat").value = parseFloat(data[5].replace('%', ''));
+    document.getElementById("sales-vat").value = parseFloat(data[6].replace('%', ''));
     document.getElementById("consumption-standard").value = data[7].replace(',', '.');
     document.getElementById("weight").value = data[8].replace(',', '.');
     document.getElementById("charge-profile").value = data[9];

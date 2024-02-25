@@ -3,11 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Diagnostics;
-using StalTradeAPI.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace StalTradeAPI.Controllers
 {
@@ -27,24 +22,18 @@ namespace StalTradeAPI.Controllers
             _productRepository = productRepository;
         }
 
-        [HttpGet("GetProducts")]
-        public async Task<ActionResult<IEnumerable<StockStatusDto>>> GetProducts()
+        [HttpGet("GetProductsWithStockStatus")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsWithStockStatus()
         {
             try
             {
-                var productsList = await _stockStatusRepository.GetAllProductsAsync();
+                var productsList = await _stockStatusRepository.GetAllProductsWithStockStatusAsync();
                 if (!productsList.Any())
                 {
                     return BadRequest("Nie znaleziono produktów.");
                 }
-                var products = productsList.Select(c => c.Product).ToList();
-                var productDtos = _mapper.Map<List<ProductDto>>(products);
-                var records = _mapper.Map<List<StockStatusDto>>(productsList);
 
-                foreach (var item in records)
-                {
-                    item.Product = productDtos.Where(c => c.StockStatusId == item.StockStatusId).FirstOrDefault();
-                }
+                var records = _mapper.Map<List<ProductDto>>(productsList);                
 
                 return Ok(records);
             }

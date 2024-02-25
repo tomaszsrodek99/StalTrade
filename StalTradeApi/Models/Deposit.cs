@@ -11,7 +11,7 @@ namespace StalTradeAPI.Models
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
         [DataType(DataType.Currency)]
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         public decimal Cash { get; set; }
         
     }

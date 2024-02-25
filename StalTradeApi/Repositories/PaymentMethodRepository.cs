@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StalTradeAPI.Context;
+﻿using StalTradeAPI.Context;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
 

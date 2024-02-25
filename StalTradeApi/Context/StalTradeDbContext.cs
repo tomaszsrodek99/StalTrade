@@ -30,11 +30,6 @@ namespace StalTradeAPI.Context
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
-                .HasMany(p => p.Prices)
-                .WithOne(ph => ph.Product)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Product>()
                 .HasOne(p => p.StockStatus)
                 .WithOne(ph => ph.Product)
                 .HasForeignKey<StockStatus>(ss => ss.ProductId)
@@ -50,10 +45,10 @@ namespace StalTradeAPI.Context
                 .WithMany()
                 .HasForeignKey(pr => pr.CompanyId);
 
-             modelBuilder.Entity<Invoice>()
-                 .HasMany(p => p.ProductsList)
-                 .WithOne(ph => ph.Invoice)
-                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Invoice>()
+                .HasMany(p => p.ProductsList)
+                .WithOne(ph => ph.Invoice)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<InvoiceProduct>()
                 .HasOne(ip => ip.Product)
@@ -89,7 +84,10 @@ namespace StalTradeAPI.Context
                     var stockStatus = entry.Entity;
 
                     stockStatus.MarginValue = stockStatus.SoldValue - stockStatus.PurchasedValue;
-                    stockStatus.Margin = stockStatus.PurchasedValue != 0 ? (stockStatus.MarginValue / stockStatus.PurchasedValue) * 100 : 0;
+                    if(stockStatus.MarginValue > 0)
+                        stockStatus.Margin = stockStatus.PurchasedValue != 0 ? (stockStatus.MarginValue / stockStatus.PurchasedValue) * 100 : 0;
+                    else
+                        stockStatus.Margin = 0;
                 }
             }
         }

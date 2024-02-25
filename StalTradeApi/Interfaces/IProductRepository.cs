@@ -7,5 +7,6 @@ namespace StalTradeAPI.Interfaces
         Task<IEnumerable<Product>> GetAllProductsAsync();
         bool IsProductExists(string companyDrawingNumber, int productId);
         Task<IEnumerable<Product>> GetAllProductWithPrices();
+        Task<Product> GetAsyncWithStockStatus(int productId);
     }
 }

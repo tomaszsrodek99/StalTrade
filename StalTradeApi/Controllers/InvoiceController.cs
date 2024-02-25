@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using StalTradeAPI.Context;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
-using StalTradeAPI.Repositories;
 
 namespace StalTradeAPI.Controllers
 {
@@ -13,19 +13,17 @@ namespace StalTradeAPI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
-        private readonly ICompanyRepository _companyRepository;
         private readonly IStockStatusRepository _stockStatusRepository;
         private readonly IInvoiceRepository _invoiceRepository;
-        private readonly IInvoiceProductRepository _invoiceProductRepository;
+        private readonly StalTradeDbContext _context;
         public InvoiceController(IMapper mapper, IProductRepository productRepository, IStockStatusRepository stockStatusRepository,
-            ICompanyRepository companyRepository, IInvoiceRepository invoiceRepository, IInvoiceProductRepository invoiceProductRepository)
+            IInvoiceRepository invoiceRepository, StalTradeDbContext context)
         {
             _mapper = mapper;
             _productRepository = productRepository;
             _stockStatusRepository = stockStatusRepository;
-            _companyRepository = companyRepository;
             _invoiceRepository = invoiceRepository;
-            _invoiceProductRepository = invoiceProductRepository;
+            _context = context;
         }
 
         [HttpGet("GetInvoices")]
@@ -36,7 +34,7 @@ namespace StalTradeAPI.Controllers
                 var invoices = await _invoiceRepository.GetAllInvoicesAsync();
                 if (!invoices.Any())
                 {
-                    return BadRequest("Nie znaleziono faktur");
+                    return BadRequest("Nie znaleziono zapisanych faktur.");
                 }
                 var records = _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
                 return Ok(records);
@@ -47,14 +45,43 @@ namespace StalTradeAPI.Controllers
             }
         }
 
-        [HttpPost("CreateInvoice")]
-        public async Task<IActionResult> CreateInvoice(InvoiceDto dto)
+        [HttpGet("GetProductsWithLatestPrices")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProductsWithLatestPrices()
         {
             try
             {
-                await _invoiceRepository.AddAsync(_mapper.Map<Invoice>(dto));
+                var productList = await _productRepository.GetAllProductWithPrices();
 
-                return Ok();
+                if (!productList.Any())
+                {
+                    return BadRequest("Nie znaleziono zapisanych produktów.");
+                }
+                var productDtos = _mapper.Map<IEnumerable<ProductDto>>(productList);
+
+                foreach (var product in productDtos)
+                {
+                    var latestPurchasePrices = product.Prices
+                        .Where(price => price.IsPurchase)
+                        .GroupBy(price => new { price.ProductId, price.CompanyId })
+                        .Select(group => group.OrderByDescending(price => price.Date).FirstOrDefault());
+
+                    var latestSalePrices = product.Prices
+                        .Where(price => !price.IsPurchase)
+                        .GroupBy(price => new { price.ProductId, price.CompanyId })
+                        .Select(group => group.OrderByDescending(price => price.Date).FirstOrDefault());
+
+                    var latestPrices = new List<PriceDto>();
+
+                    if (latestPurchasePrices != null)
+                        latestPrices.AddRange(latestPurchasePrices);
+
+                    if (latestSalePrices != null)
+                        latestPrices.AddRange(latestSalePrices);
+
+                    product.Prices = latestPrices;
+                }
+
+                return Ok(productDtos);
             }
             catch (Exception ex)
             {
@@ -62,17 +89,103 @@ namespace StalTradeAPI.Controllers
             }
         }
 
-        [HttpDelete("DeleteInvoice{id}")]
-        public async Task<IActionResult> DeleteInvoice(int id)
+
+        [HttpPost("CreateInvoice")]
+        public async Task<IActionResult> CreateInvoice(InvoiceDto dto)
         {
+            using var transaction = _context.Database.BeginTransaction(); 
+
             try
             {
-                await _invoiceRepository.DeleteAsync(id);
+                var addedInvoice = await _invoiceRepository.AddAsync(_mapper.Map<Invoice>(dto));
+
+                dto.InvoiceId = addedInvoice.InvoiceId;
+
+                foreach (var product in dto.ProductsList)
+                {
+                    product.InvoiceId = dto.InvoiceId;                  
+                    var stockStatus = await _stockStatusRepository.GetAsyncByProductId(product.ProductId);
+                    
+                    if (stockStatus == null)
+                    {
+                        transaction.Rollback();
+                        return BadRequest($"Nie udało się znaleźć StockStatus dla produktu o ID {product.ProductId}.");
+                    }
+
+                    if (dto.IsPurchase == false)
+                    {
+                        stockStatus.SoldQuantity += product.Quantity;
+                        stockStatus.InStock -= product.Quantity;
+                        stockStatus.SoldValue += product.Brutto;
+                        stockStatus.ActualQuantity -= product.ActualQuantity;
+                    }
+                    else
+                    {
+                        stockStatus.PurchasedQuantity += product.Quantity;
+                        stockStatus.InStock += product.Quantity;
+                        stockStatus.PurchasedValue += product.Brutto;
+                        stockStatus.ActualQuantity += product.ActualQuantity;
+                    }
+
+                    await _stockStatusRepository.UpdateAsync(stockStatus);
+                }
+
+                transaction.Commit(); 
 
                 return Ok();
             }
             catch (Exception ex)
             {
+                transaction.Rollback(); 
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteInvoice{id}")]
+        public async Task<IActionResult> DeleteInvoice(int id)
+        {
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var invoice = await _invoiceRepository.GetInvoiceWithProducts(id);
+
+                await _invoiceRepository.DeleteAsync(id);
+
+                foreach (var product in invoice.ProductsList)
+                {
+                    var stockStatus = await _stockStatusRepository.GetAsyncByProductId(product.ProductId);
+
+                    if (stockStatus == null)
+                    {
+                        transaction.Rollback();
+                        return BadRequest($"Nie udało się znaleźć StockStatus dla produktu o ID {product.ProductId}.");
+                    }
+
+                    if (invoice.IsPurchase == false)
+                    {
+                        stockStatus.SoldQuantity -= product.Quantity;
+                        stockStatus.InStock += product.Quantity;
+                        stockStatus.SoldValue -= product.Brutto;
+                        stockStatus.ActualQuantity += product.ActualQuantity;
+                    }
+                    else
+                    {
+                        stockStatus.PurchasedQuantity -= product.Quantity;
+                        stockStatus.InStock -= product.Quantity;
+                        stockStatus.PurchasedValue -= product.Brutto;
+                        stockStatus.ActualQuantity -= product.ActualQuantity;
+                    }
+
+                    await _stockStatusRepository.UpdateAsync(stockStatus);
+                }
+
+                transaction.Commit();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
                 return BadRequest(ex.Message);
             }
         }

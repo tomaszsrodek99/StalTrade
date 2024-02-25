@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using StalTradeAPI.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace StalTradeAPI.Dtos
 {
@@ -25,7 +21,7 @@ namespace StalTradeAPI.Dtos
         [Display(Name = "Norma zużycia")]
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public decimal? ConsumptionStandard { get; set; }
-        [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Waga")]
+        [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Waga (kg)")]
         [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public decimal Weight { get; set; }
         [Display(Name = "Profil wsadu")]
@@ -35,7 +31,6 @@ namespace StalTradeAPI.Dtos
         [Display(Name = "Zamiennik")]
         public string? SubstituteGrade { get; set; } = string.Empty;
         public int? StockStatusId { get; set; }
-        [JsonIgnore]
         public StockStatusDto? StockStatus { get; set; }
         public List<PriceDto>? Prices { get; set; }
     }

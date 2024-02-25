@@ -12,7 +12,7 @@
         <button id="delete-invoice-button" class="btn btn-danger">Usuń</button>
     </div>
 </div>
-<div class="row text-center justify-content-center" style="margin-top: 50px;">
+<div class="row text-center" style="margin-top: 50px;">
     @if (Model.Any())
     {
         <div class="col-6">
@@ -36,16 +36,16 @@
                         {
                             <tr>
                                 <td id="invoiceId-@item.InvoiceId" hidden>@Html.DisplayFor(modelItem => item.InvoiceId)</td>
-                            <td>@Html.DisplayFor(modelItem => item.InvoiceDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Netto)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Brutto)</td>
-                            <td>@Html.DisplayFor(modelItem => item.PaymentDate)</td>
-                        <td>
-                                    <button class="show-contacts btn-info" data-item='@Html.Raw(Json.Serialize(item.ProductsList))'>Szczegóły</button>
-                        </td>
-                    </tr>
-                    }
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceDate)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.Netto)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.Brutto)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.PaymentDate)</td>
+                                <td>
+                                    <button class="show-products btn-info" data-item='@Json.Serialize(item.ProductsList)'>Szczegóły</button>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -71,13 +71,13 @@
                         {
                             <tr>
                                 <td id="invoiceId-@item.InvoiceId" hidden>@Html.DisplayFor(modelItem => item.InvoiceId)</td>
-                                <td>@Html.DisplayFor(modelItem => item.InvoiceDate)</td>
-                                <td>@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Netto)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Brutto)</td>
-                                <td>@Html.DisplayFor(modelItem => item.PaymentDate)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceDate)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.Netto)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.Brutto)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.PaymentDate)</td>
                                 <td>
-                                    <button class="show-contacts btn-info" data-item='@Html.Raw(Json.Serialize(item.ProductsList))'>Szczegóły</button>
+                                    <button class="show-products btn-info" data-item='@Json.Serialize(item.ProductsList)'>Szczegóły</button>
                                 </td>
                             </tr>
                         }
@@ -92,21 +92,12 @@
     }
 </div>
 
-<div id="partial-view-purchase-form" class="partial-view hidden">
-    @await Html.PartialAsync("_CreatePurchaseInvoice", new StalTradeAPI.Dtos.InvoiceDto())
-</div>
-
-<div id="partial-view-sale-form" class="partial-view hidden">
-    @await Html.PartialAsync("_CreateSaleInvoice", new StalTradeAPI.Dtos.InvoiceDto())
-</div>
-
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
     }
-    <script src="~/js/invoice.js"></script>
+    <script src="~/js/Invoice.js"></script>
     <script>
         var data = @Json.Serialize(Model);
-        var companies = @Json.Serialize(ViewBag.Companies);
     </script>
 }

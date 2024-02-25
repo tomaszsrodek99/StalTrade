@@ -3,7 +3,6 @@ var selectedPriceRow = null;
 var currentPriceRow = null;
 var chartId = null;
 $(document).ready(function () {
-    console.log(productList);
     $('#edit-price-button, #delete-price-button, #add-price-button, #sale-prices-button, #purchase-prices-button').prop('disabled', true);
 
     $('#product-table tbody').on('click', 'td.selectable-td', function (e) {

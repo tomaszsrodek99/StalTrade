@@ -1,5 +1,4 @@
-﻿using StalTradeAPI.Dtos;
-using StalTradeAPI.Models;
+﻿using StalTradeAPI.Models;
 
 namespace StalTradeAPI.Interfaces
 {

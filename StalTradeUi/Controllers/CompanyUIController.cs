@@ -111,8 +111,10 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.PutAsJsonAsync("api/Company/UpdateCompany", dto);
+
                 if (response.IsSuccessStatusCode)
                     return RedirectToAction("Index");
+
                 var content = await response.Content.ReadAsStringAsync();
                 ViewBag.ErrorMessage = $"Nie udało się edytować rekordu.{response.ReasonPhrase + " " + content}";
                 return View("Error");
@@ -130,8 +132,10 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.PutAsJsonAsync("api/Contact/UpdateContact", dto);
+
                 if (response.IsSuccessStatusCode)
                     return RedirectToAction("Index");
+
                 var content = await response.Content.ReadAsStringAsync();
                 ViewBag.ErrorMessage = $"Nie udało się edytować rekordu.{response.ReasonPhrase + " " + content}";
                 return View("Error");

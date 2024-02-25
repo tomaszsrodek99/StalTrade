@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using StalTradeAPI.Dtos;
-using System.Net.Http;
 
 namespace StalTradeUI.Controllers
 {
@@ -25,16 +23,16 @@ namespace StalTradeUI.Controllers
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync("api/Warehouse/GetProducts");
+                HttpResponseMessage response = await _httpClient.GetAsync("api/Warehouse/GetProductsWithStockStatus");
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<StockStatusDto>>();
-                    ViewData["PurchasedValue"] = responseDto.Select(x => x.PurchasedValue).Sum();
-                    ViewData["SoldValue"] = responseDto.Select(x => x.SoldValue).Sum();
-                    ViewData["MarginValue"] = responseDto.Select(x => x.MarginValue).Sum();
+                    var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
+                    ViewData["PurchasedValue"] = responseDto.Select(x => x.StockStatus.PurchasedValue).Sum();
+                    ViewData["SoldValue"] = responseDto.Select(x => x.StockStatus.SoldValue).Sum();
+                    ViewData["MarginValue"] = responseDto.Select(x => x.StockStatus.MarginValue).Sum();
                     return View("Warehouse", responseDto);
                 }
-                return View("Warehouse", new List<StockStatusDto>());
+                return View("Warehouse", new List<ProductDto>());
             }
             catch (Exception ex)
             {

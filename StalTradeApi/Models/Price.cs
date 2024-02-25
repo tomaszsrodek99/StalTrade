@@ -21,7 +21,7 @@ namespace StalTradeAPI.Models
         public Company? Company { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         public decimal Netto { get; set; }
 

@@ -12,13 +12,18 @@ namespace StalTradeAPI.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<StockStatus>> GetAllProductsAsync()
+        public async Task<IEnumerable<Product>> GetAllProductsWithStockStatusAsync()
         {
-            var products = await _context.StockStatuses
-                .Include(ss => ss.Product)
+            var products = await _context.Products
+                .Include(ss => ss.StockStatus)
                 .ToListAsync();
 
             return products;
+        }
+
+        public async Task<StockStatus> GetAsyncByProductId(int id)
+        {
+            return await _context.StockStatuses.Where(ss => ss.ProductId == id).SingleOrDefaultAsync();
         }
     }
 }

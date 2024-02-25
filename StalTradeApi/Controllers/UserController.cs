@@ -26,7 +26,7 @@ namespace StalTradeAPI.Controllers
                 var users = await _repository.GetAllAsync();
                 if (users == null)
                 {
-                    return BadRequest("Nie znaleziono użytkowników");
+                    return BadRequest("Nie znaleziono użytkowników.");
                 }
                 var records = _mapper.Map<List<UserDto>>(users);
                 return Ok(records);

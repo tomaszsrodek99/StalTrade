@@ -28,7 +28,7 @@ namespace StalTradeAPI.Controllers
                 var expenses = await _expenseRepository.GetAllAsync();
                 if (!expenses.Any())
                 {
-                    return BadRequest("Nie znaleziono kosztów.");
+                    return BadRequest("Nie znaleziono zapisanych kosztów.");
                 }
                 var records = _mapper.Map<List<ExpenseDto>>(expenses);
 
@@ -108,7 +108,7 @@ namespace StalTradeAPI.Controllers
                 var deposites = await _depositRepository.GetAllAsync();
                 if (!deposites.Any())
                 {
-                    return BadRequest("Nie znaleziono wpłat.");
+                    return BadRequest("Nie znaleziono zapisanych wpłat.");
                 }
                 var records = _mapper.Map<List<DepositDto>>(deposites);
 

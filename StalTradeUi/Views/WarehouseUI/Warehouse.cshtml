@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StalTradeAPI.Dtos.StockStatusDto>
+﻿@model IEnumerable<StalTradeAPI.Dtos.ProductDto>
 
 @{
     ViewData["Title"] = "Magazyn";
@@ -20,30 +20,30 @@
                 <tr>
                     <th hidden></th>
                     <th>Pozycja</th>
-                    <th>@Html.DisplayNameFor(modelItem => modelItem.PurchasedQuantity)</th>
-                    <th>@Html.DisplayNameFor(modelItem => modelItem.ActualQuantity)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.StockStatus.PurchasedQuantity)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.StockStatus.ActualQuantity)</th>
                     <th>+/-</th>
-                    <th>@Html.DisplayNameFor(modelItem => modelItem.SoldQuantity)</th>
-                    <th>@Html.DisplayNameFor(modelItem => modelItem.InStock)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.StockStatus.SoldQuantity)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.StockStatus.InStock)</th>
                     <th>
                         <div class="text-center">
                             @ViewData["PurchasedValue"]
                         </div>
-                        @Html.DisplayNameFor(modelItem => modelItem.PurchasedValue)
+                        @Html.DisplayNameFor(modelItem => modelItem.StockStatus.PurchasedValue)
                     </th>
                     <th>
                         <div class="text-center">
                             @ViewData["SoldValue"]
                         </div>
-                        @Html.DisplayNameFor(modelItem => modelItem.SoldValue)
+                        @Html.DisplayNameFor(modelItem => modelItem.StockStatus.SoldValue)
                     </th>
                     <th>
                         <div class="text-center">
                             @ViewData["MarginValue"]
                         </div>
-                        @Html.DisplayNameFor(modelItem => modelItem.MarginValue)
+                        @Html.DisplayNameFor(modelItem => modelItem.StockStatus.MarginValue)
                     </th>
-                    <th>@Html.DisplayNameFor(modelItem => modelItem.Margin)</th>
+                    <th>@Html.DisplayNameFor(modelItem => modelItem.StockStatus.Margin)</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,35 +54,35 @@
                             @Html.DisplayFor(modelItem => item.StockStatusId)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Product.CompanyDrawingNumber) - @Html.DisplayFor(modelItem => item.Product.Name)
+                            @Html.DisplayFor(modelItem => item.CompanyDrawingNumber) - @Html.DisplayFor(modelItem => item.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.PurchasedQuantity)
+                            @Html.DisplayFor(modelItem => item.StockStatus.PurchasedQuantity)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ActualQuantity)
+                            @Html.DisplayFor(modelItem => item.StockStatus.ActualQuantity)
                         </td>
                         <td>
-                            @((item.PurchasedQuantity - item.ActualQuantity).ToString("N2"))
+                            @((item.StockStatus.PurchasedQuantity - item.StockStatus.ActualQuantity).ToString("N2"))
                         </td>
 
                         <td>
-                            @Html.DisplayFor(modelItem => item.SoldQuantity)
+                            @Html.DisplayFor(modelItem => item.StockStatus.SoldQuantity)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.InStock)
+                            @Html.DisplayFor(modelItem => item.StockStatus.InStock)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.PurchasedValue)
+                            @Html.DisplayFor(modelItem => item.StockStatus.PurchasedValue)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.SoldValue)
+                            @Html.DisplayFor(modelItem => item.StockStatus.SoldValue)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.MarginValue)
+                            @Html.DisplayFor(modelItem => item.StockStatus.MarginValue)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Margin)                        
+                            @Html.DisplayFor(modelItem => item.StockStatus.Margin)
                         </td>
                     </tr>
                 }
@@ -101,4 +101,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="~/js/warehouse.js"></script>
+        <script>
+        var productList = @Html.Raw(Model);
+        </script>
 }

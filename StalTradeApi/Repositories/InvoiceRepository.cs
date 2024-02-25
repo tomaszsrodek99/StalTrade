@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StalTradeAPI.Context;
-using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
 
@@ -23,6 +22,15 @@ namespace StalTradeAPI.Repositories
             .ToListAsync();        
 
             return invoices;
+        }
+
+        public Task<Invoice> GetInvoiceWithProducts(int id)
+        {
+            var invoice = _context.Invoices
+                .Where(i => i.InvoiceId == id)
+                .Include(p => p.ProductsList)
+                .SingleOrDefaultAsync();
+            return invoice;
         }
     }
 }

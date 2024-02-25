@@ -113,8 +113,7 @@ namespace StalTradeUI.Helpers
                     ClockSkew = TimeSpan.Zero
                 };
 
-                SecurityToken validatedToken;
-                var principal = tokenHandler.ValidateToken(token, parameters, out validatedToken);
+                var principal = tokenHandler.ValidateToken(token, parameters, out SecurityToken validatedToken);
                 return true;
             }
             catch (SecurityTokenExpiredException)

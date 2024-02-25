@@ -23,7 +23,8 @@
 
         if (isCollapsed) {
             targetElement.classList.remove('collapse');
-            createChart(chartId, chartData);
+            if(chartData != null)
+                createChart(chartId, chartData);
         } else {
             var canvasContainer = document.getElementById(chartId);
             canvasContainer.remove();

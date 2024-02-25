@@ -20,17 +20,20 @@ namespace StalTradeAPI.Models
         public int ProductId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
 
         [Required]
         public int Quantity { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Required]
+        public int ActualQuantity { get; set; }
+
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         [Required]
         public decimal Netto { get; set; }
 
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         [Required]
         public decimal Brutto { get; set; }

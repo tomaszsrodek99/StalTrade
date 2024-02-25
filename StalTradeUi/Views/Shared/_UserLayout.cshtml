@@ -60,7 +60,7 @@
                     </a>
                 </li>
                 <li>
-                    <a asp-controller="InvoiceUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "Invoice") ? "active" : "")">
+                    <a asp-controller="InvoiceUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "InvoiceUI") ? "active" : "")">
                         <i class="fa-solid fa-cart-shopping"></i>Faktury
                     </a>
                 </li>               
@@ -70,13 +70,13 @@
                         <li>
                             <a asp-controller="ExpenseUI" asp-action="CashRegister" class="sub-menu-element @((ViewContext.RouteData.Values["action"] as string == "CashRegister") ? "active" : "")">
                                 <i class="fa-solid fa-cash-register"></i>
-                                Kasa
+                                Wirtualna kasa
                             </a>
                         </li>
                         <li>
                             <a asp-controller="ExpenseUI" asp-action="FixedCosts" class="sub-menu-element @((ViewContext.RouteData.Values["action"] as string == "FixedCosts") ? "active" : "")">
                                 <i class="fa-solid fa-bag-shopping"></i>
-                                Koszty stałe
+                                Wydatki
                             </a>
                         </li>
                     </ul>

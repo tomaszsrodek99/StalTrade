@@ -33,6 +33,15 @@ namespace StalTradeAPI.Repositories
             return products;
         }
 
+        public async Task<Product> GetAsyncWithStockStatus(int productId)
+        {
+            var product = await _context.Products
+                .Include(s => s.StockStatus)
+                .Where(p => p.ProductId == productId)
+                .FirstOrDefaultAsync();
+            return product;
+        }
+
         public override async Task DeleteAsync(int id)
         {
             var product = await _context.Products.FindAsync(id);

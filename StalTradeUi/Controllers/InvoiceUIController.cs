@@ -24,19 +24,6 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.GetAsync("api/Invoice/GetInvoices");
-                HttpResponseMessage companyResponse = await _httpClient.GetAsync("api/Company/GetCompanies");
-                HttpResponseMessage productsResponse = await _httpClient.GetAsync("api/Warehouse/GetPrices");
-                HttpResponseMessage stocksResponse = await _httpClient.GetAsync("api/Warehouse/GetProducts");
-                
-                if (!(companyResponse.IsSuccessStatusCode && productsResponse.IsSuccessStatusCode && stocksResponse.IsSuccessStatusCode))
-                {
-                    throw new Exception(message: "Błąd pobierania danych. Upewnij się, że w bazie danych posiadasz zapisane firmy oraz produkty.");                   
-                }
-                ViewBag.Companies = await companyResponse.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
-
-                ViewBag.Products = await productsResponse.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
-
-                ViewBag.Stocks = await stocksResponse.Content.ReadFromJsonAsync<IEnumerable<StockStatusDto>>();
                 
                 if (response.IsSuccessStatusCode)
                 {
@@ -50,7 +37,68 @@ namespace StalTradeUI.Controllers
                 ViewBag.ErrorMessage = ex.Message;
                 return View("Error");
             }
-        }       
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreatePurchase()
+        {
+            try
+            {
+                HttpResponseMessage companyResponse = await _httpClient.GetAsync("api/Company/GetCompanies");
+                HttpResponseMessage productsResponse = await _httpClient.GetAsync("api/Invoice/GetProductsWithLatestPrices");
+
+                if (!(companyResponse.IsSuccessStatusCode && productsResponse.IsSuccessStatusCode))
+                {
+                    throw new Exception(message: "Błąd pobierania danych. Upewnij się, że w bazie danych posiadasz zapisane firmy oraz produkty.");
+                }
+                ViewBag.Companies = await companyResponse.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
+
+                var products = await productsResponse.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
+
+                foreach (var product in products)
+                {
+                    product.Prices = product.Prices.Where(price => price.IsPurchase).ToList();
+                }
+                ViewBag.Products = products;
+
+                return PartialView("_CreatePurchaseInvoice", new InvoiceDto());
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateSale()
+        {
+            try
+            {
+                HttpResponseMessage companyResponse = await _httpClient.GetAsync("api/Company/GetCompanies");
+                HttpResponseMessage productsResponse = await _httpClient.GetAsync("api/Invoice/GetProductsWithLatestPrices");
+
+                if (!(companyResponse.IsSuccessStatusCode && productsResponse.IsSuccessStatusCode))
+                {
+                    throw new Exception(message: "Błąd pobierania danych. Upewnij się, że w bazie danych posiadasz zapisane firmy oraz produkty.");
+                }
+                ViewBag.Companies = await companyResponse.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
+
+                var products = await productsResponse.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
+
+                foreach (var product in products)
+                {
+                    product.Prices = product.Prices.Where(price => !price.IsPurchase).ToList();
+                }
+                ViewBag.Products = products;
+                return PartialView("_CreateSaleInvoice", new InvoiceDto());
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddSale(InvoiceDto dto)
@@ -58,6 +106,12 @@ namespace StalTradeUI.Controllers
             try
             {
                 dto.IsPurchase = false;
+                List<InvoiceProductDto> productsList = dto.ProductsList.Where(x => x.Quantity != 0).ToList();
+                dto.ProductsList = productsList;
+                if(!dto.ProductsList.Any())
+                {
+                    throw new Exception(message: "Nie wybrano produktów.");
+                }
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Invoice/CreateInvoice", dto);
 
                 if (response.IsSuccessStatusCode)
@@ -80,6 +134,12 @@ namespace StalTradeUI.Controllers
             try
             {
                 dto.IsPurchase = true;
+                List<InvoiceProductDto> productsList = dto.ProductsList.Where(x =>x.Quantity != 0).ToList();
+                dto.ProductsList = productsList;
+                if (!dto.ProductsList.Any())
+                {
+                    throw new Exception(message: "Nie wybrano produktów.");
+                }
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Invoice/CreateInvoice", dto);
 
                 if (response.IsSuccessStatusCode)
@@ -88,6 +148,27 @@ namespace StalTradeUI.Controllers
                 var content = await response.Content.ReadAsStringAsync();
                 ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
                 return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+        public async Task<IActionResult> RemoveInvoice(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Invoice/DeleteInvoice{id}");
+
+                if (response.IsSuccessStatusCode)
+                    return RedirectToAction("Index");
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    ViewBag.ErrorMessage = $"Nie udało się usunąć rekordu.{response.ReasonPhrase + " " + content}";
+                    return View("Error");
+                }
             }
             catch (Exception ex)
             {

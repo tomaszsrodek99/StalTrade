@@ -13,7 +13,8 @@ namespace StalTradeAPI.Models
         public int ProductId { get; set; }
 
         [ForeignKey("ProductId")]
-        public Product Product { get; set; }
+        [JsonIgnore]
+        public Product? Product { get; set; }
 
         [Required]
         public int PurchasedQuantity { get; set; }
@@ -27,19 +28,19 @@ namespace StalTradeAPI.Models
         public int InStock { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         public decimal PurchasedValue { get; set; }
         [Required]
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         public decimal SoldValue { get; set; }
         [Required]
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         public decimal MarginValue { get; set; }
         [Required]
-        [Column(TypeName = "decimal(5, 2)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [DataType(DataType.Currency)]
         public decimal Margin { get; set; }
     }
