@@ -1,5 +1,6 @@
 ﻿var invoiceSaleTable, invoicePurchaseTable;
-var selectedRow = null;
+var selectedSaleRow = null;
+var selectedPurchaseRow = null;
 var currentSaleRow = null;
 var currentPurchaseRow = null;
 $(document).ready(function () {
@@ -8,49 +9,49 @@ $(document).ready(function () {
     $('#invoice-sale-table tbody').on('click', 'td.selectable-td', function (e) {
         e.stopPropagation();
 
+        invoicePurchaseTable.rows().deselect();      
+
         currentSaleRow = $(this).closest('tr');
 
         if (currentSaleRow.hasClass('selected')) {
             currentSaleRow.removeClass('selected');
-            selectedRow = null;
+            selectedSaleRow = null;
             $('#delete-invoice-button').prop('disabled', true);
-            invoicePurchaseTable.rows().deselect();
-            if (currentPurchaseRow)
-                currentPurchaseRow.addClass('selected');
+            invoicePurchaseTable.rows().deselect();           
         } else {
             invoiceSaleTable.rows().deselect();
             currentSaleRow.addClass('selected');
-            selectedRow = invoiceSaleTable.row(currentSaleRow).data();
+            selectedSaleRow = invoiceSaleTable.row(currentSaleRow).data();
         }
 
-        var isRowSelected = selectedRow !== null;
+        var isRowSelected = selectedSaleRow !== null;
         $('#delete-invoice-button').prop('disabled', !isRowSelected);
 
-        $('#delete-invoice-button').attr('data-invoice-id', isRowSelected ? selectedRow[0] : null);
+        $('#delete-invoice-button').attr('data-invoice-id', isRowSelected ? selectedSaleRow[0] : null);
     });
 
     $('#invoice-purchase-table tbody').on('click', 'td.selectable-td', function (e) {
         e.stopPropagation();
 
+        invoiceSaleTable.rows().deselect();      
+
         var currentPurchaseRow = $(this).closest('tr');
 
         if (currentPurchaseRow.hasClass('selected')) {
             currentPurchaseRow.removeClass('selected');
-            selectedRow = null;
+            selectedPurchaseRow = null;
             $('#delete-invoice-button').prop('disabled', true);
-            invoicePurchaseTable.rows().deselect();
-            if (currentSaleRow)
-                currentSaleRow.addClass('selected');
+            invoicePurchaseTable.rows().deselect();           
         } else {
             invoicePurchaseTable.rows().deselect();
             currentPurchaseRow.addClass('selected');
-            selectedRow = invoicePurchaseTable.row(currentPurchaseRow).data();
+            selectedPurchaseRow = invoicePurchaseTable.row(currentPurchaseRow).data();
         }
 
-        var isRowSelected = selectedRow !== null;
+        var isRowSelected = selectedPurchaseRow !== null;
         $('#delete-invoice-button').prop('disabled', !isRowSelected);
 
-        $('#delete-invoice-button').attr('data-invoice-id', isRowSelected ? selectedRow[0] : null);
+        $('#delete-invoice-button').attr('data-invoice-id', isRowSelected ? selectedPurchaseRow[0] : null);
     });
 
     $('#add-invoice-purchase-button').on('click', function () {
@@ -63,7 +64,10 @@ $(document).ready(function () {
 
     $('#delete-invoice-button').on('click', function () {
         if (confirm('Czy na pewno chcesz usunąć fakturę?')) {
-            window.location.href = '/InvoiceUI/RemoveInvoice/' + selectedRow[0];
+            if (selectedPurchaseRow)
+                window.location.href = '/InvoiceUI/RemoveInvoice/' + selectedPurchaseRow[0];
+            else
+                window.location.href = '/InvoiceUI/RemoveInvoice/' + selectedSaleRow[0];
         }
     });
 
@@ -96,7 +100,7 @@ $(document).ready(function () {
     });
 
     invoiceSaleTable = new DataTable('#invoice-sale-table', {
-        order: [[0, 'asc']],
+        order: [[0, 'desc']],
         searching: false,
         paging: false,
         info: false,
@@ -113,7 +117,7 @@ $(document).ready(function () {
     });
 
     invoicePurchaseTable = new DataTable('#invoice-purchase-table', {
-        order: [[0, 'asc']],
+        order: [[0, 'desc']],
         searching: false,
         paging: false,
         info: false,
@@ -139,19 +143,21 @@ function showProducts(data) {
         '<th>Ilość</th>' +
         '<th>Rzeczywista ilość</th>' +
         '<th>Netto</th>' +
-        '<th>Brutto</th>' +      
+        '<th>Brutto</th>' +
         '</tr>' +
         '</thead>' +
         '<tbody>';
 
     for (var i = 0; i < data.length; i++) {
+        var actualQuantity = data[i].actualQuantity == 0 ? data[i].quantity : data[i].actualQuantity;
+
         table += '<tr>' +
             '<td hidden>' + data[i].invoiceId + '</td>' +
-            '<td>' + data[i].product.name + data[i].product.companyDrawingNumber + '</td>' +
-            '<td>' + data[i].quantity + '</td>' +
+            '<td>' + data[i].product.name + ' ' + data[i].product.companyDrawingNumber + '</td>' +
+            '<td>' + actualQuantity + '</td>' +
             '<td>' + data[i].actualQuantity + '</td>' +
             '<td>' + data[i].netto + '</td>' +
-            '<td>' + (data[i].brutto || '-') + '</td>' +     
+            '<td>' + (data[i].brutto || '-') + '</td>' +
             '</tr>';
     }
 

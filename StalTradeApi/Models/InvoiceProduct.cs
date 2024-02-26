@@ -37,5 +37,7 @@ namespace StalTradeAPI.Models
         [DataType(DataType.Currency)]
         [Required]
         public decimal Brutto { get; set; }
+        [Required]
+        public bool IsPurchase { get; set; }
     }
 }

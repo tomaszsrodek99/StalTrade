@@ -103,7 +103,8 @@ namespace StalTradeAPI.Controllers
 
                 foreach (var product in dto.ProductsList)
                 {
-                    product.InvoiceId = dto.InvoiceId;                  
+                    product.InvoiceId = dto.InvoiceId;
+                    product.IsPurchase = dto.IsPurchase;
                     var stockStatus = await _stockStatusRepository.GetAsyncByProductId(product.ProductId);
                     
                     if (stockStatus == null)
@@ -115,14 +116,13 @@ namespace StalTradeAPI.Controllers
                     if (dto.IsPurchase == false)
                     {
                         stockStatus.SoldQuantity += product.Quantity;
-                        stockStatus.InStock -= product.Quantity;
+                        stockStatus.InStock -= product.ActualQuantity;
                         stockStatus.SoldValue += product.Brutto;
-                        stockStatus.ActualQuantity -= product.ActualQuantity;
                     }
                     else
                     {
                         stockStatus.PurchasedQuantity += product.Quantity;
-                        stockStatus.InStock += product.Quantity;
+                        stockStatus.InStock += product.ActualQuantity;
                         stockStatus.PurchasedValue += product.Brutto;
                         stockStatus.ActualQuantity += product.ActualQuantity;
                     }
@@ -166,12 +166,11 @@ namespace StalTradeAPI.Controllers
                         stockStatus.SoldQuantity -= product.Quantity;
                         stockStatus.InStock += product.Quantity;
                         stockStatus.SoldValue -= product.Brutto;
-                        stockStatus.ActualQuantity += product.ActualQuantity;
                     }
                     else
                     {
                         stockStatus.PurchasedQuantity -= product.Quantity;
-                        stockStatus.InStock -= product.Quantity;
+                        stockStatus.InStock -= product.ActualQuantity;
                         stockStatus.PurchasedValue -= product.Brutto;
                         stockStatus.ActualQuantity -= product.ActualQuantity;
                     }

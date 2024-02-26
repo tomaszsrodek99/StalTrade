@@ -23,7 +23,6 @@
                         <th hidden></th>
                         <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceDate)</th>
                         <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceNumber)</th>
-                        <th>@Html.DisplayNameFor(modelItem => modelItem.Netto)</th>
                         <th>@Html.DisplayNameFor(modelItem => modelItem.Brutto)</th>
                         <th>@Html.DisplayNameFor(modelItem => modelItem.PaymentDate)</th>
                         <th></th>
@@ -37,8 +36,7 @@
                             <tr>
                                 <td id="invoiceId-@item.InvoiceId" hidden>@Html.DisplayFor(modelItem => item.InvoiceId)</td>
                                 <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceDate)</td>
-                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
-                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.Netto)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceNumber) - @Html.DisplayFor(modelItem => item.Company.Name)</td>
                                 <td class="selectable-td">@Html.DisplayFor(modelItem => item.Brutto)</td>
                                 <td class="selectable-td">@Html.DisplayFor(modelItem => item.PaymentDate)</td>
                                 <td>
@@ -58,7 +56,6 @@
                         <th hidden></th>
                         <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceDate)</th>
                         <th>@Html.DisplayNameFor(modelItem => modelItem.InvoiceNumber)</th>
-                        <th>@Html.DisplayNameFor(modelItem => modelItem.Netto)</th>
                         <th>@Html.DisplayNameFor(modelItem => modelItem.Brutto)</th>
                         <th>@Html.DisplayNameFor(modelItem => modelItem.PaymentDate)</th>
                         <th></th>
@@ -72,8 +69,7 @@
                             <tr>
                                 <td id="invoiceId-@item.InvoiceId" hidden>@Html.DisplayFor(modelItem => item.InvoiceId)</td>
                                 <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceDate)</td>
-                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceNumber)</td>
-                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.Netto)</td>
+                                <td class="selectable-td">@Html.DisplayFor(modelItem => item.InvoiceNumber) - @Html.DisplayFor(modelItem => item.Company.Name)</td>
                                 <td class="selectable-td">@Html.DisplayFor(modelItem => item.Brutto)</td>
                                 <td class="selectable-td">@Html.DisplayFor(modelItem => item.PaymentDate)</td>
                                 <td>

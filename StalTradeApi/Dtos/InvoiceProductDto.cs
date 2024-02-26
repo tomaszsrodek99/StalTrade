@@ -36,5 +36,7 @@ namespace StalTradeAPI.Dtos
         [DataType(DataType.Currency)]
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Brutto")]
         public decimal Brutto { get; set; }
+        [Required]
+        public bool IsPurchase { get; set; }
     }
 }

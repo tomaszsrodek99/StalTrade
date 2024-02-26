@@ -63,7 +63,7 @@
                             @Html.DisplayFor(modelItem => item.StockStatus.ActualQuantity)
                         </td>
                         <td>
-                            @((item.StockStatus.PurchasedQuantity - item.StockStatus.ActualQuantity).ToString("N2"))
+                            @((item.StockStatus.PurchasedQuantity - item.StockStatus.ActualQuantity).ToString())
                         </td>
 
                         <td>
@@ -82,7 +82,7 @@
                             @Html.DisplayFor(modelItem => item.StockStatus.MarginValue)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.StockStatus.Margin)
+                            @Html.DisplayFor(modelItem => item.StockStatus.Margin)%
                         </td>
                     </tr>
                 }

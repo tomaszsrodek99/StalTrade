@@ -33,7 +33,6 @@ namespace StalTradeAPI.Dtos
         [DataType(DataType.Currency)]
         public decimal MarginValue { get; set; }
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Marża")]
-        [DisplayFormat(DataFormatString = "{0:P2}")]
         public decimal Margin { get; set; }
     }
 }

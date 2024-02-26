@@ -75,17 +75,17 @@ namespace StalTradeAPI.Context
 
         private void ApplyCustomLogic()
         {
-            var entries = ChangeTracker.Entries<StockStatus>();
+            var stock = ChangeTracker.Entries<StockStatus>();
 
-            foreach (var entry in entries)
+            foreach (var entry in stock)
             {
                 if (entry.State == EntityState.Modified)
                 {
                     var stockStatus = entry.Entity;
 
                     stockStatus.MarginValue = stockStatus.SoldValue - stockStatus.PurchasedValue;
-                    if(stockStatus.MarginValue > 0)
-                        stockStatus.Margin = stockStatus.PurchasedValue != 0 ? (stockStatus.MarginValue / stockStatus.PurchasedValue) * 100 : 0;
+                    if (stockStatus.SoldQuantity > 0)
+                        stockStatus.Margin = (stockStatus.SoldValue - stockStatus.PurchasedValue) / stockStatus.PurchasedValue * 100;
                     else
                         stockStatus.Margin = 0;
                 }

@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿var formName;
+$(document).ready(function () {
     var productTable = new DataTable('#product-table', {
         searching: false,
         paging: false,
@@ -10,6 +11,13 @@
         scrollY: '345px',
         scrollCollapse: true
     });
+
+    formName = document.getElementById('purchase-header');
+    if (!formName) {
+        console.log("działa");
+        document.getElementById('actual-quantity-th').hidden = true;
+    }
+
 });
 
 function enableCompany() {
@@ -118,9 +126,7 @@ function updatePaymentDate() {
     }
 
     document.getElementById('invoice-date-label').innerHTML = "Data płatności - " + company.paymentMethod;
-
-    var formName = document.getElementById('purchase-header');
-
+ 
     var productTableBody = $('#product-table tbody');
     productTableBody.empty();
 
@@ -131,7 +137,7 @@ function updatePaymentDate() {
                 var productId = product.productId;
                 //console.log(product);
                 var quantityInput = `<input id="product-quantity-${productId}" name="ProductsList[${i}].Quantity" type="number" oninput="updateBrutto(this)" class="form-control" min="0" step="1" placeholder="0" />`;
-                var actualQuantityInput = `<input id="product-actual-quantity-${productId}" name="ProductsList[${i}].ActualQuantity" type="number" class="form-control" min="0" placeholder="0" step="1" disabled/>`;
+                var actualQuantityInput = `<td><input id="product-actual-quantity-${productId}" name="ProductsList[${i}].ActualQuantity" type="number" class="form-control" min="0" placeholder="0" step="1" disabled/></td>`;
                 var nettoInput = `<input id="netto-${productId}" asp-for="ProductsList.ActualQuantity" value="${product.prices[0].netto}" type="number" class="form-control" min="0" step="0.01" placeholder="0" readonly />
                 <span asp-validation-for="ProductsList.ActualQuantity" class="text-danger"></span>`;
                 var productNettoInput = `<input id="product-netto-${productId}" name="ProductsList[${i}].Netto" type="number" class="form-control" min="0" step="0.01" placeholder="0" readonly />`;
@@ -141,13 +147,16 @@ function updatePaymentDate() {
                 var quantityColumn = formName != null ? `<td>${quantityInput}</td>` : `<td><label>W magazynie ${product.stockStatus.inStock}</label>
             <input id="product-quantity-${productId}" name="ProductsList[${i}].Quantity" type="number" oninput="updateBrutto(this)" class="form-control" min="0" max="${product.stockStatus.inStock}" step="1" placeholder="0" /></td>`;
                 var vatColumn = formName != null ? `${productVat}` : `<td id="product-vat-${productId}"><p>${product.salesVat}</p></td>`;
+                var actualQuantityColumn = formName != null
+                    ? `${actualQuantityInput}`
+                    : `<td hidden><input id="product-actual-quantity-${productId}" name="ProductsList[${i}].ActualQuantity" type="number" class="form-control" value="0" /></td>`;         
 
                 var tableRow = `
             <tr>
                 <td hidden><input id="productId-${productId}" name="ProductsList[${i}].ProductId" class="form-control" type="number" value="${productId}" /></td>
                 <td><p>${product.companyDrawingNumber} - ${product.name}</p></td>
                 ${quantityColumn}
-                <td>${actualQuantityInput}</td>
+                ${actualQuantityColumn}
                 <td><p>${product.unitOfMeasure}</p></td>
                 <td>${nettoInput}</td>
                 <td>${productNettoInput}</td>

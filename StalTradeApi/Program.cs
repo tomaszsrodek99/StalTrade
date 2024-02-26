@@ -55,7 +55,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        Description = "Standard Autohrization header using the Bearer scheme (\"baerer {token}\")",
+        Description = "Standardowy nag³ówek autoryzacji u¿ywa schematu Bearer (\"baerer {token}\")",
         In = ParameterLocation.Header,
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
@@ -86,7 +86,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseCors();
+
 app.UseRouting();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
