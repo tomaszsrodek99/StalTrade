@@ -3,7 +3,7 @@ Dedykowana aplikacja webowa do zarządzania firmą zajmującą się handlem odku
 Ma z zadanie pomóc w prowadzeniu ewidencji sprzedaży bądź zakupu, monitorowaniu stanów magazynowych produktów, zarzadzanie fakturami i finansami firmy.
 
 ## Jak uruchomić?
-1. Pobierz projekt z GitHub lub sklonuj repozytorium w konsoli: git clone https://github.com/tomaszsrodek99/StalTrade/tree/master
+1. Pobierz projekt z GitHub lub sklonuj repozytorium w konsoli: git clone https://github.com/tomaszsrodek99/StalTrade.git
 2. Jeżeli nie ma odwołania pomiędzy UI a API ustaw je
 3. Upewnij się, że posiadasz bazę danych o nazwie StalTrade
 4. Zmień connection stringa w pliku konfiguracyjnym w API na własny
@@ -20,15 +20,15 @@ Dla API ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/45d99048-b027-4a1a-8a9f-970fa1d9a1c2)
 
 ## Technologie:
-ASP.NET 6.0
-Entity Framework Core
-LINQ
-JavaScript
-SQL Server
-Automapper
-Git
-Jwt Token
-REST API
+- ASP.NET 6.0
+- Entity Framework Core
+- LINQ
+- JavaScript
+- SQL Server
+- Automapper
+- Git
+- Jwt Token
+- REST API
 
 ## Swagger
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/d638b454-152f-418e-a026-a5032cce843e)
