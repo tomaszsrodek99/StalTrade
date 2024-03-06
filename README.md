@@ -3,7 +3,7 @@ Dedykowana aplikacja webowa do zarządzania firmą zajmującą się handlem odku
 Ma z zadanie pomóc w prowadzeniu ewidencji sprzedaży bądź zakupu, monitorowaniu stanów magazynowych produktów, zarzadzanie fakturami i finansami firmy.
 
 ## Jak uruchomić?
-1. Pobierz projekt z GitHub lub sklonuj repozytorium w konsoli: git clone https://github.com/twoj-nick/twoj-projekt.git
+1. Pobierz projekt z GitHub lub sklonuj repozytorium w konsoli: git clone https://github.com/tomaszsrodek99/StalTrade.git
 2. Jeżeli nie ma odwołania pomiędzy UI a API ustaw je
 3. Upewnij się, że posiadasz bazę danych o nazwie StalTrade
 4. Zmień connection stringa w pliku konfiguracyjnym w API na własny
