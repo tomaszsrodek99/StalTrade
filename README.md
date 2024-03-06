@@ -3,16 +3,18 @@ Dedykowana aplikacja webowa do zarządzania firmą zajmującą się handlem odku
 Ma z zadanie pomóc w prowadzeniu ewidencji sprzedaży bądź zakupu, monitorowaniu stanów magazynowych produktów, zarzadzanie fakturami i finansami firmy.
 
 ## Jak uruchomić?
-1. Pobierz projekt z GitHub lub sklonuj repozytorium w konsoli: git clone https://github.com/tomaszsrodek99/StalTrade.git
+1. Pobierz projekt z GitHub lub sklonuj repozytorium w konsoli: git clone https://github.com/tomaszsrodek99/StalTrade/tree/master.git
 2. Jeżeli nie ma odwołania pomiędzy UI a API ustaw je
 3. Upewnij się, że posiadasz bazę danych o nazwie StalTrade
 4. Zmień connection stringa w pliku konfiguracyjnym w API na własny
-5. Ustaw projekt startowy na <Wiele projektów startowych>
-6. 5. Zainstaluj wymagane pakiety NuGet ręcznie lub poprzez komendę w lokalnym katalogu projektu (dotnet restore):
+5. Ustaw projekt startowy na <Wiele projektów startowych> 
+6. Zainstaluj wymagane pakiety NuGet ręcznie lub poprzez komendę w lokalnym katalogu projektu (dotnet restore):
+   
 Dla UI ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/de07234e-d291-4200-bb43-c766c2d71f24)
 Dla API ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512d0157-5946-4e1a-ba1a-1b113e61bcf1)
-7. Jeżeli wystepuje konflikt z innymi projektami na tych samych portach, zmień porty w plikach launchSettings.json
-8. Po uruchomieniu aplikacji dodaj użytkownika za pomocą Swagger
+
+8. Jeżeli wystepuje konflikt z innymi projektami na tych samych portach, zmień porty w plikach launchSettings.json
+9. Po uruchomieniu aplikacji dodaj użytkownika za pomocą Swagger
      
 ## Struktura bazy danych:
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/45d99048-b027-4a1a-8a9f-970fa1d9a1c2)
