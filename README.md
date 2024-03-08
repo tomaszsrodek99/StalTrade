@@ -14,7 +14,8 @@ Dla UI ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/de07
 Dla API ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512d0157-5946-4e1a-ba1a-1b113e61bcf1)
 
 8. Jeżeli wystepuje konflikt z innymi projektami na tych samych portach, zmień porty w plikach launchSettings.json
-9. Po uruchomieniu aplikacji dodaj użytkownika za pomocą Swagger
+9. Wykonaj migrację bazy danych, wpisując nastepujące polecenia w Konsoli Menedżera Pakietów: Add-Migration Init oraz Update-Database.
+10. Po uruchomieniu aplikacji dodaj użytkownika za pomocą Swagger
      
 ## Struktura bazy danych:
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/45d99048-b027-4a1a-8a9f-970fa1d9a1c2)
@@ -25,7 +26,7 @@ Dla API ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512
 - LINQ
 - JavaScript
 - SQL Server
-- Automapper
+- AutoMapper
 - Git
 - Jwt Token
 - REST API
