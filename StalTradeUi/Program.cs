@@ -49,17 +49,20 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseSession();
+
 app.UseStaticFiles();
 
 app.UseRequestLocalization();
 
 app.UseAuthentication();
+
 app.UseJwtAuthorization(); 
 
 app.UseRouting();
-app.UseAuthorization();
 
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

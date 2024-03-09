@@ -37,7 +37,8 @@ namespace StalTradeAPI.Controllers
                 {
                     Email = request.Email,
                     PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt
+                    PasswordSalt = passwordSalt,
+                    Firstname = request.Firstname
                 };
 
                 await _repository.AddAsync(newUser);
@@ -79,7 +80,7 @@ namespace StalTradeAPI.Controllers
             var claims = new List<Claim>
             {
                 //new Claim("UserId", user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.FirstName)
+                new Claim(ClaimTypes.Name, user.Firstname)
             };
 
             var token = new JwtSecurityToken(

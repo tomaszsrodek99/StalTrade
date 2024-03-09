@@ -89,7 +89,6 @@ namespace StalTradeAPI.Controllers
             }
         }
 
-
         [HttpPost("CreateInvoice")]
         public async Task<IActionResult> CreateInvoice(InvoiceDto dto)
         {

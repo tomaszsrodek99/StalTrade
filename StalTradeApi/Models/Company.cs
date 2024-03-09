@@ -20,6 +20,7 @@ namespace StalTradeAPI.Models
         public string PostOffice { get; set; } = string.Empty;
         [Required,StringLength(10, MinimumLength = 10)]
         public string NIP { get; set; } = string.Empty;
+        [Required]
         public string PaymentMethod { get; set; } = string.Empty;
         public List<Contact>? Contacts { get; set; }
     }

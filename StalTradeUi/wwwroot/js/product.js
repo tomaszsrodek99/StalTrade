@@ -98,6 +98,7 @@ function loadUpdateProductForm(data) {
 
 function checkUnique() {
     var companyDrawingNumber = $('#company-drawing-number').val();
+    console.log(companyDrawingNumber);
     var productId = $('#productId').val();
     $.ajax({
         url: 'https://localhost:7279/api/Product/IsProductUnique/' + productId + '?companyDrawingNumber=' + encodeURIComponent(companyDrawingNumber),

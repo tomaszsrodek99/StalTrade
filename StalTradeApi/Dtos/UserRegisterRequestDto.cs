@@ -14,5 +14,7 @@ namespace StalTradeAPI.Dtos
         [Required(ErrorMessage = "Pole jest wymagane."), Compare("Password", ErrorMessage = "Hasła nie są identyczne.")]
         [Display(Name = "Potwierdż hasło")]
         public string ConfirmPassword { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Pole jest wymagane.")]
+        public string Firstname { get; set; } = string.Empty;
     }
 }

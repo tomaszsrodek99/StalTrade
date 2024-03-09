@@ -26,6 +26,7 @@
                     <div class="col">
                         <label asp-for="CompanyId" class="control-label"></label>
                     <select id="invoice-companyId" asp-for="CompanyId" class="form-control" onchange="updatePaymentDate(products)" readonly>
+                        <option value="" disabled selected>Wybierz firmę</option>
                             @foreach (var company in ViewBag.Companies)
                             {
                                 <option value="@company.CompanyID">@company.Name</option>

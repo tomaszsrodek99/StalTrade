@@ -58,7 +58,10 @@ namespace StalTradeUI.Controllers
                         Secure = true,
                         SameSite = SameSiteMode.Strict
                     };
-                    Response.Cookies.Append("UserName", user.FirstName, userName);
+                    Response.Cookies.Append("UserName", user.Firstname, userName);
+
+                    if(user.Email == "admin@example.com")
+                        return RedirectToAction("AdminIndex");
 
                     return RedirectToAction("Index");
                 }
@@ -90,6 +93,12 @@ namespace StalTradeUI.Controllers
         public IActionResult Index()
         {
             return View("Index");
+        }
+
+        [Authorize]
+        public IActionResult AdminIndex()
+        {
+            return View("AdminPanel");
         }
 
         public IActionResult Logout()

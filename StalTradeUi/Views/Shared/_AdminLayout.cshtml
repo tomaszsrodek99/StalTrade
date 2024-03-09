@@ -1,0 +1,124 @@
+﻿@{
+    var jwtToken = Context.Request.Cookies["JWTToken"];
+    var userName = Context.Request.Cookies["UserName"];
+}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StalTrade</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/DataTables/datatables.min.js"></script>
+    <script src="~/DataTables/Buttons-2.4.2/js/buttons.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/DataTables/datatables.min.css" />
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="~/css/loading-spinner.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/form.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true" />
+</head>
+<body style="background-color: rgb(220,220,220);">
+    <header>
+        <div class="blur-overlay" id="blurOverlay"></div>
+        <nav>
+            <div class="d-flex justify-content-between w-100">
+                <h1 class="navbar-brand">Witaj, @userName !</h1>
+                <div class="d-flex">
+                    <h1 class="navbar-brand clock"><span id="clock"></span></h1>
+                    <h1 class="navbar-brand">
+                        <a class="nav-link no-link-style" asp-controller="UserUI" asp-action="Logout">
+                            <i class="fa-solid fa-right-from-bracket"></i> Wyloguj
+                        </a>
+                    </h1>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li>
+                    <a asp-controller="CompanyUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "CompanyUI") ? "active" : "")">
+                        <i class="fa-solid fa-person"></i>Dostawcy i klienci
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="WarehouseUI" asp-action="PriceList" class="@((ViewContext.RouteData.Values["action"] as string == "PriceList") ? "active" : "")">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                        Cennik
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="InvoiceUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "InvoiceUI") ? "active" : "")">
+                        <i class="fa-solid fa-cart-shopping"></i>Faktury
+                    </a>
+                </li>               
+                <li>
+                    <a id="kosztySubMenuToggle" class=""><i class="fa-solid fa-comment-dollar"></i>Koszty</a>
+                    <ul id="kosztySubMenu" class="submenu">
+                        <li>
+                            <a asp-controller="ExpenseUI" asp-action="CashRegister" class="sub-menu-element @((ViewContext.RouteData.Values["action"] as string == "CashRegister") ? "active" : "")">
+                                <i class="fa-solid fa-cash-register"></i>
+                                Wirtualna kasa
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="ExpenseUI" asp-action="FixedCosts" class="sub-menu-element @((ViewContext.RouteData.Values["action"] as string == "FixedCosts") ? "active" : "")">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                                Wydatki
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a asp-controller="WarehouseUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "WarehouseUI" && ViewContext.RouteData.Values["action"] as string == "Index") ? "active" : "")">
+                        <i class="fa-solid fa-house"></i>Magazyn
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="ProductUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "ProductUI") ? "active" : "")">
+                        <i class="fa-solid fa-book"></i>Produkty
+                    </a>
+                </li>
+                <li>
+                    <a id="admin-panel" style="color: red;">Panel administratora</a>
+                </li>
+            </ul>
+        </aside>
+
+        <main role="main" class="content text-center user-background">
+            @RenderBody()
+        </main>
+    </div>
+
+    <div id="tokenExpirationMessage">
+        <p>Wylogowano z powodu braku aktywności</p>
+        <button id="acceptButton">Akceptuj</button>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/loading.js" asp-append-version="true"></script>
+    <script src="~/js/user.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        window.onload = function () {
+            var token = '@jwtToken';
+            scheduleTokenExpiration(token);
+        }
+        setInterval(updateClock, 1000);
+
+        updateClock();
+    </script>
+</body>
+</html>
