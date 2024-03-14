@@ -5,16 +5,24 @@ This application is intended to streamline processes related to invoice manageme
 ## How to run?
 1. Download the project from GitHub or clone the repository in the console: git clone https://github.com/tomaszsrodek99/StalTrade.git
 2. If there is no reference between the UI and API, set it  
+
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/bf6fd12d-cd69-491d-ae02-a35a0f219c6b)
+
 3. Make sure you have a database named StalTrade
 4. Change the connection string in the configuration file in the API to your own if it is need
 5. Set the startup project to <Multiple startup projects>
+
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/aec9d592-7519-40e0-bd1e-150342bae2e6)
+
 6. Install the required NuGet packages manually or by running the following command in the local project directory:   
 UI
+
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/de07234e-d291-4200-bb43-c766c2d71f24)
+
 API
+
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512d0157-5946-4e1a-ba1a-1b113e61bcf1)
+
 7. If there is a conflict with other projects on the same ports, change the ports in the launchSettings.json files
 8. Execute the database migration by entering the following commands in the Package Manager Console: Add-Migration Init and Update-Database, or run a script with sample data
 9. After launching the application, add a user using Swagger or, if you ran the database script, log in using the following credentials:
