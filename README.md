@@ -1,31 +1,39 @@
 # StalTrade
 Dedykowana aplikacja webowa do zarządzania firmą zajmującą się handlem odkuwkami matrycowymi.
-Ma z zadanie pomóc w prowadzeniu ewidencji sprzedaży bądź zakupu, monitorowaniu stanów magazynowych produktów, zarzadzanie fakturami i finansami firmy.
+Aplikacja ta ma służyć usprawnieniu procesów związanych z zarządzaniem fakturami, analizować aspekty finansowe, monitorować stany magazynowe, 
+ewidencjonować sprzedaż oraz wspomagać inne procesy związane z działalnością firmy tworząc scentralizowane miejsce do przechowywania danych
 
-## Jak uruchomić?
-1. Pobierz projekt z GitHub lub sklonuj repozytorium w konsoli: git clone https://github.com/tomaszsrodek99/StalTrade.git
-2. Jeżeli nie ma odwołania pomiędzy UI a API ustaw je
-3. Upewnij się, że posiadasz bazę danych o nazwie StalTrade
-4. Zmień connection stringa w pliku konfiguracyjnym w API na własny
-5. Ustaw projekt startowy na <Wiele projektów startowych> 
-6. Zainstaluj wymagane pakiety NuGet ręcznie lub poprzez komendę w lokalnym katalogu projektu (dotnet restore):
+## How to run?
+1. Download the project from GitHub or clone the repository in the console: git clone https://github.com/tomaszsrodek99/StalTrade.git
+2. If there is no reference between the UI and API, set it
    
-Dla UI ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/de07234e-d291-4200-bb43-c766c2d71f24)
-Dla API ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512d0157-5946-4e1a-ba1a-1b113e61bcf1)
+![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/bf6fd12d-cd69-491d-ae02-a35a0f219c6b)
+4. Make sure you have a database named StalTrade
+5. Change the connection string in the configuration file in the API to your own if it is need
+6. Set the startup project to <Multiple startup projects>
 
-8. Jeżeli wystepuje konflikt z innymi projektami na tych samych portach, zmień porty w plikach launchSettings.json
-9. Wykonaj migrację bazy danych, wpisując nastepujące polecenia w Konsoli Menedżera Pakietów: Add-Migration Init oraz Update-Database.
-10. Po uruchomieniu aplikacji dodaj użytkownika za pomocą Swagger
-     
-## Struktura bazy danych:
+![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/aec9d592-7519-40e0-bd1e-150342bae2e6)
+8. Install the required NuGet packages manually or by running the following command in the local project directory:
+   
+UI ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/de07234e-d291-4200-bb43-c766c2d71f24)
+API ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512d0157-5946-4e1a-ba1a-1b113e61bcf1)
+
+9. If there is a conflict with other projects on the same ports, change the ports in the launchSettings.json files
+10. Execute the database migration by entering the following commands in the Package Manager Console: Add-Migration Init and Update-Database, or run a script with sample data
+11. After launching the application, add a user using Swagger or, if you ran the database script, log in using the following credentials:
+User
+Login: user@example.com
+Hasło: string
+
+## Structure of the database:
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/45d99048-b027-4a1a-8a9f-970fa1d9a1c2)
 
-## Technologie:
+## Technologies:
 - ASP.NET 6.0
 - Entity Framework Core
 - LINQ
 - JavaScript
-- SQL Server
+- MSSQL Server
 - AutoMapper
 - Git
 - Jwt Token
@@ -37,10 +45,10 @@ Dla API ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/81a095c5-b612-4b0b-948c-2cc00b3abf7f)
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/7b418a4f-2df0-46ce-9652-d9e051e0484d)
 
-## Prezentacja aplikacji
-Panel logowania:
+## Application review
+### Login view:
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/5ad55729-fd3c-4e36-8260-aec8a0c534aa)
-Wybrane zakładki:
+### Selected tabs:
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/ccf17f14-f442-4b61-bd0c-5f0443409a2d)
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/65af994b-fbea-4345-ac7c-9325165cb205)
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/4917b59c-12da-432c-82c6-a0f6eb38f3c4)
