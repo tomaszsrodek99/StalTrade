@@ -1,7 +1,6 @@
 # StalTrade
-Dedykowana aplikacja webowa do zarządzania firmą zajmującą się handlem odkuwkami matrycowymi.
-Aplikacja ta ma służyć usprawnieniu procesów związanych z zarządzaniem fakturami, analizować aspekty finansowe, monitorować stany magazynowe, 
-ewidencjonować sprzedaż oraz wspomagać inne procesy związane z działalnością firmy tworząc scentralizowane miejsce do przechowywania danych
+Dedicated web application for managing a company specializing in matrix forging trade.
+This application is intended to streamline processes related to invoice management, analyze financial aspects, monitor inventory levels, record sales, and support other business processes by creating a centralized repository for storing data.
 
 ## How to run?
 1. Download the project from GitHub or clone the repository in the console: git clone https://github.com/tomaszsrodek99/StalTrade.git
@@ -15,8 +14,11 @@ ewidencjonować sprzedaż oraz wspomagać inne procesy związane z działalnośc
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/aec9d592-7519-40e0-bd1e-150342bae2e6)
 8. Install the required NuGet packages manually or by running the following command in the local project directory:
    
-UI ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/de07234e-d291-4200-bb43-c766c2d71f24)
-API ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512d0157-5946-4e1a-ba1a-1b113e61bcf1)
+UI
+![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/de07234e-d291-4200-bb43-c766c2d71f24)
+
+API
+![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/512d0157-5946-4e1a-ba1a-1b113e61bcf1)
 
 9. If there is a conflict with other projects on the same ports, change the ports in the launchSettings.json files
 10. Execute the database migration by entering the following commands in the Package Manager Console: Add-Migration Init and Update-Database, or run a script with sample data
