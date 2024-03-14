@@ -47,7 +47,7 @@ Hasło: string
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/81a095c5-b612-4b0b-948c-2cc00b3abf7f)
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/7b418a4f-2df0-46ce-9652-d9e051e0484d)
 
-## Application review
+## Application screenshots
 ### Login view:
 ![image](https://github.com/tomaszsrodek99/StalTrade/assets/98595791/5ad55729-fd3c-4e36-8260-aec8a0c534aa)
 ### Selected tabs:
