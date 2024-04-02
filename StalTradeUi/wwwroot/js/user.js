@@ -1,9 +1,4 @@
-﻿$(document).ready(function () {
-    document.getElementById('admin-panel').addEventListener('click', function () {
-        window.location.href = 'https://localhost:7279/swagger/index.html';
-    });
-});
-function scheduleTokenExpiration(token) {
+﻿function scheduleTokenExpiration(token) {
     const tokenData = parseJwt(token);
     if (tokenData && tokenData.exp) {
         const tokenExpiration = new Date(tokenData.exp * 1000); //Przekształć `exp` w tokenie na datę

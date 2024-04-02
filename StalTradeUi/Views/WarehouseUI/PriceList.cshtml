@@ -6,6 +6,20 @@
 }
 
 <h2>Cennik</h2>
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div class="position-float-right">
     <div id="button-container">
         <button id="sale-prices-button" class="btn btn-info">Sprzedaż</button>

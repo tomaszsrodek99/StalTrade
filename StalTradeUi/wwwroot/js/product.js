@@ -24,17 +24,17 @@
         $('#edit-product-button, #delete-product-button').attr('data-product-id', isRowSelected ? selectedRow[0] : null);
     });
 
+    $('#add-product-button').on('click', function () {
+        window.location.href = '/ProductUI/CreateProductView';
+    });
+
     $('#edit-product-button').on('click', function () {
-        if (selectedRow !== null) {
-            loadUpdateProductForm(selectedRow);
-        }
+        window.location.href = '/ProductUI/EditProductView/' + selectedRow[0];
     });
 
     $('#delete-product-button').on('click', function () {
-        if (selectedRow !== null) {
             if (confirm('Czy na pewno chcesz usunąć produkt?')) {
                 window.location.href = '/ProductUI/RemoveProduct/' + selectedRow[0];
-            }
         }
     });
 
@@ -60,55 +60,22 @@
     });
 });
 
-function loadCreateProductForm() {
-    var form = document.getElementById("productForm");
-    form.reset();
-    document.getElementById("productForm").action = "AddProduct";
-    document.getElementById("product-form-name").innerHTML = "Dodaj produkt";
-    var partialView = document.getElementById("partial-view");
-    partialView.style.visibility = "visible";
-    blur();
-}
-
-function loadUpdateProductForm(data) {
-    console.log(data);
-    var form = document.getElementById("productForm");
-    form.reset();
-
-    form.action = "PutProduct";
-    document.getElementById("product-form-name").innerHTML = "Edytuj produkt";
-
-    document.getElementById("productId").value = data[0];
-    document.getElementById("name").value = data[1];
-    document.getElementById("company-drawing-number").value = data[2];
-    document.getElementById("customer-drawing-number").value = data[3];
-    document.getElementById("unit-of-measure").value = data[4].replace('.','');
-    document.getElementById("purchase-vat").value = parseFloat(data[5].replace('%', ''));
-    document.getElementById("sales-vat").value = parseFloat(data[6].replace('%', ''));
-    document.getElementById("consumption-standard").value = data[7].replace(',', '.');
-    document.getElementById("weight").value = data[8].replace(',', '.');
-    document.getElementById("charge-profile").value = data[9];
-    document.getElementById("material-grade").value = data[10];
-    document.getElementById("substitute-grade").value = data[11];
-
-    var partialView = document.getElementById("partial-view");
-    partialView.style.visibility = "visible";
-    blur();
-}
-
 function checkUnique() {
     var companyDrawingNumber = $('#company-drawing-number').val();
-    console.log(companyDrawingNumber);
     var productId = $('#productId').val();
+
     $.ajax({
-        url: 'https://localhost:7279/api/Product/IsProductUnique/' + productId + '?companyDrawingNumber=' + encodeURIComponent(companyDrawingNumber),
-        type: 'GET',
+        url: 'https://localhost:7090/ProductUI/ProductExists?productId=' + productId + '&companyDrawingNumber=' + encodeURIComponent(companyDrawingNumber),
+        type: 'POST',
         success: function (result) {
-            if (!result) {
-                $('#uniqueProductError').text('Taki produkt już istnieje.');
-            } else {
+            if (result.success === true) { 
                 $('#uniqueProductError').text('');
+            } else {
+                $('#uniqueProductError').text('Taki produkt już istnieje.');
             }
+        },
+        error: function (textStatus, errorThrown) {
+            alert('Wystąpił błąd podczas przetwarzania żadania.' + textStatus + ' ' + errorThrown);
         }
     });
 }

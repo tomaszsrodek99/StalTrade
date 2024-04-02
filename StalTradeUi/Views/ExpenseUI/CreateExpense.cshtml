@@ -1,0 +1,122 @@
+﻿@model StalTradeAPI.Dtos.ExpenseDto
+@{
+    ViewData["Title"] = "Wydatek";
+    Layout = "_UserLayout";
+    string action = ViewContext.RouteData.Values["action"] as string;
+}
+<h2 class="text-center" id="expense-form-name">
+    @{
+
+        string title = (action == "CreateExpenseView" || action == "AddExpense") ? "Dodaj wydatek" : "Edytuj wydatek";
+    }
+    @title
+</h2>
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="text-center row">
+    <div class="offset-3 col-6">
+        <form id="expenseForm" asp-controller="ExpenseUI" asp-action="@((action == "CreateExpenseView" || action == "AddExpense") ? "AddExpense" : "PutExpense")" method="post" class="my-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input id="expenseId" asp-for="ExpenseId" class="form-control" hidden />
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" type="date" id="date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Contractor" class="control-label"></label>
+                <input id="contractor" asp-for="Contractor" class="form-control autocomplete-contractor" />
+                <span asp-validation-for="Contractor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InvoiceNumber" class="control-label"></label>
+                <input id="invoice-number" asp-for="InvoiceNumber" class="form-control" />
+                <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input id="description" asp-for="Description" class="form-control autocomplete-description" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Netto" class="control-label"></label>
+                        <input id="netto" asp-for="Netto" class="form-control" type="number" min="0" step="0.01" />
+                        <span asp-validation-for="Netto" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Brutto" class="control-label"></label>
+                        <input id="brutto" asp-for="Brutto" class="form-control" type="number" min="0" step="0.01" />
+                        <span asp-validation-for="Brutto" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="DateOfPayment" class="control-label"></label>
+                        <input asp-for="DateOfPayment" class="form-control" type="date" id="date-of-payment" />
+                        <span asp-validation-for="DateOfPayment" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Paid" class="control-label"></label>
+                        <div class="form-check my-form-check">
+                            <input class="form-checkbox-control" asp-for="Paid" type="checkbox" id="paid" asp-true-value="true" asp-false-value="false" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="PaymentType" class="control-label"></label>
+                        <select id="payment-type" asp-for="PaymentType" class="form-control">
+                            <option value="Kasa">Kasa</option>
+                            <option value="Konto">Konto</option>
+                        </select>
+                        <span asp-validation-for="PaymentType" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col">
+                    <label asp-for="EventType" class="control-label"></label>
+                    <input id="event-type" asp-for="EventType" class="form-control autocomplete-event-type" />
+                    <span asp-validation-for="EventType" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-dark form-button" onclick="redirectToIndex()">Wstecz</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/expense.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        function redirectToIndex() {
+            window.location.href = '/ExpenseUI/FixedCosts';
+        }
+    </script>
+}

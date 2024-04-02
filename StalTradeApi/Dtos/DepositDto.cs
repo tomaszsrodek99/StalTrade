@@ -9,7 +9,7 @@ namespace StalTradeAPI.Dtos
         [DataType(DataType.Currency)]
         public decimal Cash { get; set; }
         [Required, Display(Name = "Data")]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime Date { get; set; }
     }
 }

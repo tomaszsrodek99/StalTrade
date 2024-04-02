@@ -38,7 +38,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _contactRepository.AddAsync(_mapper.Map<Contact>(dto));
-                return Ok();
+                return Ok(new { success = true, message = "Kontakt został pomyślnie przypisany do firmy!" });
             }
             catch (Exception ex)
             {
@@ -52,7 +52,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _contactRepository.UpdateAsync(_mapper.Map<Contact>(dto));
-                return Ok();
+                return Ok(new { success = true, message = "Kontakt został pomyślnie edytowany!" });
             }
             catch (Exception ex)
             {
@@ -66,7 +66,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _contactRepository.DeleteAsync(id);
-                return Ok();
+                return Ok(new { success = true, message = "Kontakt został pomyślnie usunięty!" });
             }
             catch (Exception ex)
             {

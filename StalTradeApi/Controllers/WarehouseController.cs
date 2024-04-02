@@ -71,8 +71,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _priceRepository.AddAsync(_mapper.Map<Price>(dto));
-
-                return Ok();
+                return Ok(new { success = true, message = "Cena została pomyślnie dodana!" });
             }
             catch (Exception ex)
             {
@@ -90,7 +89,7 @@ namespace StalTradeAPI.Controllers
 
                 if (previousPrice.CompanyId == dto.CompanyId && previousPrice.Netto == dto.Netto)
                 {
-                    return Ok();
+                    return Ok(new { success = true, message = "Cena została pomyślnie zaktualizowana!" });
                 }
                 else
                 {
@@ -113,8 +112,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _priceRepository.DeleteAsync(id);
-
-                return Ok();
+                return Ok(new { success = true, message = "Cena została pomyślnie usunięta!" });
             }
             catch (Exception ex)
             {

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
-using System.Net;
 
 namespace StalTradeUI.Controllers
 {
@@ -16,7 +16,6 @@ namespace StalTradeUI.Controllers
             };
         }
 
-        [HttpGet]
         public IActionResult LoginView()
         {
             return View("Login");
@@ -35,7 +34,7 @@ namespace StalTradeUI.Controllers
 
                     var jwtCookie = new CookieOptions
                     {
-                        HttpOnly = false,
+                        HttpOnly = true,
                         Secure = true,
                         SameSite = SameSiteMode.None,
                         Expires = DateTime.UtcNow.AddMinutes(10)
@@ -58,14 +57,11 @@ namespace StalTradeUI.Controllers
                         Secure = true,
                         SameSite = SameSiteMode.Strict
                     };
-                    Response.Cookies.Append("UserName", user.Firstname, userName);
-
-                    if(user.Email == "admin@example.com")
-                        return RedirectToAction("AdminIndex");
+                    Response.Cookies.Append("UserName", user.Firstname, userName);                 
 
                     return RedirectToAction("Index");
                 }
-                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                else
                 {
                     var error = await response.Content.ReadFromJsonAsync<ValidationError>();
                     if(error != null)
@@ -73,11 +69,6 @@ namespace StalTradeUI.Controllers
                         ModelState.AddModelError(error.State, error.Message);
                         return View("Login", request);
                     }
-                    ViewBag.ErrorMessage = await response.Content.ReadAsStringAsync();
-                    return View("Error");
-                }
-                else
-                {
                     ViewBag.ErrorMessage = await response.Content.ReadAsStringAsync();
                     return View("Error");
                 }
@@ -95,20 +86,13 @@ namespace StalTradeUI.Controllers
             return View("Index");
         }
 
-        [Authorize]
-        public IActionResult AdminIndex()
-        {
-            return View("AdminPanel");
-        }
-
         public IActionResult Logout()
         {
             Response.Cookies.Delete("JWTToken");
             Response.Cookies.Delete("UserId");
             Response.Cookies.Delete("UserName");
+            HttpContext.SignOutAsync();
             return RedirectToAction("LoginView");
         }
-
-
     }
 }

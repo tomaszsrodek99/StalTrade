@@ -18,7 +18,7 @@ namespace StalTradeAPI.Dtos
         public decimal Netto { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Data")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Zakup?")]

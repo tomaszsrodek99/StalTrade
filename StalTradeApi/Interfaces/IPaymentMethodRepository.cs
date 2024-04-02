@@ -4,6 +4,6 @@ namespace StalTradeAPI.Interfaces
 {
     public interface IPaymentMethodRepository : IGenericRepository<PaymentMethod>
     {
-        public bool MethodExists(string request);
+        bool MethodExists(string request);
     }
 }

@@ -17,29 +17,19 @@ namespace StalTradeAPI.Repositories
             _context = context;
         }
 
-        public async Task<User> UserExists(string request)
+        public async Task<bool> UserExists(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == request);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+                return false;
+   
+            return true;
         }
 
-        public async void RegisterFromInitializer(UserRegisterRequestDto request)
+        public async Task<User> GetUserByEmail(string email)
         {
-                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-                var newUser = new User()
-                {
-                    Email = request.Email,
-                    PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt
-                };
-                await AddAsync(newUser);
-        }
-        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return user;
         }
     }
 }

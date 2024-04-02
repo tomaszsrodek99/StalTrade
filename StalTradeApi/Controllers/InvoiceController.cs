@@ -129,9 +129,9 @@ namespace StalTradeAPI.Controllers
                     await _stockStatusRepository.UpdateAsync(stockStatus);
                 }
 
-                transaction.Commit(); 
+                transaction.Commit();
 
-                return Ok();
+                return Ok(new { success = true, message = "Faktura została pomyślnie dodana!" });
             }
             catch (Exception ex)
             {
@@ -179,7 +179,7 @@ namespace StalTradeAPI.Controllers
 
                 transaction.Commit();
 
-                return Ok();
+                return Ok(new { success = true, message = "Firma została pomyślnie usunięta!" });
             }
             catch (Exception ex)
             {

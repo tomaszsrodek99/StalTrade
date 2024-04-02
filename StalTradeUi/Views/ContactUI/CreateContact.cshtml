@@ -1,0 +1,84 @@
+﻿@model StalTradeAPI.Dtos.ContactDto
+@{
+    ViewData["Title"] = "Kontakt";
+    Layout = "_UserLayout";
+    string action = ViewContext.RouteData.Values["action"] as string;
+}
+
+<h2>
+    @{
+        
+        string title = (action == "CreateContactView" || action == "AddContact") ? "Dodaj kontakt" : "Edytuj kontakt";
+    }
+    @title
+</h2>
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="text-center row">
+    <div class="offset-3 col-6">
+        <form id="contactForm" class="my-form" asp-controller="ContactUI" asp-action="@((action == "CreateContactView" || action == "AddContact") ? "AddContact" : "PutContact")" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input id="CompanyID" asp-for="CompanyID" class="form-control" type="hidden" />
+            <input id="contactId" asp-for="ContactID" class="form-control" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Firstname" class="control-label"></label>
+                <input id="firstname" asp-for="Firstname" class="form-control" />
+                <span asp-validation-for="Firstname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lastname" class="control-label"></label>
+                <input id="lastname" asp-for="Lastname" class="form-control" />
+                <span asp-validation-for="Lastname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Position" class="control-label"></label>
+                <input id="position" asp-for="Position" class="form-control" />
+                <span asp-validation-for="Position" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone1" class="control-label"></label>
+                <input id="phone1" asp-for="Phone1" class="form-control" />
+                <span asp-validation-for="Phone1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone2" class="control-label"></label>
+                <input id="phone2" asp-for="Phone2" class="form-control" />
+                <span asp-validation-for="Phone2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input id="email" asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-dark form-button" onclick="redirectToIndex()">Wstecz</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function redirectToIndex() {
+            window.location.href = '/CompanyUI/Index';
+        }
+    </script>
+}

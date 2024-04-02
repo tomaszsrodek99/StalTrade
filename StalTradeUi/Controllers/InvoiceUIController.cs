@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
+using StalTradeUI.Helpers;
 
 namespace StalTradeUI.Controllers
 {
     [Authorize]
     public class InvoiceUIController : Controller
     {
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _httpClient;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public InvoiceUIController(IWebHostEnvironment webHostEnvironment)
+        public InvoiceUIController(IHttpClientFactory httpContext)
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7279/")
-            };
-            _webHostEnvironment = webHostEnvironment;
+            _httpClientFactory = httpContext;
+            _httpClient = httpContext.CreateClient("MyHttpContext");
         }
 
         [HttpGet]
@@ -160,20 +158,13 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Invoice/DeleteInvoice{id}");
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("Index");
-                else
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    ViewBag.ErrorMessage = $"Nie udało się usunąć rekordu.{response.ReasonPhrase + " " + content}";
-                    return View("Error");
-                }
+                ResponseHandler.HandleResponse(response, this);
+                return RedirectToAction("Index");              
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = $"Nie udało się usunąć faktury. {ex.Message}";
+                return RedirectToAction("Index");
             }
         }
     }

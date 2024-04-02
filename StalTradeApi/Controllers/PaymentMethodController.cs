@@ -32,10 +32,16 @@ namespace StalTradeAPI.Controllers
             }
         }
 
-        [HttpPost("MethodExists")]
-        public IActionResult MethodExists(string request)
+        [HttpPost("IsMethodExists")]
+        public IActionResult IsMethodExists([FromBody] string request)
         {
-            return new JsonResult(_paymentMethodRepository.MethodExists(request));
+            bool methodExists = _paymentMethodRepository.MethodExists(request);
+
+            if (methodExists)
+            {
+                return BadRequest("Taka metoda płatności już istnieje.");
+            }
+            return Ok();
         }
 
         [HttpPost("CreatePaymentMethod")]
@@ -44,7 +50,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _paymentMethodRepository.AddAsync(model);
-                return Ok();
+                return Ok(new { success = true, message = "Metoda płatności została pomyślnie dodana!" });
             }
             catch (Exception ex)
             {
@@ -58,7 +64,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _paymentMethodRepository.DeleteAsync(id);
-                return Ok();
+                return Ok(new { success = true, message = "Pomyślnie usunięto metodę płatności!" });
             }
             catch (Exception ex)
             {

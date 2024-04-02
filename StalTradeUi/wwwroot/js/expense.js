@@ -24,18 +24,17 @@
         $('#edit-expense-button, #delete-expense-button').attr('data-expense-id', isRowSelected ? selectedRow[0] : null);
     });
 
+    $('#add-expense-button').on('click', function () {
+        window.location.href = '/ExpenseUI/CreateExpenseView';
+    });
     $('#edit-expense-button').on('click', function () {
-        if (selectedRow !== null) {
-            loadUpdateExpenseForm(selectedRow);
-        }
+        window.location.href = '/ExpenseUI/EditExpenseView/' + selectedRow[0];
     });
 
     $('#delete-expense-button').on('click', function () {
-        if (selectedRow !== null) {
             if (confirm('Czy na pewno chcesz usunąć wydatek?')) {
                 window.location.href = '/ExpenseUI/RemoveExpense/' + selectedRow[0];
             }
-        }
     });
 
     var table = new DataTable('#search-table', {
@@ -58,53 +57,15 @@
     });
 });
 
-function loadCreateExpenseForm() {
-    var form = document.getElementById("expenseForm");
-    form.reset();
-    document.getElementById("expenseForm").action = "AddExpense";
-    document.getElementById("expense-form-name").innerHTML = "Dodaj wydatek";
-    var partialView = document.getElementById("partial-view-expense");
-    partialView.style.visibility = "visible";
-    blur();
-}
-
-function loadUpdateExpenseForm(data) {
-    var form = document.getElementById("expenseForm");
-    form.reset();
-
-    form.action = "PutExpense";
-    document.getElementById("expense-form-name").innerHTML = "Edytuj wydatek";
-
-    document.getElementById("date").value = formatDateForInput(data[2]);
-    document.getElementById("expenseId").value = data[0];
-    document.getElementById("contractor").value = data[3];
-    document.getElementById("invoice-number").value = data[1];
-    document.getElementById("expenseId").value = data[0];
-    document.getElementById("description").value = data[4];
-    document.getElementById("brutto").value = data[6].replace(',', '.');
-    document.getElementById("netto").value = data[5].replace(',', '.');
-    document.getElementById("date-of-payment").value = formatDateForInput(data[7]);
-    document.getElementById("paid").checked = data[8].includes("checked");
-    document.getElementById("payment-type").value = data[9];
-    document.getElementById("event-type").value = data[10];
-
-    var partialView = document.getElementById("partial-view-expense");
-    partialView.style.visibility = "visible";
-    blur();
-}
-
 $(function () {
     $(".autocomplete-contractor").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: 'https://localhost:7279/api/Expense/AutocompleteContractor',
+                url: 'https://localhost:7090/ExpenseUI/AutocompleteContractor?term=' + encodeURIComponent(request.term),
                 type: 'GET',
                 dataType: 'json',
-                data: {
-                    term: request.term
-                },
                 success: function (data) {
-                    response(data);
+                    response(data.data);
                 }
             });
         },
@@ -116,14 +77,11 @@ $(function () {
     $(".autocomplete-description").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: 'https://localhost:7279/api/Expense/AutocompleteDescription',
+                url: 'https://localhost:7090/ExpenseUI/AutocompleteDescription?term=' + encodeURIComponent(request.term),
                 type: "GET",
-                dataType: "json",
-                data: {
-                    term: request.term
-                },
+                dataType: 'json',
                 success: function (data) {
-                    response(data);
+                    response(data.data);
                 }
             });
         },
@@ -135,43 +93,14 @@ $(function () {
     $(".autocomplete-event-type").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: 'https://localhost:7279/api/Expense/AutocompleteEventType',
+                url: 'https://localhost:7090/ExpenseUI/AutocompleteEventType?term=' + encodeURIComponent(request.term),
                 type: "GET",
-                dataType: "json",
-                data: {
-                    term: request.term
-                },
+                dataType: 'json',
                 success: function (data) {
-                    response(data);
+                    response(data.data);
                 }
             });
         },
         minLength: 2
     });
 });
-
-function updateStatus(id) {
-    $.ajax({
-        url: 'https://localhost:7279/api/Expense/ChangePaidStatus/' + id,
-        type: 'POST',
-        contentType: 'application/json',
-        success: function (response) {
-            $('#mark-as-paid-button-' + id).hide();
-
-            $('#paid-checkbox-' + id).prop('checked', true);
-        },
-        error: function (error) {
-            alert('Wystąpił błąd podczas przetwarzania żądania.' + error);
-        }
-    });
-}
-
-function formatDateForInput(dateString) {
-    var parts = dateString.split('.');
-
-    var formattedDate = new Date(parts[2], parts[1] - 1, parts[0]);
-    console.log(formattedDate);
-    var formattedDateString = formattedDate.toISOString().split('T')[0];
-
-    return formattedDateString;
-}

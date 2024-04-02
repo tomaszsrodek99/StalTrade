@@ -10,11 +10,11 @@ namespace StalTradeAPI.Dtos
         public int InvoiceId { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Data wystawienia faktury")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime InvoiceDate { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Data płatności")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime PaymentDate { get; set; }
 
         [Required(ErrorMessage = "To pole jest wymagane."), Display(Name = "Numer faktury")]

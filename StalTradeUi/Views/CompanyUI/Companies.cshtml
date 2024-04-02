@@ -6,6 +6,18 @@
 }
 
 <h2 class="text-center">Firmy</h2>
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 <div class="text-center">
     <div class="input-group search-input">
         <span class="input-group-text">
@@ -88,17 +100,7 @@
     </div>
 </div>
 
-<div id="partial-view-company" class="partial-view hidden">
-    @await Html.PartialAsync("_CreateCompany", new StalTradeAPI.Dtos.CompanyDto()),
-</div>
-<div id="partial-view-contact" class="partial-view hidden">
-    @await Html.PartialAsync("_CreateContact", new StalTradeAPI.Dtos.ContactDto()),
-</div>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
     <script src="~/js/company.js"></script>
     <script src="~/js/paymentMethod.js"></script>
 }

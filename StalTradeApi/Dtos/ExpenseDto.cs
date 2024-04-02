@@ -6,7 +6,7 @@ namespace StalTradeAPI.Dtos
     {
         public int ExpenseId { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Data")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Date { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Dostawca"), MaxLength(64, ErrorMessage = "Maksymalna długość to 64 litery."),
         RegularExpression(@"^[A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9 ]*$", ErrorMessage = "Pole musi zaczynać się od dużej litery.")]
@@ -24,7 +24,7 @@ namespace StalTradeAPI.Dtos
         [DataType(DataType.Currency)]
         public decimal Brutto { get; set; }
         [Required(ErrorMessage = "Pole jest wymagane."), Display(Name = "Termin płatności")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DateOfPayment { get; set; }
         [Display(Name = "Zapłacono?")]
         public bool Paid { get; set; }

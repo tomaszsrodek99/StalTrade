@@ -18,7 +18,7 @@ namespace StalTradeAPI.Repositories
         }
         public bool IsNIPExists(string nip, int companyId)
         {
-            return !_context.Companies.Any(c => c.NIP == nip && c.CompanyID != companyId);
+            return _context.Companies.Any(c => c.NIP == nip && c.CompanyID != companyId);
         }
     }
 }

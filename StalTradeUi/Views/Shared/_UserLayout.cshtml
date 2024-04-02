@@ -49,7 +49,8 @@
         <aside class="sidebar">
             <ul>
                 <li>
-                    <a asp-controller="CompanyUI" asp-action="Index" class="@((ViewContext.RouteData.Values["controller"] as string == "CompanyUI") ? "active" : "")">
+                    <a asp-controller="CompanyUI" asp-action="Index"
+                    class="@((ViewContext.RouteData.Values["controller"] as string == "CompanyUI" || ViewContext.RouteData.Values["controller"] as string == "ContactUI") ? "active" : "")">
                         <i class="fa-solid fa-person"></i>Dostawcy i klienci
                     </a>
                 </li>
@@ -74,7 +75,8 @@
                             </a>
                         </li>
                         <li>
-                            <a asp-controller="ExpenseUI" asp-action="FixedCosts" class="sub-menu-element @((ViewContext.RouteData.Values["action"] as string == "FixedCosts") ? "active" : "")">
+                            <a asp-controller="ExpenseUI" asp-action="FixedCosts"
+                               class="sub-menu-element @((ViewContext.RouteData.Values["controller"] as string == "ExpenseUI" && ViewContext.RouteData.Values["action"] as string != "CashRegister") ? "active" : "")">
                                 <i class="fa-solid fa-bag-shopping"></i>
                                 Wydatki
                             </a>

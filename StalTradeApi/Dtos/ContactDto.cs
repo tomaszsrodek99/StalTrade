@@ -1,4 +1,5 @@
-﻿using StalTradeAPI.Models;
+﻿using StalTradeAPI.Helpers;
+using StalTradeAPI.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace StalTradeAPI.Dtos

@@ -5,6 +5,20 @@
 }
 
 <h2>Faktury</h2>
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div class="position-float-right">
     <div id="button-container">
         <button id="add-invoice-sale-button" class="btn btn-primary">Dodaj nową fakturę sprzedaży</button>

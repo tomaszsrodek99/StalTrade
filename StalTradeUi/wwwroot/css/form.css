@@ -17,25 +17,24 @@
     margin-right: 15px;
 }
 
+/*mamy vh i vw*/
 .my-form {
-    max-width: 500px;
     padding: 10px 20px;
     background-color: #f8f9fa;
-    border: 1px solid #ced4da;
+    border: 3px solid #ced4da;
     border-radius: 5px;
     margin: 25px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: rgba(60, 66, 87, 0.12) 0px 7px 14px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px;
+}
+
+.form-button {
+    margin-right: 15px;
 }
 
 .wide-form {
     max-width: 100%;
-}
-
-.contact-form {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    margin-bottom: 15px;
 }
 
 .form-control:focus {
@@ -92,27 +91,17 @@
 }
 
 .partial-view {
+    transform: translate(-50%, -50%);
     background-color: white;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-    z-index: 1;
+    z-index: 9999;
     margin-top: 10px;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 10px;
-}
-
-#partial-view-method {
-    width: 100%;
-    padding: 15px;
-}
-
-.contact-form {
-    z-index: 1;
-    margin-left: 10px;
-    margin-right: 10px;
 }
 
 .my-form-check {

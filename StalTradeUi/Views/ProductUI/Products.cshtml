@@ -5,6 +5,20 @@
 }
 
 <h2>Produkty</h2>
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div class="text-center">
     <div class="input-group search-input">
         <span class="input-group-text">
@@ -12,7 +26,7 @@
         </span>
         <input class="form-control search-bar" type="text" id="searchInput" onkeyup="searchByName()" placeholder="Wyszukaj po nazwie produktu..">
         <div id="button-container">
-            <button class="btn btn-primary" onclick="loadCreateProductForm()">Dodaj nowy produkt</button>
+            <button id="add-product-button" class="btn btn-primary">Dodaj nowy produkt</button>
             <button id="edit-product-button" class="btn btn-secondary">Edytuj</button>
             <button id="delete-product-button" class="btn btn-danger">Usuń</button>
         </div>
@@ -87,14 +101,7 @@
     }
 </div>
 
-<div id="partial-view" class="partial-view hidden">
-    @await Html.PartialAsync("_CreateProduct", new StalTradeAPI.Dtos.ProductDto())
-</div>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
     <script src="~/js/product.js"></script>
     <script>
         var data = @Json.Serialize(Model);

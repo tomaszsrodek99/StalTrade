@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
+using StalTradeUI.Helpers;
 
 namespace StalTradeUI.Controllers
 {
     [Authorize]
     public class WarehouseUIController : Controller
     {
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _httpClient;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public WarehouseUIController(IWebHostEnvironment webHostEnvironment)
+        public WarehouseUIController(IHttpClientFactory httpContext)
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7279/")
-            };
-            _webHostEnvironment = webHostEnvironment;
+            _httpClientFactory = httpContext;
+            _httpClient = httpContext.CreateClient("MyHttpContext");
         }
 
         [HttpGet]
@@ -86,18 +84,13 @@ namespace StalTradeUI.Controllers
                 dto.Date = DateTime.Now;
                 dto.IsPurchase = false;
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Warehouse/CreatePrice", dto);
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("PriceList");
-
-                var content = await response.Content.ReadAsStringAsync();
-                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
-                return View("Error");
+                ResponseHandler.HandleResponse(response, this);
+                return RedirectToAction("PriceList");
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = $"Nie udało się dodać ceny sprzedaży. {ex.Message}";
+                return RedirectToAction("PriceList");
             }
         }
 
@@ -109,18 +102,13 @@ namespace StalTradeUI.Controllers
                 dto.Date = DateTime.Now;
                 dto.IsPurchase = true;
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Warehouse/CreatePrice", dto);
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("PriceList");
-
-                var content = await response.Content.ReadAsStringAsync();
-                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
-                return View("Error");
+                ResponseHandler.HandleResponse(response, this);
+                return RedirectToAction("PriceList");
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = $"Nie udało się dodać ceny zakupu. {ex.Message}";
+                return RedirectToAction("PriceList");
             }
         }
 
@@ -131,18 +119,13 @@ namespace StalTradeUI.Controllers
             {
                 dto.Date = DateTime.Now;
                 HttpResponseMessage response = await _httpClient.PutAsJsonAsync("api/Warehouse/UpdatePrice", dto);
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("PriceList");
-
-                var content = await response.Content.ReadAsStringAsync();
-                ViewBag.ErrorMessage = $"Nie udało się edytować rekordu.{response.ReasonPhrase + " " + content}";
-                return View("Error");
+                ResponseHandler.HandleResponse(response, this);
+                return RedirectToAction("PriceList");
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = $"Nie udało się edytować ceny. {ex.Message}";
+                return RedirectToAction("PriceList");
             }
         }
 
@@ -151,20 +134,13 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Warehouse/DeletePrice{id}");
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("PriceList");
-                else
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    ViewBag.ErrorMessage = $"Nie udało się usunąć rekordu.{response.ReasonPhrase + " " + content}";
-                    return View("Error");
-                }
+                ResponseHandler.HandleResponse(response, this);
+                return RedirectToAction("PriceList");               
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = $"Nie udało się usunąć ceny. {ex.Message}";
+                return RedirectToAction("PriceList");
             }
         }
     }

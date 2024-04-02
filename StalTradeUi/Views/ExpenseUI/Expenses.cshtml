@@ -5,6 +5,20 @@
     Layout = "_UserLayout";
     var sum = ViewBag.BruttoExpensesUnpaid + ViewBag.BruttoExpensesPaid;
 }
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <h1>Koszty</h1>
 <div>
     <h6>Suma wydatków opłaconych: @ViewBag.BruttoExpensesPaid zł</h6>
@@ -22,7 +36,7 @@
         </div>
     }
     <div class="position-float-right">
-        <button id="add-expense-button" class="btn btn-primary" onclick="loadCreateExpenseForm()">Dodaj nowy wydatek</button>
+        <button id="add-expense-button" class="btn btn-primary">Dodaj nowy wydatek</button>
         <button id="edit-expense-button" class="btn btn-secondary">Edytuj</button>
         <button id="delete-expense-button" class="btn btn-danger">Usuń</button>
     </div>
@@ -85,7 +99,7 @@
                         <td class="payment-control">
                             @if (!item.Paid)
                             {
-                                <button id="mark-as-paid-button-@item.ExpenseId" class="change-status btn btn-info" onclick="updateStatus(@item.ExpenseId)">Zapłać</button>
+                                <a href="UpdatePaidStatus/@item.ExpenseId" class="change-status btn btn-info">Zapłać</a>
                             }
                         </td>
                     </tr>
@@ -99,18 +113,8 @@
     }
 </div>
 
-<div id="partial-view-expense" class="partial-view hidden">
-    @await Html.PartialAsync("_CreateExpense", new StalTradeAPI.Dtos.ExpenseDto())
-</div>
-
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
     <script src="~/js/expense.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         var data = @Json.Serialize(Model);
     </script>

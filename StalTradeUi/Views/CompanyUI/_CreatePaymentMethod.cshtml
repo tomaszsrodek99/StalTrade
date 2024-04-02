@@ -2,7 +2,7 @@
 
 <div class="text-center row">
     <div class="col-md-6">
-        <table class="display table table-striped table-bordered table-hover">
+        <table id="paymentMethodTable" class="display table table-striped table-bordered table-hover">
             <thead class="thead-dark">
                 <tr>
                     <th>Nazwa</th>
@@ -15,7 +15,7 @@
                     <tr>
                         <td>@method.Name</td>
                         <td>
-                            <a class="btn btn-danger" href="CompanyUI/RemoveMethod/@method.Id" onclick="return confirm('Czy na pewno chcesz usunąć kontakt?')">Usuń</a>
+                            <a class="btn btn-danger" href="RemoveMethod/@method.Id" onclick="return confirm('Czy na pewno chcesz usunąć metodę płatności?')">Usuń</a>
                         </td>
                     </tr>
                 }
@@ -24,7 +24,7 @@
     </div>
     <div class="col-md-6">
         <h2>Nowa forma płatności</h2>
-        <form id="paymentMethodForm" class="my-form" asp-controller="CompanyUI" method="post">
+        <form id="paymentMethodForm" class="my-form" asp-controller="CompanyUI" asp-action="AddMethod" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -41,4 +41,3 @@
         </form>
     </div>
 </div>
-

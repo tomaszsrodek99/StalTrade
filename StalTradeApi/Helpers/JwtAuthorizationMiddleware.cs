@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
-namespace StalTradeUI.Helpers
+namespace StalTradeAPI.Helpers
 {
     public class JwtAuthorizationMiddleware
     {
@@ -17,13 +17,11 @@ namespace StalTradeUI.Helpers
 
         public async Task Invoke(HttpContext context)
         {
-            var token = context.Request.Cookies["JWTToken"];
-
+            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             if (string.IsNullOrEmpty(token))
             {
-                if (context.Request.Path == "/" || context.Request.Path == "/UserUI/LoginView" || context.Request.Path == "/UserUI/Login")
+                if (context.Request.Path == "/" || context.Request.Path == "/UserUI/LoginView" || context.Request.Path == "/UserUI/Login" || context.Request.Path =="/api/Auth/Login")
                 {
-                    context.Request.Headers.Add("Authorization", $"Bearer {token}");
                     await _next(context);
                     return;
                 }
@@ -43,7 +41,7 @@ namespace StalTradeUI.Helpers
                         {
                             HttpOnly = true,
                             Secure = true,
-                            SameSite = SameSiteMode.None,
+                            SameSite = SameSiteMode.Strict,
                             Expires = DateTime.UtcNow.AddMinutes(10)
                         };
                         context.Response.Cookies.Append("JWTToken", newToken, jwtCookie);
@@ -81,7 +79,7 @@ namespace StalTradeUI.Helpers
                     ValidateAudience = true,
                     ValidAudience = _config["Jwt:Audience"],
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.FromSeconds(1)
+                    ClockSkew = TimeSpan.Zero
                 };
 
                 var principal = tokenHandler.ValidateToken(token, parameters, out var validatedToken);

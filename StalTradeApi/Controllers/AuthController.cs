@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
@@ -12,6 +13,7 @@ namespace StalTradeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private IConfiguration _config;
@@ -28,20 +30,18 @@ namespace StalTradeAPI.Controllers
         {
             try
             {
-                if (await _repository.UserExists(request.Email) != null)
+                if (await CheckEmail(request.Email))
                     return BadRequest("Użytkownik o podanym adresie email już istnieje.");
 
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-                var newUser = new User()
+                await _repository.AddAsync(new User()
                 {
                     Email = request.Email,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
                     Firstname = request.Firstname
-                };
-
-                await _repository.AddAsync(newUser);
+                });
                 return Ok("Poprawna rejestracja");
             }
             catch (Exception ex)
@@ -55,12 +55,13 @@ namespace StalTradeAPI.Controllers
         {
             try
             {
-                var user = await _repository.UserExists(request.Email);
+                var user = await _repository.GetUserByEmail(request.Email);
+
                 if (user == null)
-                    return BadRequest(new ValidationError() { State = "Email", Message = "Podany email nie istnieje." });
+                    return Unauthorized(new ValidationError() { State = "Email", Message = "Użytkownik o podanym emailu nie istnieje." });
 
                 if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-                    return BadRequest(new ValidationError() { State = "Password", Message = "Niepoprawne hasło." });
+                    return Unauthorized(new ValidationError() { State = "Password", Message = "Niepoprawne hasło." });
 
                 string token = CreateToken(user);
 
@@ -79,7 +80,6 @@ namespace StalTradeAPI.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
-                //new Claim("UserId", user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Firstname)
             };
 
@@ -93,7 +93,7 @@ namespace StalTradeAPI.Controllers
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
-        }    
+        }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -112,11 +112,11 @@ namespace StalTradeAPI.Controllers
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
+
         [HttpGet("CheckEmail")]
-        public async Task<ActionResult<bool>> CheckEmail(string email)
+        public async Task<bool> CheckEmail(string email)
         {
-            var user = await _repository.UserExists(email);
-            return user != null;
+            return await _repository.UserExists(email);
         }
     }
 }

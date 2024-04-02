@@ -19,7 +19,7 @@ namespace StalTradeAPI.Repositories
 
         public bool IsProductExists(string companyDrawingNumber, int productId)
         {
-            return !_context.Products.Any(c => c.CompanyDrawingNumber == companyDrawingNumber && c.ProductId != productId);
+            return _context.Products.Any(c => c.CompanyDrawingNumber == companyDrawingNumber && c.ProductId != productId);
         }
 
         public async Task<IEnumerable<Product>> GetAllProductWithPrices()

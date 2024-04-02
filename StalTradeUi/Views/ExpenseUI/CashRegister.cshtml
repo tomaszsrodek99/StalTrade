@@ -6,6 +6,20 @@
 }
 
 <h1>Wirtualna kasa</h1>
+
+@if (TempData.ContainsKey("SuccessMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData.ContainsKey("ErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div class="row">
     @if (Model.Any())
     {
@@ -39,7 +53,10 @@
         <div class="text-center col-4">
             <h3>Podsumowanie</h3>
             <button id="deposit-button" class="btn btn-primary" type="button" onclick="loadDepositForm()">Wpłata do kasy</button>
-            <button id="deposit-list-button" class="btn btn-info" type="button" onclick="loadDepositesList()">Wyświetl wpłaty</button>
+            @if (ViewData["Deposites"] != null)
+            {
+                <button id="deposit-list-button" class="btn btn-info" type="button" onclick="loadDepositesList()">Wyświetl wpłaty</button>
+            }
             <h6 class="position-float-right">Stan kasy: @ViewData["Cash"] zł</h6>
             <table class="table table-striped table-bordered">
                 <thead class="thead-dark">
@@ -116,8 +133,4 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="~/js/cashRegister.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var chartData = @Html.Raw(ViewBag.ChartData);
-    </script>
 }

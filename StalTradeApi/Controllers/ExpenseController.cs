@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
+using System.Globalization;
 
 namespace StalTradeAPI.Controllers
 {
@@ -40,6 +41,33 @@ namespace StalTradeAPI.Controllers
             }
         }
 
+        [HttpGet("GetMonthlyExpenses")]
+        public async Task<ActionResult<IEnumerable<MonthlyExpenseViewModel>>> GetMonthlyExpenses()
+        {
+            try
+            {
+                var expenses = await _expenseRepository.GetAllAsync();
+                var expensesDto = _mapper.Map<List<ExpenseDto>>(expenses.OrderBy(x => x.DateOfPayment));
+
+                var monthlyExpenses = expensesDto
+                        .GroupBy(e => e.DateOfPayment.ToString("MMMM yyyy"))
+                        .Select(group => new MonthlyExpenseViewModel
+                        {
+                            Month = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(group.Key),
+                            TotalBrutto = group.Sum(e => e.Brutto),
+                            Expenses = group.ToList()
+                        })
+                        .OrderByDescending(m => m.Month)
+                        .Take(12);
+
+                return Ok(monthlyExpenses);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("CreateExpense")]
         public async Task<IActionResult> CreateExpense(ExpenseDto dto)
         {
@@ -47,7 +75,7 @@ namespace StalTradeAPI.Controllers
             {
                 await _expenseRepository.AddAsync(_mapper.Map<Expense>(dto));
 
-                return Ok();
+                return Ok(new { success = true, message = "Wydatek został pomyślnie dodany!" });
             }
             catch (Exception ex)
             {
@@ -62,7 +90,7 @@ namespace StalTradeAPI.Controllers
             {
                 await _expenseRepository.UpdateAsync(_mapper.Map<Expense>(dto));
 
-                return Ok();
+                return Ok(new { success = true, message = "Wydatek został pomyślnie edytowany!" });
             }
             catch (Exception ex)
             {
@@ -77,7 +105,7 @@ namespace StalTradeAPI.Controllers
             {
                 await _expenseRepository.DeleteAsync(id);
 
-                return Ok();
+                return Ok(new { success = true, message = "Wydatek został pomyślnie usunięty!" });
             }
             catch (Exception ex)
             {
@@ -126,7 +154,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _depositRepository.AddAsync(_mapper.Map<Deposit>(deposit));
-                return Ok();
+                return Ok(new { success = true, message = "Udało się dokonać wpłatę do kasy!" });
             }
             catch (Exception ex)
             {
@@ -140,7 +168,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _depositRepository.DeleteAsync(id);
-                return Ok();
+                return Ok(new { success = true, message = "Wpłata została anulowana!" });
             }
             catch (Exception ex)
             {
@@ -148,8 +176,8 @@ namespace StalTradeAPI.Controllers
             }
         }
 
-        [HttpPost("ChangePaidStatus/{id}")]
-        public async Task<IActionResult> ChangePaidStatus(int id)
+        [HttpPost("ChangePaidStatus")]
+        public async Task<IActionResult> ChangePaidStatus([FromBody] int id)
         {
             try
             {
@@ -158,7 +186,7 @@ namespace StalTradeAPI.Controllers
 
                 await _expenseRepository.UpdateAsync(expense);
 
-                return Ok("Pomyślnie zaktualizowano status.");
+                return Ok(new { success = true, message = $"Zaktualizowano status płatności dla {expense.Contractor}!" });
             }
             catch (Exception ex)
             {
@@ -166,22 +194,22 @@ namespace StalTradeAPI.Controllers
             }
         }
 
-        [HttpGet("AutocompleteContractor")]
-        public IActionResult AutocompleteContractor(string term)
+        [HttpPost("AutocompleteContractor")]
+        public IActionResult AutocompleteContractor([FromBody] string term)
         {
             var contractors = _expenseRepository.GetContractorsFromDatabase(term);
             return Json(contractors.Distinct());
         }
 
-        [HttpGet("AutocompleteDescription")]
-        public IActionResult AutocompleteDescription(string term)
+        [HttpPost("AutocompleteDescription")]
+        public IActionResult AutocompleteDescription([FromBody] string term)
         {
             var descriptions = _expenseRepository.GetDescriptionsFromDatabase(term);
             return Json(descriptions.Distinct());
         }
 
-        [HttpGet("AutocompleteEventType")]
-        public IActionResult AutocompleteEventType(string term)
+        [HttpPost("AutocompleteEventType")]
+        public IActionResult AutocompleteEventType([FromBody] string term)
         {
             var eventTypes = _expenseRepository.GetEventTypesFromDatabase(term);
             return Json(eventTypes.Distinct());

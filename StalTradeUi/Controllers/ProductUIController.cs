@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
+using StalTradeUI.Helpers;
 
 namespace StalTradeUI.Controllers
 {
     [Authorize]
     public class ProductUIController : Controller
     {
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient _httpClient;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public ProductUIController(IWebHostEnvironment webHostEnvironment)
+        public ProductUIController(IHttpClientFactory httpContext)
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7279/")
-            };
-            _webHostEnvironment = webHostEnvironment;
+            _httpClientFactory = httpContext;
+            _httpClient = httpContext.CreateClient("MyHttpContext");
         }
 
         [HttpGet]
@@ -38,27 +36,49 @@ namespace StalTradeUI.Controllers
             }
         }
 
+        public IActionResult CreateProductView()
+        {
+            return View("CreateProduct", new ProductDto());
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddProduct(ProductDto dto)
         {
             try
             {
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Product/CreateProduct", dto);
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("Index");
-
-                var content = await response.Content.ReadAsStringAsync();
-                ViewBag.ErrorMessage = $"Nie udało się dodać rekordu. {response.ReasonPhrase + " " + content}";
-                return View("Error");
+                ResponseHandler.HandleResponse(response, this);
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = $"Błąd serwera. {ex.Message}";
+                return RedirectToAction("Index");
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditProductView(int id)
+        {
+            try
+            {
+                HttpResponseMessage product = await _httpClient.GetAsync($"api/Product/GetProduct{id}");
+
+                if (product.IsSuccessStatusCode)
+                {
+                    var productDto = await product.Content.ReadFromJsonAsync<ProductDto>();
+                    return View("CreateProduct", productDto);
+                }
+
+                TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Błąd serwera. {ex.Message}";
+                return RedirectToAction("Index");
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> PutProduct(ProductDto dto)
@@ -66,18 +86,13 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.PutAsJsonAsync("api/Product/UpdateProduct", dto);
-
-                if (response.IsSuccessStatusCode)
-                    return RedirectToAction("Index");
-
-                var content = await response.Content.ReadAsStringAsync();
-                ViewBag.ErrorMessage = $"Nie udało się edytować rekordu.{response.ReasonPhrase + " " + content}";
-                return View("Error");
+                ResponseHandler.HandleResponse(response, this);
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = $"Nie udało się dodać metody płatności. {ex.Message}";
+                return RedirectToAction("CreateProductView");
             }
         }
         public async Task<IActionResult> RemoveProduct(int id)
@@ -85,20 +100,35 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Product/DeleteProduct{id}");
+                ResponseHandler.HandleResponse(response, this);
+                return RedirectToAction("Index");              
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Nie udało się usunąć metody płatności. {ex.Message}";
+                return RedirectToAction("CreateProductView");
+            }
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> ProductExists([FromQuery] string companyDrawingNumber, [FromQuery] int productId)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"api/Product/IsProductUnique{productId}", companyDrawingNumber);
                 if (response.IsSuccessStatusCode)
-                    return RedirectToAction("Index");
+                {
+                    return Json(new { success = true });
+                }
                 else
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    ViewBag.ErrorMessage = $"Nie udało się usunąć rekordu.{response.ReasonPhrase + " " + content}";
-                    return View("Error");
+                    return Json(new { success = false });
                 }
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View("Error");
+                TempData["ErrorMessage"] = $"Błąd serwera. {ex.Message}";
+                return RedirectToAction("CreateProductView");
             }
         }
     }

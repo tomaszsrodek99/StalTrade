@@ -13,7 +13,7 @@ namespace StalTradeAPI.Repositories
         }
         public bool MethodExists(string request)
         {
-            return !_context.PaymentMethods.Any(c => c.Name == request);
+            return _context.PaymentMethods.Any(c => c.Name == request);
         }
     }
 }

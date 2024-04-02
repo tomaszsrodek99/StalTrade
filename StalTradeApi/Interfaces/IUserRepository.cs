@@ -5,7 +5,7 @@ namespace StalTradeAPI.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        Task<User> UserExists(string request);
-        void RegisterFromInitializer(UserRegisterRequestDto request);
+        Task<bool> UserExists(string email);
+        Task<User> GetUserByEmail(string email);
     }
 }

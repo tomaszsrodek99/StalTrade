@@ -9,10 +9,11 @@ namespace StalTradeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CompanyController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ICompanyRepository _companyRepository;      
+        private readonly ICompanyRepository _companyRepository;
         public CompanyController(IMapper mapper, ICompanyRepository companyRepository)
         {
             _mapper = mapper;
@@ -27,18 +28,21 @@ namespace StalTradeAPI.Controllers
                 var companies = await _companyRepository.GetAllCompaniesWithContactsAsync();
                 if (!companies.Any())
                 {
-                    return BadRequest("Nie znaleziono zapisanych użytkowników.");
+                    return BadRequest("Nie znaleziono zapisanych firm.");
                 }
-                var contactMap = companies.SelectMany(c => c.Contacts).ToList();
-                var contactDtos = _mapper.Map<List<ContactDto>>(contactMap);
-                var records = _mapper.Map<List<CompanyDto>>(companies);
 
-                foreach (var companyDto in records)
+                var contactMap = companies.SelectMany(c => c.Contacts).ToList();
+
+                var contactDtos = _mapper.Map<List<ContactDto>>(contactMap);
+
+                var companyDtos = _mapper.Map<List<CompanyDto>>(companies);
+
+                foreach (var companyDto in companyDtos)
                 {
                     companyDto.Contacts = contactDtos.Where(c => c.CompanyID == companyDto.CompanyID).ToList();
                 }
 
-                return Ok(records);
+                return Ok(companyDtos);
             }
             catch (Exception ex)
             {
@@ -46,7 +50,7 @@ namespace StalTradeAPI.Controllers
             }
         }
 
-        [HttpGet("GetCompany/{companyId}")]
+        [HttpGet("GetCompany{companyId}")]
         public async Task<ActionResult<CompanyDto>> GetCompany(int companyId)
         {
             try
@@ -60,11 +64,16 @@ namespace StalTradeAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("IsNIPUnique/{companyId}", Name = "IsNIPUnique")]
-        public IActionResult IsNIPUnique(int companyId, string nip) 
+        [HttpPost("IsNIPUnique{companyId}")]
+        public IActionResult IsNIPUnique(int companyId, [FromBody] string request) 
         {
-            return new JsonResult(_companyRepository.IsNIPExists(nip, companyId));
+            bool companyExists = _companyRepository.IsNIPExists(request, companyId);
+
+            if (companyExists)
+            {
+                return BadRequest("Taka metoda płatności już istnieje.");
+            }
+            return Ok();
         }   
 
         [HttpPost("CreateCompany")]
@@ -73,7 +82,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _companyRepository.AddAsync(_mapper.Map<Company>(dto));
-                return Ok();
+                return Ok(new { success = true, message = "Firma została pomyślnie dodana!" });
             }
             catch (Exception ex)
             {
@@ -85,9 +94,9 @@ namespace StalTradeAPI.Controllers
         public async Task<IActionResult> UpdateCompany(CompanyDto dto)
         {
             try
-            {           
+            {
                 await _companyRepository.UpdateAsync(_mapper.Map<Company>(dto));
-                return Ok();
+                return Ok(new { success = true, message = "Poprawnie edytowano wartości!" });
             }
             catch (Exception ex)
             {
@@ -101,7 +110,7 @@ namespace StalTradeAPI.Controllers
             try
             {
                 await _companyRepository.DeleteAsync(id);
-                return Ok();
+                return Ok(new { success = true, message = "Pomyślnie usunięto firmę wraz z kontaktami!" });
             }
             catch (Exception ex)
             {
