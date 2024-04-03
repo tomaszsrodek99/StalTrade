@@ -1,11 +1,7 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using StalTradeAPI.Dtos;
-using StalTradeAPI.Models;
 using StalTradeUI.Helpers;
-using System.Globalization;
 
 namespace StalTradeUI.Controllers
 {
@@ -77,9 +73,31 @@ namespace StalTradeUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreateExpenseView()
+        public async Task<IActionResult> CreateExpenseView(int? id)
         {
-            return View("CreateExpense", new ExpenseDto { Date = DateTime.Now, DateOfPayment = DateTime.Now });
+            if (id == null)
+                return View("CreateExpense", new ExpenseDto { Date = DateTime.Now, DateOfPayment = DateTime.Now });
+            else
+            {
+                try
+                {
+                    HttpResponseMessage response = await _httpClient.GetAsync($"api/Expense/GetExpense{id}");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var expenseDto = await response.Content.ReadFromJsonAsync<ExpenseDto>();
+                        return View("CreateExpense", expenseDto);
+                    }
+
+                    TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
+                    return RedirectToAction("FixedCosts");
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"Błąd serwera. Spróbuj ponownie później. {ex.Message}";
+                    return RedirectToAction("FixedCosts");
+                }
+            }
         }
 
         [HttpPost]
@@ -96,30 +114,7 @@ namespace StalTradeUI.Controllers
                 TempData["ErrorMessage"] = $"Nie udało się dodać wydatku. {ex.Message}";
                 return RedirectToAction("FixedCosts");
             }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EditExpenseView(int id)
-        {
-            try
-            {
-                HttpResponseMessage response = await _httpClient.GetAsync($"api/Expense/GetExpense{id}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var expenseDto = await response.Content.ReadFromJsonAsync<ExpenseDto>();
-                    return View("CreateExpense", expenseDto);
-                }
-
-                TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
-                return RedirectToAction("FixedCosts");
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Błąd serwera. Spróbuj ponownie później. {ex.Message}";
-                return RedirectToAction("FixedCosts");
-            }
-        }
+        }      
 
         [HttpPost]
         public async Task<IActionResult> PutExpense(ExpenseDto dto)

@@ -3,7 +3,7 @@ var selectedPriceRow = null;
 var currentPriceRow = null;
 var chartId = null;
 $(document).ready(function () {
-    $('#edit-price-button, #delete-price-button, #add-price-button, #sale-prices-button, #purchase-prices-button').prop('disabled', true);
+    $('#edit-price-button, #delete-price-button, #add-purchase-price-button, #add-sale-price-button').prop('disabled', true);
 
     $('#product-table tbody').on('click', 'td.selectable-td', function (e) {
         e.stopPropagation();
@@ -12,23 +12,24 @@ $(document).ready(function () {
         if (currentProductRow.hasClass('selected')) {
             currentProductRow.removeClass('selected');
             selectedProductRow = null;
-            $('#add-price-button, #sale-prices-button, #purchase-prices-button, #edit-price-button, #delete-price-button').prop('disabled', true);
+            $('#add-price-button, #edit-price-button, #delete-price-button, #add-purchase-price-button, #add-sale-price-button').prop('disabled', true);
             var priceTableBody = $('#price-table tbody');
             priceTableBody.empty();
         } else {
             productTable.rows().deselect();
             currentProductRow.addClass('selected');
-            selectedProductRow = productTable.row(currentProductRow).data();           
+            selectedProductRow = productTable.row(currentProductRow).data();
+            var latestPricesForSelectedProduct = latestPrices.filter(price => price.productId == selectedProductRow[0]);
 
+            updatePriceTable(latestPricesForSelectedProduct);
             if (chartId != null)
                 removeChart(chartId);
+            $('#add-purchase-price-button, #add-sale-price-button').prop('disabled', false);
+            $('#edit-price-button, #delete-price-button').prop('disabled', true);
+            var isProductRowSelected = selectedProductRow != null;
+            $('#add-purchase-price-button, #add-sale-price-button').attr('data-product-id', isProductRowSelected ? selectedProductRow[0] : null);
+            var priceTableBody = $('#price-table tbody');
         }
-        var isProductRowSelected = selectedProductRow != null;
-        $('#edit-price-button, #delete-price-button, #add-price-button').prop('disabled', true);
-        $('#sale-prices-button, #purchase-prices-button').prop('disabled', false);
-        $('#add-price-button').attr('data-product-id', isProductRowSelected ? selectedProductRow[0] : null);
-        var priceTableBody = $('#price-table tbody');
-        priceTableBody.empty();
     });
 
     $('#price-table tbody').on('click', 'tr', function (e) {
@@ -62,57 +63,33 @@ $(document).ready(function () {
             //console.log(selectedProductRow);
             //console.log(selectedPriceRow);
             chartId = 'chart-' + selectedPriceRow[2];
-            
-            var chartData = prepareChartData(productList, selectedPriceRow[2], selectedProductRow[0]);
-            //console.log(chartData);
+
+            var chartData = prepareChartData(productList, selectedPriceRow);
+            console.log(chartData);
             if (chartData.length > 1) {
-                createChart(chartId, chartData);
+                showDataTable(chartId, chartData);
             }
         }
     });
 
     $('#edit-price-button').on('click', function () {
         loadUpdatePriceForm(selectedPriceRow);
-    });
-
-    $('#add-price-button').on('click', function () {
+    }); $('#add-purchase-price-button').on('click', function () {
+        var availableCompanies = getAvailableCompanies(true);
+        updateCompanyOptions(availableCompanies);
         loadCreatePriceForm(selectedProductRow[0]);
+        document.getElementById("is-purchase").checked = true;
+    }); $('#add-sale-price-button').on('click', function () {
+        var availableCompanies = getAvailableCompanies(false);
+        updateCompanyOptions(availableCompanies);
+        loadCreatePriceForm(selectedProductRow[0]);
+        document.getElementById("is-purchase").checked = false;
     });
 
     $('#delete-price-button').on('click', function () {
         if (confirm('Czy na pewno chcesz usunąć cenę?')) {
             window.location.href = '/WarehouseUI/RemovePrice/' + selectedPriceRow[0];
         }
-    });
-
-    $('#sale-prices-button').on('click', function () {      
-        var latestPricesForSelectedProduct = latestSalePrices.filter(price => price.productId == selectedProductRow[0]);
-        updatePriceTable(latestPricesForSelectedProduct);
-        var availableCompanies = getAvailableCompanies();
-        updateCompanyOptions(availableCompanies);
-        $('#add-price-button').prop('disabled', false);
-        document.getElementById("price-table-header").innerHTML = "Ceny sprzedaży";
-        var form = document.getElementById("priceForm");
-        form.action = "AddSalePrice";
-
-        $('#sale-prices-button, #edit-price-button, #delete-price-button').prop('disabled', true);
-        $('#purchase-prices-button').prop('disabled', false);
-        removeChart(chartId);
-    });
-
-    $('#purchase-prices-button').on('click', function () {
-        var latestPricesForSelectedProduct = latestPurchasePrices.filter(price => price.productId == selectedProductRow[0]);
-        updatePriceTable(latestPricesForSelectedProduct);
-        var availableCompanies = getAvailableCompanies();
-        updateCompanyOptions(availableCompanies);
-        $('#add-price-button').prop('disabled', false);
-        document.getElementById("price-table-header").innerHTML = "Ceny zakupu";
-        var form = document.getElementById("priceForm");
-        form.action = "AddPurchasePrice";
-
-        $('#sale-prices-button').prop('disabled', false);
-        $('#purchase-prices-button, #edit-price-button, #delete-price-button').prop('disabled', true);
-        removeChart(chartId);
     });
 
     var table = new DataTable('#search-table', {
@@ -171,7 +148,7 @@ function updatePriceTable(prices) {
     priceTableBody.empty();
     if (prices.length > 0) {
         prices.forEach(price => {
-            //console.log(price);
+            //            console.log(price);
             priceTableBody.append(`
                 <tr>
                     <td id="priceId-${price.priceId}" hidden>${price.priceId}</td>
@@ -180,14 +157,14 @@ function updatePriceTable(prices) {
                     <td id="company-name-${price.company.name}">${price.company.name}</td>
                     <td id="price-data-${price.date}">${new Date(price.date).toLocaleDateString()}</td>
                     <td id="netto-${price.netto}">${price.netto}</td>
-                    <td id="is-purchase-${price.isPurchase}" hidden>${price.isPurchase}</td>
+                    <td id="is-purchase-${price.isPurchase}">${price.isPurchase ? 'Zakup' : 'Sprzedaż'}</td>
                 </tr>
             `);
         });
     } else {
         priceTableBody.append(`
             <tr>
-                <td colspan="6" class="text-center">Dodaj pierwszą cenę dla wybranego produktu.</td>
+                <td colspan="7" class="text-center">Dodaj pierwszą cenę dla wybranego produktu.</td>
             </tr>
         `);
     }
@@ -198,7 +175,6 @@ function loadCreatePriceForm(data) {
     form.reset();
     document.getElementById("product-id").value = data;
     document.getElementById("price-form-name").innerHTML = "Dodaj cenę";
-
     var partialView = document.getElementById("partial-view-price");
     partialView.style.visibility = "visible";
     blur();
@@ -248,10 +224,10 @@ function updateCompanyOptions(companies) {
     }
 }
 
-function getAvailableCompanies() {
+function getAvailableCompanies(isPurchase) {
     //console.log("wszystkie " + allCompanies);
 
-    var usedCompanyIds = getUsedCompanyIds();
+    var usedCompanyIds = getUsedCompanyIds(isPurchase);
     //console.log("usedIds " + usedCompanyIds);
     if (usedCompanyIds.length > 0) {
         var availableCompanies = allCompanies.filter(function (company) {
@@ -263,19 +239,19 @@ function getAvailableCompanies() {
         return allCompanies;
 }
 
-function getUsedCompanyIds() {
+function getUsedCompanyIds(isPurchase) {
     var usedCompanyIds = [];
 
     $('#price-table tbody tr').each(function () {
-        var companyId = $(this).find('td:eq(2)').text();
-        //console.log(companyId);
-        usedCompanyIds.push(parseInt(companyId));
+        var isPurchaseId = $(this).find('td:last').attr('id');
+        if (isPurchaseId && isPurchaseId.endsWith(`is-purchase-${isPurchase}`)) {
+            var companyId = $(this).find('td:eq(2)').text();
+            usedCompanyIds.push(parseInt(companyId));
+        }
     });
 
-    //console.log("uzywane " + usedCompanyIds);
     return usedCompanyIds;
 }
-
 function removeChart(chartId) {
     var canvasContainer = document.getElementById("chart-container");
     var existingTable = document.getElementById("chart-table");
@@ -293,121 +269,32 @@ function removeChart(chartId) {
         existingChart.remove();
     }
 }
+function prepareChartData(productList, selectedPriceRow) {
+    //console.log(selectedPriceRow);
+    selectedPriceRow[6] = selectedPriceRow[6] === 'Zakup' ? true : false;
+    var selectedProduct = productList.find(product => product.productId == selectedPriceRow[1]);
+    //console.log(selectedProduct);
+    var selectedPrices = null;
+    selectedPrices = selectedProduct.prices.filter(price => price.companyId == selectedPriceRow[2] && price.isPurchase === selectedPriceRow[6]);
+    selectedPrices.sort((a, b) => new Date(b.date) - new Date(a.date));
+    //console.log(selectedPrices);
+    var data = selectedPrices.map(price => ({
+        date: new Date(price.date).toLocaleDateString(),
+        netto: price.netto
+    }));
+    //console.log(data)
+    return data;
+} 
 
-function prepareChartData(productList, companyId, productId) {
-    console.log(productList);
-    console.log(productId, companyId)
-    var selectedProduct = productList.find(product => product.productId == parseInt(productId));
-    console.log(selectedProduct);
-    if (selectedProduct) {
-        var selectedPrices = null;
-
-        if ($('#sale-prices-button').prop('disabled')) {
-            console.log("sprzedaz dola firma " + companyId + " dla produkt " + productId);
-            selectedPrices = selectedProduct.prices.filter(price => price.companyId == companyId && !price.isPurchase && price.productId == productId);
-        } else {
-            console.log("kupno");
-            selectedPrices = selectedProduct.prices.filter(price => price.companyId == companyId && price.isPurchase);
-        }
-        
-        console.log(selectedPrices);
-        var chartData = selectedPrices.map(price => ({
-            date: new Date(price.date).toLocaleDateString(),
-            netto: price.netto
-        }));
-        return chartData;
-    } else {
-        return [];
-    }
-}
-
-function createChart(chartId, chartData) {
+function showDataTable(chartId, chartData) {
     var canvasContainer = document.getElementById("chart-container");
-
-    var existingCanvas = document.getElementById(chartId);
-    if (existingCanvas) {
-        canvasContainer.removeChild(existingCanvas);
-    }
-
-    var existingButton = document.getElementById("details-price-button");
-    if (existingButton) {
-        existingButton.parentNode.removeChild(existingButton);
-    }
-
-    var detailsButton = document.createElement("button");
-    detailsButton.id = "details-price-button";
-    detailsButton.className = "btn btn-info";
-    detailsButton.innerText = "Tabela danych";
-    document.getElementById("button-container").appendChild(detailsButton);
-
-    var canvas = document.createElement("canvas");
-    canvas.id = chartId;
-    canvas.width = 600;
-    canvas.height = 400;
-    canvasContainer.appendChild(canvas);
-    
-    console.log(canvasContainer);
-    var ctx = canvas.getContext('2d');
-    var chartLabels = chartData.map(entry => entry.date);
-    var chartNettoData = chartData.map(entry => entry.netto);
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: chartLabels,
-            datasets: [
-                {
-                    label: 'Netto',
-                    data: chartNettoData,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    fill: false
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            plugins: {
-                zoom: {
-                    pan: {
-                        enabled: true,
-                        mode: 'xy'
-                    },
-                    zoom: {
-                        enabled: true,
-                        mode: 'xy'
-                    }
-                }
-            }
-        }
-    });
-
-    detailsButton.addEventListener("click", function () {
-        if (detailsButton.innerText == "Tabela danych") {
-            showDataTable(chartData);
-            detailsButton.innerText = "Wykres";
-        } else {
-            showChart(chartId, chartData);
-            detailsButton.innerText = "Tabela danych";
-        }
-    });
-}
-
-function showDataTable(chartData) {
-    var canvasContainer = document.getElementById("chart-container");
-
     var existingCanvas = document.querySelector("canvas");
     if (existingCanvas) {
         canvasContainer.removeChild(existingCanvas);
     }
 
     var table = document.createElement("table");
-    table.className = "table subtable table-info table-bordered table-hover";
+    table.className = "table subtable table-info table-bordered table-hover data-table";
     table.id = "chart-table";
 
     var thead = document.createElement("thead");
@@ -417,6 +304,8 @@ function showDataTable(chartData) {
     headerRow.insertCell().innerText = "Netto";
 
     var tbody = document.createElement("tbody");
+    //console.log(table);
+    //console.log(chartData);
     chartData.forEach(entry => {
         var row = tbody.insertRow();
         row.insertCell().innerText = entry.date;
@@ -426,13 +315,4 @@ function showDataTable(chartData) {
     table.appendChild(thead);
     table.appendChild(tbody);
     canvasContainer.appendChild(table);
-}
-
-function showChart(chartId, chartData) {
-    var existingTable = document.querySelector("#chart-container table");
-    if (existingTable) {
-        existingTable.remove();
-    }
-
-    createChart(chartId, chartData);
 }

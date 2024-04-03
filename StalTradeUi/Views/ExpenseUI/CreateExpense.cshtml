@@ -2,12 +2,12 @@
 @{
     ViewData["Title"] = "Wydatek";
     Layout = "_UserLayout";
-    string action = ViewContext.RouteData.Values["action"] as string;
+    int id = Model.ExpenseId;
 }
 <h2 class="text-center" id="expense-form-name">
     @{
 
-        string title = (action == "CreateExpenseView" || action == "AddExpense") ? "Dodaj wydatek" : "Edytuj wydatek";
+        string title = (id == 0) ? "Dodaj wydatek" : "Edytuj wydatek";
     }
     @title
 </h2>
@@ -27,7 +27,7 @@ else if (TempData.ContainsKey("ErrorMessage"))
 
 <div class="text-center row">
     <div class="offset-3 col-6">
-        <form id="expenseForm" asp-controller="ExpenseUI" asp-action="@((action == "CreateExpenseView" || action == "AddExpense") ? "AddExpense" : "PutExpense")" method="post" class="my-form">
+        <form id="expenseForm" asp-controller="ExpenseUI" asp-action="@((id == 0) ? "AddExpense" : "PutExpense")" method="post" class="my-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input id="expenseId" asp-for="ExpenseId" class="form-control" hidden />
             <div class="form-group">

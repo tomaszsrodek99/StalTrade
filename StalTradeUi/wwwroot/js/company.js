@@ -44,7 +44,7 @@
     });
 
     $('#edit-company-button').on('click', function () {
-        window.location.href = '/CompanyUI/EditCompanyView/' + selectedRow[0];
+        window.location.href = '/CompanyUI/CreateCompanyView/' + selectedRow[0];
     });
 
     $('#delete-company-button').on('click', function () {

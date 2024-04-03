@@ -59,7 +59,7 @@ namespace StalTradeUI.Controllers
                 }
                 ViewBag.Products = products;
 
-                return PartialView("_CreatePurchaseInvoice", new InvoiceDto());
+                return View("CreatePurchaseInvoice", new InvoiceDto { InvoiceDate = DateTime.Now, PaymentDate = DateTime.Now });
             }
             catch (Exception ex)
             {
@@ -89,7 +89,7 @@ namespace StalTradeUI.Controllers
                     product.Prices = product.Prices.Where(price => !price.IsPurchase).ToList();
                 }
                 ViewBag.Products = products;
-                return PartialView("_CreateSaleInvoice", new InvoiceDto());
+                return View("CreateSaleInvoice", new InvoiceDto { InvoiceDate = DateTime.Now, PaymentDate = DateTime.Now });
             }
             catch (Exception ex)
             {

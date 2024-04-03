@@ -3,8 +3,9 @@
 @{
     ViewData["Title"] = "Produkt";
     Layout = "_UserLayout";
+    int id = Model.ProductId;
 }
-<h2>@((ViewContext.RouteData.Values["action"] as string == "CreateProductView") ? "Dodaj produkt" : "Edytuj produkt")</h2>
+<h2>@((id == 0) ? "Dodaj produkt" : "Edytuj produkt")</h2>
 
 @if (TempData.ContainsKey("SuccessMessage"))
 {
@@ -22,7 +23,7 @@ else if (TempData.ContainsKey("ErrorMessage"))
 <div class="text-center row">
     <div class="offset-3 col-6">
         <h2 id="product-form-name"></h2>
-        <form id="productForm" class="my-form" asp-controller="ProductUI" asp-action="@((ViewContext.RouteData.Values["action"] as string == "CreateProductView") ? "AddProduct" : "PutProduct")" method="post">
+        <form id="productForm" class="my-form" asp-controller="ProductUI" asp-action="@((id == 0) ? "AddProduct" : "PutProduct")" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input id="productId" asp-for="ProductId" class="form-control" hidden />
             <div class="form-group">

@@ -5,9 +5,10 @@
 @{
     ViewData["Title"] = "Firma";
     Layout = "_UserLayout";
+    int id = Model.CompanyID;
 }
 
-<h2 id="company-form-name" class="text-center">@((ViewContext.RouteData.Values["action"] as string == "CreateCompanyView") ? "Dodaj firmę" : "Edytuj firmę")</h2>
+<h2 id="company-form-name" class="text-center">@((id == 0) ? "Dodaj firmę" : "Edytuj firmę")</h2>
 
 @if (TempData.ContainsKey("SuccessMessage"))
 {
@@ -25,7 +26,7 @@ else if (TempData.ContainsKey("ErrorMessage"))
 <div class="text-center row">
     <div class="col-6">
         <input id="oldNip" asp-for="NIP" class="form-control" type="hidden" />
-        <form id="companyForm" asp-controller="CompanyUI" asp-action="@((ViewContext.RouteData.Values["action"] as string == "CreateCompanyView") ? "AddCompany" : "PutCompany")" method="post" class="my-form">
+        <form id="companyForm" asp-controller="CompanyUI" asp-action="@((id == 0) ? "AddCompany" : "PutCompany")" method="post" class="my-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input id="companyId" asp-for="CompanyID" class="form-control" type="hidden" value="@Model.CompanyID"/>           
             <div class="form-group">

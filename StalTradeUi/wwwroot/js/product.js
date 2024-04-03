@@ -29,7 +29,7 @@
     });
 
     $('#edit-product-button').on('click', function () {
-        window.location.href = '/ProductUI/EditProductView/' + selectedRow[0];
+        window.location.href = '/ProductUI/CreateProductView/' + selectedRow[0];
     });
 
     $('#delete-product-button').on('click', function () {

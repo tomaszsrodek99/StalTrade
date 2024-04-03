@@ -40,7 +40,7 @@ namespace StalTradeUI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateCompanyView()
+        public async Task<IActionResult> CreateCompanyView(int? id)
         {
             try
             {
@@ -49,10 +49,29 @@ namespace StalTradeUI.Controllers
                 {
                     var methodsDto = await response.Content.ReadFromJsonAsync<IEnumerable<PaymentMethod>>();
                     ViewBag.Methods = methodsDto;
-                    return View("CreateCompany", new CompanyDto());
+                    if (id == null)
+                    {
+                        return View("CreateCompany", new CompanyDto());
+                    }
+                    else
+                    {
+                        HttpResponseMessage company = await _httpClient.GetAsync($"api/Company/GetCompany{id}");
+                        HttpResponseMessage methods = await _httpClient.GetAsync("api/PaymentMethod/GetPaymentMethods");
+
+                        if (company.IsSuccessStatusCode)
+                        {
+                            var companyDto = await company.Content.ReadFromJsonAsync<CompanyDto>();
+                            return View("CreateCompany", companyDto);
+                        }
+                        TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
+                        return RedirectToAction("Index");
+                    }
                 }
-                TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
-                return RedirectToAction("Index");
+                else
+                {
+                    TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
+                    return RedirectToAction("Index");
+                }
             }
             catch (Exception ex)
             {
@@ -95,32 +114,6 @@ namespace StalTradeUI.Controllers
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Nie udało się dodać firmy. {ex.Message}";
-                return RedirectToAction("Index");
-            }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EditCompanyView(int id)
-        {
-            try
-            {
-                HttpResponseMessage company = await _httpClient.GetAsync($"api/Company/GetCompany{id}");
-                HttpResponseMessage methods = await _httpClient.GetAsync("api/PaymentMethod/GetPaymentMethods");
-
-                if (methods.IsSuccessStatusCode && company.IsSuccessStatusCode)
-                {
-                    var methodsDto = await methods.Content.ReadFromJsonAsync<IEnumerable<PaymentMethod>>();
-                    ViewBag.Methods = methodsDto;              
-                    var companyDto = await company.Content.ReadFromJsonAsync<CompanyDto>();
-                    return View("CreateCompany", companyDto);
-                }
-
-                TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Błąd serwera. Spróbuj ponownie później. {ex.Message}";
                 return RedirectToAction("Index");
             }
         }
@@ -184,7 +177,7 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/PaymentMethod/CreatePaymentMethod", dto);
-                ResponseHandler.HandleResponse(response, this);             
+                ResponseHandler.HandleResponse(response, this);
                 return RedirectToAction("CreateCompanyView");
             }
             catch (Exception ex)
@@ -199,7 +192,7 @@ namespace StalTradeUI.Controllers
             try
             {
                 HttpResponseMessage response = await _httpClient.DeleteAsync($"api/PaymentMethod/DeletePaymentMethod{id}");
-                ResponseHandler.HandleResponse(response, this);            
+                ResponseHandler.HandleResponse(response, this);
                 return RedirectToAction("CreateCompanyView");
             }
             catch (Exception ex)

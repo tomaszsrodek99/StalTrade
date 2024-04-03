@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StalTradeAPI.Dtos;
+using StalTradeAPI.Helpers;
 using StalTradeAPI.Interfaces;
 using StalTradeAPI.Models;
 
@@ -65,13 +66,35 @@ namespace StalTradeAPI.Controllers
             }
         }
 
+        [HttpGet("GetLatestPricesWithProducts")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetLatestPricesWithProducts()
+        {
+            try
+            {
+                var productList = await _productRepository.GetAllProductsWithLatestPrices();
+
+                if (!productList.Any())
+                {
+                    return BadRequest("Nie znaleziono produktów.");
+                }
+
+                var productDtos = _mapper.Map<IEnumerable<ProductDto>>(productList);
+
+                return Ok(productDtos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost("CreatePrice")]
         public async Task<IActionResult> CreatePrice(PriceDto dto)
         {
             try
             {
                 await _priceRepository.AddAsync(_mapper.Map<Price>(dto));
-                return Ok(new { success = true, message = "Cena została pomyślnie dodana!" });
+                return Ok(new { success = true, message = "Cena została pomyślnie przypisana!" });
             }
             catch (Exception ex)
             {

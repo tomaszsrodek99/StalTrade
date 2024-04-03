@@ -1,12 +1,7 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
 using StalTradeAPI.Dtos;
-using StalTradeAPI.Models;
 using StalTradeUI.Helpers;
-using System.ComponentModel.Design;
-using System.Net.Http.Headers;
 
 namespace StalTradeUI.Controllers
 {

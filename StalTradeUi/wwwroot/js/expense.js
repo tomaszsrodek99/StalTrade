@@ -28,17 +28,17 @@
         window.location.href = '/ExpenseUI/CreateExpenseView';
     });
     $('#edit-expense-button').on('click', function () {
-        window.location.href = '/ExpenseUI/EditExpenseView/' + selectedRow[0];
+        window.location.href = '/ExpenseUI/CreateExpenseView/' + selectedRow[0];
     });
 
     $('#delete-expense-button').on('click', function () {
-            if (confirm('Czy na pewno chcesz usunąć wydatek?')) {
-                window.location.href = '/ExpenseUI/RemoveExpense/' + selectedRow[0];
-            }
+        if (confirm('Czy na pewno chcesz usunąć wydatek?')) {
+            window.location.href = '/ExpenseUI/RemoveExpense/' + selectedRow[0];
+        }
     });
 
     var table = new DataTable('#search-table', {
-        order: [[7, 'desc']],     
+        order: [[7, 'desc']],
         searching: false,
         dom: 'Blrtip',
         buttons: ['print'],
@@ -53,7 +53,7 @@
         pageLength: 10,
         lengthMenu: [10, 25, 50],
         scrollY: '800px',
-        scrollCollapse: true
+        scrollCollapse: true,     
     });
 });
 

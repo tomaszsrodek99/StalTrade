@@ -58,7 +58,7 @@
         </div>
         <div class="form-group">
             <div class="btn-group">
-                <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="goBack()">Wstecz</button>
+                <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="redirectToIndex()">Wstecz</button>
                 <button type="submit" class="btn btn-primary">Zapisz</button>
             </div>
         </div>
@@ -92,6 +92,11 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="~/js/createInvoice.js"></script>
+    <script>
+        function redirectToIndex() {
+            window.location.href = '/InvoiceUI/Index';
+        }
+    </script>
     <script>
         var companies = @Json.Serialize(ViewBag.Companies);
         var products = @Json.Serialize(ViewBag.Products);

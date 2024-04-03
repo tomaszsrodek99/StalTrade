@@ -22,14 +22,13 @@ else if (TempData.ContainsKey("ErrorMessage"))
 
 <div class="position-float-right">
     <div id="button-container">
-        <button id="sale-prices-button" class="btn btn-info">Sprzedaż</button>
-        <button id="purchase-prices-button" class="btn btn-info">Zakup</button>
-        <button id="add-price-button" class="btn btn-primary">Dodaj nową cenę</button>
+        <button id="add-purchase-price-button" class="btn btn-primary">Dodaj nową cenę zakupu</button>
+        <button id="add-sale-price-button" class="btn btn-primary">Dodaj nową cenę sprzedaży</button>
         <button id="edit-price-button" class="btn btn-secondary">Edytuj</button>
         <button id="delete-price-button" class="btn btn-danger">Usuń ostatnią cenę</button>
     </div>
 </div>
-<div class="text-center row" style="margin-top: 50px;">
+<div class="text-center row" style="margin-top: 75px;">
     @if (Model.Any())
     {
         <div class="col-4">
@@ -75,7 +74,7 @@ else if (TempData.ContainsKey("ErrorMessage"))
                         <th>Firma</th>
                         <th>Data</th>
                         <th>Cena netto</th>
-                        <th hidden></th>
+                        <th>Typ transakcji</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,13 +85,15 @@ else if (TempData.ContainsKey("ErrorMessage"))
                         <td class="selectable-td"></td>
                         <td class="selectable-td"></td>
                         <td class="selectable-td"></td>
-                        <td hidden></td>
+                        <td class="selectable-td"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="col-4">
-            <div id="chart-container" class="chart-container"></div>
+            <div id="chart-container" class="chart-container">
+                <h4>Historia ceny</h4>
+            </div>
         </div>
     }
     else
@@ -100,8 +101,6 @@ else if (TempData.ContainsKey("ErrorMessage"))
         <p>Brak produktów.</p>
     }
 </div>
-
-
 
 <div id="partial-view-price" class="partial-view hidden">
     @await Html.PartialAsync("_CreatePrice", new StalTradeAPI.Dtos.PriceDto())
@@ -114,9 +113,7 @@ else if (TempData.ContainsKey("ErrorMessage"))
     <script>
         var allCompanies = @Html.Raw(Json.Serialize(ViewBag.Companies));
         var productList = @Html.Raw(Json.Serialize(Model));
-        var latestPurchasePrices = @Html.Raw(Json.Serialize(ViewBag.LatestPurchasePrices));
-        var latestSalePrices = @Html.Raw(Json.Serialize(ViewBag.LatestSalePrices));
+        var latestPrices = @Html.Raw(Json.Serialize(ViewBag.LatestPrices));
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/warehouse.js"></script>
 }

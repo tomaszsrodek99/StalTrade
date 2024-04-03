@@ -51,19 +51,21 @@ namespace StalTradeUI.Controllers
                     var responseDto = await response.Content.ReadFromJsonAsync<IEnumerable<ProductDto>>();
                     ViewBag.Companies = await companyResponse.Content.ReadFromJsonAsync<IEnumerable<CompanyDto>>();
 
-                    var latestPurchasePrices = responseDto
-                        .SelectMany(p => p.Prices ?? Enumerable.Empty<PriceDto>())
+                    var allPrices = responseDto
+                        .SelectMany(p => p.Prices);
+
+                    var latestPurchasePrices = allPrices
                         .Where(price => price.IsPurchase)
                         .GroupBy(price => new { price.ProductId, price.CompanyId })
                         .Select(group => group.OrderByDescending(price => price.Date).FirstOrDefault());
-                    ViewBag.LatestPurchasePrices = latestPurchasePrices;
 
-                    var latestSalePrices = responseDto
-                        .SelectMany(p => p.Prices ?? Enumerable.Empty<PriceDto>())
+                    var latestSalePrices = allPrices
                         .Where(price => !price.IsPurchase)
                         .GroupBy(price => new { price.ProductId, price.CompanyId })
                         .Select(group => group.OrderByDescending(price => price.Date).FirstOrDefault());
-                    ViewBag.LatestSalePrices = latestSalePrices;
+
+                    var latestPrices = latestPurchasePrices.Concat(latestSalePrices).OrderBy(price => price.CompanyId);
+                    ViewBag.LatestPrices = latestPrices;
 
                     return View("PriceList", responseDto);
                 }
@@ -135,7 +137,7 @@ namespace StalTradeUI.Controllers
             {
                 HttpResponseMessage response = await _httpClient.DeleteAsync($"api/Warehouse/DeletePrice{id}");
                 ResponseHandler.HandleResponse(response, this);
-                return RedirectToAction("PriceList");               
+                return RedirectToAction("PriceList");
             }
             catch (Exception ex)
             {

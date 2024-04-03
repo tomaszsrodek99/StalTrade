@@ -24,15 +24,40 @@ namespace StalTradeAPI.Repositories
 
         public async Task<IEnumerable<Product>> GetAllProductWithPrices()
         {
-            var products = await _context.Products             
-                .Include(p => p.Prices)
-                    .ThenInclude(price => price.Company)
-                .Include(s =>s.StockStatus)
-                .ToListAsync();
-            
+            var products = await _context.Products
+            .Include(p => p.Prices)
+                .ThenInclude(price => price.Company)
+            .Select(product => new Product
+            {
+                ProductId = product.ProductId,
+                UnitOfMeasure = product.UnitOfMeasure,
+                Name = product.Name,
+                CompanyDrawingNumber = product.CompanyDrawingNumber,
+                Prices = product.Prices.Select(price => new Price
+                {
+                    PriceId = price.PriceId,
+                    ProductId = price.ProductId,
+                    CompanyId = price.CompanyId,
+                    Date = price.Date,
+                    Netto = price.Netto,
+                    IsPurchase = price.IsPurchase,
+                    Company = new Company
+                    {
+                        Name = price.Company.Name
+                    },
+                }).ToList()
+            })
+            .ToListAsync();
+
             return products;
         }
 
+        public async Task<IEnumerable<Product>> GetAllProductsWithLatestPrices()
+        {
+            var products = await GetAllProductWithPrices();
+
+            return products;
+        }
         public async Task<Product> GetAsyncWithStockStatus(int productId)
         {
             var product = await _context.Products
@@ -46,15 +71,12 @@ namespace StalTradeAPI.Repositories
         {
             var product = await _context.Products.FindAsync(id);
 
-            // Sprawdź, czy ProductId występuje w tabeli Invoice
             bool isUsedInInvoices = await _context.Invoices.AnyAsync(i => i.ProductsList.Any(p => p.ProductId == id));
 
-            // Sprawdź, czy ProductId występuje w tabeli Price
             bool isUsedInPrices = await _context.Prices.AnyAsync(p => p.ProductId == id);
 
             if (isUsedInInvoices || isUsedInPrices)
             {
-                // Jeśli ProductId występuje w Invoice lub Price, nie pozwól na usunięcie produktu
                 throw new InvalidOperationException("Nie można usunąć tego produktu, ponieważ jest już zapisany w fakturze bądź jego cena jest zapisana w bazie danych.");
             }
 

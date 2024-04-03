@@ -36,11 +36,6 @@ namespace StalTradeUI.Controllers
             }
         }
 
-        public IActionResult CreateProductView()
-        {
-            return View("CreateProduct", new ProductDto());
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddProduct(ProductDto dto)
         {
@@ -58,25 +53,30 @@ namespace StalTradeUI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditProductView(int id)
+        public async Task<IActionResult> CreateProductView(int? id)
         {
-            try
+            if (id == null)
+                return View("CreateProduct", new ProductDto());
+            else
             {
-                HttpResponseMessage product = await _httpClient.GetAsync($"api/Product/GetProduct{id}");
-
-                if (product.IsSuccessStatusCode)
+                try
                 {
-                    var productDto = await product.Content.ReadFromJsonAsync<ProductDto>();
-                    return View("CreateProduct", productDto);
-                }
+                    HttpResponseMessage product = await _httpClient.GetAsync($"api/Product/GetProduct{id}");
 
-                TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Błąd serwera. {ex.Message}";
-                return RedirectToAction("Index");
+                    if (product.IsSuccessStatusCode)
+                    {
+                        var productDto = await product.Content.ReadFromJsonAsync<ProductDto>();
+                        return View("CreateProduct", productDto);
+                    }
+
+                    TempData["ErrorMessage"] = $"Błąd pobierania danych. Spróbuj ponownie później.";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"Błąd serwera. {ex.Message}";
+                    return RedirectToAction("Index");
+                }
             }
         }
 

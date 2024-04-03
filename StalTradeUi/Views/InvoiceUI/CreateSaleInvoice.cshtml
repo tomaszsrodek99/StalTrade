@@ -57,7 +57,7 @@
             </div>
             <div class="form-group">
                 <div class="btn-group">
-                    <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="goBack()">Wstecz</button>
+                    <button style="margin-right: 15px" type="button" class="btn btn-dark" onclick="redirectToIndex()">Wstecz</button>
                     <button type="submit" class="btn btn-primary">Zapisz</button>
                 </div>
             </div>
@@ -93,6 +93,11 @@
     }
     <script src="~/js/createInvoice.js"></script>
     <script>
+        <script>
+            function redirectToIndex() {
+                window.location.href = '/InvoiceUI/Index';
+            }
+    </script>
         var companies = @Json.Serialize(ViewBag.Companies);
         var products = @Json.Serialize(ViewBag.Products);
     </script>
